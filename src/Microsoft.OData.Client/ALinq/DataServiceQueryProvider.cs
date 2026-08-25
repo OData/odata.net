@@ -159,7 +159,9 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.MinSelector: // Mapped to a generic expression - Min(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
                     case SequenceMethod.MaxSelector: // Mapped to a generic expression - Max(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
                     case SequenceMethod.CountDistinctSelector: // Mapped to a generic expression - CountDistinct(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->Int32
-                        return ((DataServiceQuery<TElement>)query).GetValue(this.Context, this.ParseAggregateSingletonResult<TElement>);
+                        return ((DataServiceQuery<TElement>)query).GetValue(
+                            this.Context,
+                            queryResult => this.ParseAggregateSingletonResult<TElement>(queryResult, sequenceMethod));
                     default:
                         throw Error.MethodNotSupported(mce);
                 }
@@ -292,8 +294,9 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="TElement">The return type.</typeparam>
         /// <param name="queryResult">The query result.</param>
-        /// <returns></returns>
-        private TElement ParseAggregateSingletonResult<TElement>(QueryResult queryResult)
+        /// <param name="aggregationMethod">The aggregation sequence method that produced the request.</param>
+        /// <returns>The materialized scalar aggregate value.</returns>
+        private TElement ParseAggregateSingletonResult<TElement>(QueryResult queryResult, SequenceMethod aggregationMethod)
         {
             IDictionary<string, string> responseHeaders = new Dictionary<string, string>
             {
@@ -308,6 +311,7 @@ namespace Microsoft.OData.Client
             };
 
             ODataResource entry = default(ODataResource);
+            bool sawResourceEntry = false;
             using (ODataMessageReader messageReader = new ODataMessageReader(
                 httpWebResponseMessage, messageReaderSettings, this.Context.Format.ServiceModel))
             {
@@ -318,8 +322,14 @@ namespace Microsoft.OData.Client
                     {
                         case ODataReaderState.ResourceEnd:
                             entry = reader.Item as ODataResource;
+                            if (entry == null)
+                            {
+                                break;
+                            }
+
+                            sawResourceEntry = true;
                             IEnumerable<ODataProperty> properties = entry.Properties?.OfType<ODataProperty>();
-                            if (entry != null && properties?.Any() == true)
+                            if (properties?.Any() == true)
                             {
                                 ODataProperty aggregationProperty = properties.First();
                                 ODataUntypedValue untypedValue = aggregationProperty.Value as ODataUntypedValue;
@@ -342,8 +352,73 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            // Failed to retrieve the aggregate result for whatever reason
+            if (!sawResourceEntry)
+            {
+                // The server returned an empty aggregate result set (no aggregation entry, i.e. "value": []),
+                // which happens when the input set to aggregate over is empty. Materialize the value that
+                // LINQ-to-Objects would produce for an empty sequence instead of failing.
+                return GetEmptyAggregateResult<TElement>(aggregationMethod);
+            }
+
+            // A resource entry was present but no aggregate value could be materialized from it.
+            // Preserve the original failure rather than masking a malformed/unexpected response.
             throw new DataServiceQueryException(SRResources.DataServiceRequest_FailGetValue);
+        }
+
+        /// <summary>
+        /// Gets the scalar value to return when an aggregate request yields an empty result set
+        /// (i.e. there were no rows to aggregate over), matching <see cref="System.Linq.Enumerable"/> semantics.
+        /// </summary>
+        /// <typeparam name="TElement">The return type.</typeparam>
+        /// <param name="aggregationMethod">The aggregation sequence method that produced the request.</param>
+        /// <returns>Zero for Sum/CountDistinct, null for nullable (or reference-type) Average/Min/Max; otherwise throws.</returns>
+        private static TElement GetEmptyAggregateResult<TElement>(SequenceMethod aggregationMethod)
+        {
+            switch (aggregationMethod)
+            {
+                // Sum over an empty sequence is 0, including for the nullable overloads (LINQ returns 0, not null).
+                // CountDistinct over an empty sequence is 0.
+                case SequenceMethod.SumIntSelector:
+                case SequenceMethod.SumDoubleSelector:
+                case SequenceMethod.SumDecimalSelector:
+                case SequenceMethod.SumLongSelector:
+                case SequenceMethod.SumSingleSelector:
+                case SequenceMethod.SumNullableIntSelector:
+                case SequenceMethod.SumNullableDoubleSelector:
+                case SequenceMethod.SumNullableDecimalSelector:
+                case SequenceMethod.SumNullableLongSelector:
+                case SequenceMethod.SumNullableSingleSelector:
+                case SequenceMethod.CountDistinctSelector:
+                    Type zeroType = Nullable.GetUnderlyingType(typeof(TElement)) ?? typeof(TElement);
+                    return (TElement)Convert.ChangeType(0, zeroType, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+
+                // Average/Min/Max over an empty sequence returns null for the nullable overloads (and for
+                // reference-type Min/Max), and throws InvalidOperationException for the non-nullable value-type
+                // overloads, matching Enumerable semantics.
+                case SequenceMethod.AverageIntSelector:
+                case SequenceMethod.AverageDoubleSelector:
+                case SequenceMethod.AverageDecimalSelector:
+                case SequenceMethod.AverageLongSelector:
+                case SequenceMethod.AverageSingleSelector:
+                case SequenceMethod.AverageNullableIntSelector:
+                case SequenceMethod.AverageNullableDoubleSelector:
+                case SequenceMethod.AverageNullableDecimalSelector:
+                case SequenceMethod.AverageNullableLongSelector:
+                case SequenceMethod.AverageNullableSingleSelector:
+                case SequenceMethod.MinSelector:
+                case SequenceMethod.MaxSelector:
+                    if (Nullable.GetUnderlyingType(typeof(TElement)) != null || !typeof(TElement).IsValueType)
+                    {
+                        return default(TElement);
+                    }
+
+                    throw new InvalidOperationException(SRResources.ALinq_AggregationOnEmptyCollectionNotSupported);
+
+                default:
+                    // Any other method reaching here is unexpected; preserve the original failure semantics
+                    // rather than silently returning an empty-aggregate value.
+                    throw new DataServiceQueryException(SRResources.DataServiceRequest_FailGetValue);
+            }
         }
     }
 }
