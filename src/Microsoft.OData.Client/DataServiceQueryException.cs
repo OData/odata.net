@@ -16,7 +16,6 @@ namespace Microsoft.OData.Client
         #region Private fields
 
         /// <summary>Actual response object.</summary>
-        [NonSerialized]
         private readonly QueryOperationResponse response;
 
         #endregion Private fields

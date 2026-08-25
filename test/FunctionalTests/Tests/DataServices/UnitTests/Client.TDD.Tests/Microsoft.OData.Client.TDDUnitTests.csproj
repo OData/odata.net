@@ -128,7 +128,6 @@
     <Compile Include="Tests\EdmPrimitiveValueSimulator.cs" />
     <Compile Include="Tests\EdmValueToClrValueTests.cs" />
     <Compile Include="Tests\TemplatingIntegrationTests.cs" />
-    <Compile Include="Tests\DataServiceClientExceptionSerializationTests.cs" />
     <Compile Include="Tests\DynamicProxyMethodGeneratorTests.cs" />
     <Compile Include="Tests\HttpProcessUtilityTests.cs" />
     <Compile Include="Tests\Common\TestPrimitiveType.cs" />
