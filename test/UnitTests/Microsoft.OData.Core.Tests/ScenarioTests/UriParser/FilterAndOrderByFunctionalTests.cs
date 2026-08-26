@@ -2866,6 +2866,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("'def");
             collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("ghi'");
             collectionNode.Collection.ElementAt(3).ShouldBeConstantQueryNode("xyz'");
+            Assert.Equal("'a''bc'", collectionNode.Collection.ElementAt(0).LiteralText);
+            Assert.Equal("'''def'", collectionNode.Collection.ElementAt(1).LiteralText);
+            Assert.Equal("'ghi'''", collectionNode.Collection.ElementAt(2).LiteralText);
+            Assert.Equal("'xyz'''", collectionNode.Collection.ElementAt(3).LiteralText);
         }
 
         [Theory]
@@ -3214,9 +3218,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(string.Empty, constantNode.Value);
 
-            // Since in the 'in' clause, the item string is normalized as plain JSON (using [] instead of ()), and the string item has changed from '' to "". 
-            // Thefore, the LiteralText is expected to be string.Empty.
-            Assert.Equal(string.Empty, constantNode.LiteralText);
+            Assert.Equal("''", constantNode.LiteralText);
         }
 
         [Theory]
@@ -3235,7 +3237,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(string.Empty, constantNode.Value);
-            Assert.Equal(string.Empty, constantNode.LiteralText);
+            Assert.Equal("''", constantNode.LiteralText);
         }
 
         [Theory]
@@ -3258,10 +3260,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("SSN in ( ' ' )", " ")]     // 1 space
-        [InlineData("SSN in ( '   ' )", "   ")]     // 3 spaces
-        [InlineData("SSN in ( \"  \" )", "  ")]     // 2 spaces
-        [InlineData("SSN in ( \"    \" )", "    ")]     // 4 spaces
+        [InlineData("SSN in ( ' ' )", "' '")]     // 1 space
+        [InlineData("SSN in ( '   ' )", "'   '")]     // 3 spaces
+        [InlineData("SSN in ( \"  \" )", "'  '")]     // 2 spaces
+        [InlineData("SSN in ( \"    \" )", "'    '")]     // 4 spaces
         public void FilterWithInOperationWithWhitespace(string filterClause, string expectedLiteralText)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -3278,10 +3280,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("SSN in [ ' ' ]", " ")]     // 1 space
-        [InlineData("SSN in [ '   ' ]", "   ")]     // 3 spaces
-        [InlineData("SSN in [ \"  \" ]", "  ")]     // 2 spaces
-        [InlineData("SSN in [ \"    \" ]", "    ")]     // 4 spaces
+        [InlineData("SSN in [ ' ' ]", "' '")]     // 1 space
+        [InlineData("SSN in [ '   ' ]", "'   '")]     // 3 spaces
+        [InlineData("SSN in [ \"  \" ]", "'  '")]     // 2 spaces
+        [InlineData("SSN in [ \"    \" ]", "'    '")]     // 4 spaces
         public void FilterWithInOperationWithWhitespaceInSquareBrackets(string filterClause, string expectedLiteralText)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -3751,11 +3753,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('')", "")] // No space
-        [InlineData("example in (' ')", " ")] // 1 space
-        [InlineData("example in ( '   ' )", "   ")] // 3 spaces
-        [InlineData("example in ( \"  \" )", "  ")] // 2 spaces
-        [InlineData("example in ( \"    \" )", "    ")] // 4 spaces
+        [InlineData("example in ('')", "''")] // No space
+        [InlineData("example in (' ')", "' '")] // 1 space
+        [InlineData("example in ( '   ' )", "'   '")] // 3 spaces
+        [InlineData("example in ( \"  \" )", "'  '")] // 2 spaces
+        [InlineData("example in ( \"    \" )", "'    '")] // 4 spaces
         public void FilterWithInOperationWithOpenTypesInEmptyString(string filterQueryString, string expectedLiteral)
         {
             FilterClause filter = ParseFilter(filterQueryString,
@@ -3770,11 +3772,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('', \"  \")", "", "  ")]
-        [InlineData("example in (' ', \"\")", " ", "")]
-        [InlineData("example in ( '   ', '' )", "   ", "")]
-        [InlineData("example in ( \"  \", \" \" )", "  ", " ")]
-        [InlineData("example in ( \"    \", ' ' )", "    ", " ")]
+        [InlineData("example in ('', \"  \")", "''", "'  '")]
+        [InlineData("example in (' ', \"\")", "' '", "''")]
+        [InlineData("example in ( '   ', '' )", "'   '", "''")]
+        [InlineData("example in ( \"  \", \" \" )", "'  '", "' '")]
+        [InlineData("example in ( \"    \", ' ' )", "'    '", "' '")]
         public void FilterWithInOperationWithOpenTypesInMultipleEmptyStrings(string filterQueryString, string expectedFirstLiteral, string expectedSecondLiteral)
         {
             FilterClause filter = ParseFilter(filterQueryString,

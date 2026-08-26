@@ -52,6 +52,16 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
+        public void EmptyLiteralTextShouldThrow()
+        {
+            Action createWithoutType = () => new ConstantNode(string.Empty, string.Empty);
+            Action createWithType = () => new ConstantNode(string.Empty, string.Empty, EdmCoreModel.Instance.GetString(false));
+
+            Assert.Throws<ArgumentNullException>("literalText", createWithoutType);
+            Assert.Throws<ArgumentNullException>("literalText", createWithType);
+        }
+
+        [Fact]
         public void LiteralTextPropertyShouldBeSet()
         {
             ConstantNode constantNode = new ConstantNode(null, "foo");
