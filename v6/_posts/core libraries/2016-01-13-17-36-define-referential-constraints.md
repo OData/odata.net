@@ -29,31 +29,29 @@ order.AddKeys(orderCustomerId, orderOrderId);
 model.AddElement(order);
 {% endhighlight %}
 
-`Customer.id` is the principal property while `Order.customerId` is the dependent property. Create a navigation property `orders` on the principal entity type `customer`.
+`Customer.id` is the principal property while `Order.customerId` is the dependent property. Create a bidirectional navigation relationship between the principal entity type `customer` and the dependent entity type `order`. Define the referential constraint on the partner navigation property declared on `order`.
 
 {% highlight csharp %}
-var customerOrders = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
-{
-    ContainsTarget = true,
-    Name = "orders",
-    Target = order,
-    TargetMultiplicity = EdmMultiplicity.Many
-});
+var customerOrders = customer.AddBidirectionalNavigation(
+    new EdmNavigationPropertyInfo
+    {
+        ContainsTarget = true,
+        Name = "orders",
+        Target = order,
+        TargetMultiplicity = EdmMultiplicity.Many
+    },
+    new EdmNavigationPropertyInfo
+    {
+        ContainsTarget = false,
+        Name = "customer",
+        Target = customer,
+        TargetMultiplicity = EdmMultiplicity.One,
+        DependentProperties = new[] { orderCustomerId },
+        PrincipalProperties = new[] { customerId }
+    });
 {% endhighlight %}
 
-Then, create its corresponding partner navigation property on the dependent entity type `order` with referential constraint.
-
-{% highlight csharp %}
-var orderCustomer = order.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
-{
-    ContainsTarget = false,
-    Name = "customer",
-    Target = customer,
-    TargetMultiplicity = EdmMultiplicity.One,
-    DependentProperties = new[] { orderCustomerId },
-    PrincipalProperties = new[] { customerId }
-});
-{% endhighlight %}
+`AddBidirectionalNavigation` creates both navigation properties and links them as partners. Calling `AddUnidirectionalNavigation` separately for each direction does not establish a partner relationship, so shortened key predicates cannot use the referential constraint from the reverse navigation.
 
 Create an entity type `Test.Detail` with a composite key consisting of three key properties `customerId` of `Edm.String`, `orderId` of `Edm.String` and `id` of `Edm.Int32`.
 
@@ -76,33 +74,27 @@ Come back to the type `Test.Detail`. There are two referential constraints here:
  - `DetailedOrder.orderId` is the principal property while `Detail.orderId` is the dependent property.
  - `DetailedOrder.customerId` is the principal property while `Detail.customerId` is the dependent property.
 
-Create a navigation property `details`.
+Create a bidirectional navigation relationship between `DetailedOrder` and `Detail`, with the referential constraints defined on the partner navigation property declared on `Detail`.
 
 {% highlight csharp %}
-var detailedOrderDetails = detailedOrder.AddUnidirectionalNavigation(
+var detailedOrderDetails = detailedOrder.AddBidirectionalNavigation(
     new EdmNavigationPropertyInfo
     {
         ContainsTarget = true,
-        Name = "details"
+        Name = "details",
         Target = detail,
         TargetMultiplicity = EdmMultiplicity.Many
-    });
-model.AddElement(detailedOrder);
-{% endhighlight %}
-
-Then, create its corresponding partner navigation property on the dependent entity type `detail` with referential constraint.
-
-{% highlight csharp %}
-var detailDetailedOrder = detail.AddUnidirectionalNavigation(
+    },
     new EdmNavigationPropertyInfo
     {
         ContainsTarget = false,
-        Name = "detailedOrder"
+        Name = "detailedOrder",
         Target = detailedOrder,
         TargetMultiplicity = EdmMultiplicity.One,
         DependentProperties = new[] { detailOrderId, detailCustomerId },
         PrincipalProperties = new[] { orderOrderId, orderCustomerId }
     });
+model.AddElement(detailedOrder);
 {% endhighlight %}
 
 Please note that you should **NOT** specify `Customer.id` as the principal property because the association (represented by the navigation property `details`) is from `DetailedOrder` to `Detail` rather than from `Customer` to `Detail`. And those properties must be specified **in the same order**.
