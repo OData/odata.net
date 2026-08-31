@@ -1200,6 +1200,7 @@ namespace Microsoft.OData.Client
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         public virtual async Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, DataServiceQueryContinuation continuation, CancellationToken cancellationToken)
         {
+            Util.CheckArgumentNull(continuation, "continuation");
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, callback: null, state: null, requestUri: null, continuation);
             await result.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
 
@@ -1717,12 +1718,14 @@ namespace Microsoft.OData.Client
         /// <param name="queries">The array of query requests to include in the batch request.</param>
         public virtual async Task<DataServiceResponse> ExecuteBatchAsync(SaveChangesOptions options, CancellationToken cancellationToken, params DataServiceRequest[] queries)
         {
+            Util.CheckArgumentNotEmpty(queries, "queries");
+
             if (!Util.IsBatch(options))
             {
                 throw new InvalidOperationException();
             }
 
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatchAsync", queries, options, null, null);
+            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, options, null, null);
             await result.BatchRequestAsync(cancellationToken).ConfigureAwait(false);
 
             return result.EndRequest();
@@ -2157,7 +2160,7 @@ namespace Microsoft.OData.Client
             DataServiceResponse errors = null;
             this.ValidateSaveChangesOptions(options);
 
-            BaseSaveResult result = BaseSaveResult.CreateSaveResult(this, "SaveChangesAsync", null, options, null, null);
+            BaseSaveResult result = BaseSaveResult.CreateSaveResult(this, Util.SaveChangesMethodName, null, options, null, null);
             if (result.IsBatchRequest)
             {
                 await ((BatchSaveResult)result).BatchRequestAsync(cancellationToken).ConfigureAwait(false);
@@ -2277,7 +2280,7 @@ namespace Microsoft.OData.Client
                 throw Error.Argument(SRResources.Util_EmptyArray, nameof(objects));
             }
 
-            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, "BulkUpdateAsync", SaveChangesOptions.BulkUpdate, null, null);
+            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.BulkUpdateMethodName, SaveChangesOptions.BulkUpdate, null, null);
             await result.BulkUpdateRequestAsync(cancellationToken, objects).ConfigureAwait(false);
 
             return result.EndRequest();
@@ -2348,14 +2351,14 @@ namespace Microsoft.OData.Client
         /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
         /// <param name="resource">The top-level object of the type to be deep inserted.</param>
         /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of the deep insert operation.</returns>
-        public async virtual Task<DataServiceResponse> DeepInsertAsync<T>(T resource, CancellationToken cancellationToken)
+        public virtual async Task<DataServiceResponse> DeepInsertAsync<T>(T resource, CancellationToken cancellationToken)
         {
             if (resource == null)
             {
                 throw Error.ArgumentNull(nameof(resource));
             }
 
-            DeepInsertSaveResult result = new DeepInsertSaveResult(this, "DeepInsertAsync", SaveChangesOptions.DeepInsert, callback: null, state: null);
+            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.DeepInsertMethodName, SaveChangesOptions.DeepInsert, callback: null, state: null);
             await result.DeepInsertRequestAsync(resource, cancellationToken).ConfigureAwait(false);
 
             return result.EndRequest();

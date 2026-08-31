@@ -434,6 +434,15 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
+        public async Task ExecuteBatchAsync_WithEmptyQueries_Throws()
+        {
+            var context = CreateContext();
+
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => context.ExecuteBatchAsync(Array.Empty<DataServiceRequest>()));
+        }
+
+        [Fact]
         public async Task LoadPropertyAsync_LoadsNavigationProperty_WithoutUsingApm()
         {
             const string categoryResponse = @"{
@@ -507,6 +516,21 @@ namespace Microsoft.OData.Client.Tests.Serialization
             Assert.NotNull(response);
             Assert.Equal(2, product.Categories.Count);
             Assert.Equal(2, requestCount);
+        }
+
+        [Fact]
+        public async Task LoadPropertyAsync_WithNullContinuation_Throws()
+        {
+            var context = CreateContext();
+            var product = new Product { Id = 1, Name = "Widget", Categories = new List<Category>() };
+            context.AttachTo("Products", product);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                () => context.LoadPropertyAsync(
+                    product,
+                    nameof(Product.Categories),
+                    continuation: null,
+                    CancellationToken.None));
         }
 
         [Fact]
