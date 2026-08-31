@@ -68,6 +68,58 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
+        public void EmptyPathsAreEqual()
+        {
+            Assert.True(new ODataPath().Equals(new ODataPath()));
+        }
+
+        [Fact]
+        public void EqualsThrowsForNullPath()
+        {
+            ODataPath path = new ODataPath(MetadataSegment.Instance);
+
+            Assert.Throws<ArgumentNullException>("other", () => path.Equals((ODataPath)null));
+        }
+
+        [Fact]
+        public void PathsWithMultipleEquivalentSegmentsAreEqual()
+        {
+            ODataPath first = new ODataPath(
+                new DynamicPathSegment("first"),
+                new DynamicPathSegment("middle"),
+                new DynamicPathSegment("last"));
+            ODataPath second = new ODataPath(
+                new DynamicPathSegment("first"),
+                new DynamicPathSegment("middle"),
+                new DynamicPathSegment("last"));
+
+            Assert.True(first.Equals(second));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        public void PathsWithMismatchAtAnyPositionAreNotEqual(int mismatchIndex)
+        {
+            ODataPathSegment[] firstSegments =
+            {
+                new DynamicPathSegment("first"),
+                new DynamicPathSegment("middle"),
+                new DynamicPathSegment("last")
+            };
+            ODataPathSegment[] secondSegments =
+            {
+                new DynamicPathSegment("first"),
+                new DynamicPathSegment("middle"),
+                new DynamicPathSegment("last")
+            };
+            secondSegments[mismatchIndex] = new DynamicPathSegment("different");
+
+            Assert.False(new ODataPath(firstSegments).Equals(new ODataPath(secondSegments)));
+        }
+
+        [Fact]
         public void PathsShouldNotAllowSegmentsToBeNull()
         {
             Action createWithNull = () => new ODataPath((IEnumerable<ODataPathSegment>)null);
