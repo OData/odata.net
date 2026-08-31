@@ -216,7 +216,16 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            return !this.segments.Where((t, i) => !t.Equals(other.segments[i])).Any();
+            int segmentsCount = this.segments.Count;
+            for (int index = 0; index < segmentsCount; index++)
+            {
+                if (!this.segments[index].Equals(other.segments[index]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
