@@ -985,6 +985,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                     });
             }
 
+            public override Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                return Task.FromResult(GetResponse());
+            }
+
             public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
             {
                 return GetCompletedTask(callback, state);

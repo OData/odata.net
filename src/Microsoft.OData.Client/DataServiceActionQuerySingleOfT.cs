@@ -78,9 +78,12 @@ namespace Microsoft.OData.Client
         /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
         /// <returns>A task represents the result of the operation. </returns>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public Task<T> GetValueAsync(CancellationToken cancellationToken)
+        public async Task<T> GetValueAsync(CancellationToken cancellationToken)
         {
-            return this.context.FromAsync(this.BeginGetValue, this.EndGetValue, cancellationToken);
+            IEnumerable<T> result = await context.ExecuteAsync<T>(this.RequestUri, XmlConstants.HttpMethodPost, true, cancellationToken, parameters)
+                .ConfigureAwait(false);
+
+            return ClientTypeUtil.CanAssignNull(typeof(T)) ? result.SingleOrDefault() : result.Single();
         }
 
         /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceActionQuery{T}.BeginExecute(AsyncCallback,Object)" />.</summary>
