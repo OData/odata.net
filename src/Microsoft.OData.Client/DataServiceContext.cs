@@ -1121,9 +1121,12 @@ namespace Microsoft.OData.Client
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property on the specified entity to load.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, CancellationToken cancellationToken)
+        public virtual async Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, CancellationToken cancellationToken)
         {
-            return this.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, cancellationToken);
+            LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, callback: null, state: null, requestUri: null, continuation: null);
+            await result.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
+
+            return result.LoadProperty();
         }
 
         /// <summary>Asynchronously loads a page of related entities from the data service by using the supplied next link URI.</summary>
@@ -1156,9 +1159,12 @@ namespace Microsoft.OData.Client
         /// <param name="propertyName">The name of the property on the specified entity to load.</param>
         /// <param name="nextLinkUri">The URI used to load the next results page.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, Uri nextLinkUri, CancellationToken cancellationToken)
+        public virtual async Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, Uri nextLinkUri, CancellationToken cancellationToken)
         {
-            return this.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, nextLinkUri, cancellationToken);
+            LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, callback: null, state: null, nextLinkUri, continuation: null);
+            await result.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
+
+            return result.LoadProperty();
         }
 
         /// <summary>Asynchronously loads the next page of related entities from the data service by using the supplied query continuation object.</summary>
@@ -1192,9 +1198,12 @@ namespace Microsoft.OData.Client
         /// <param name="propertyName">The name of the property on the specified entity to load.</param>
         /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entity data to return from the data service.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, DataServiceQueryContinuation continuation, CancellationToken cancellationToken)
+        public virtual async Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, DataServiceQueryContinuation continuation, CancellationToken cancellationToken)
         {
-            return this.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, continuation, cancellationToken);
+            LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, callback: null, state: null, requestUri: null, continuation);
+            await result.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
+
+            return result.LoadProperty();
         }
 
         /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginLoadProperty(System.Object,System.String,System.AsyncCallback,System.Object)" /> operation.</summary>
@@ -1403,9 +1412,11 @@ namespace Microsoft.OData.Client
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="System.ArgumentNullException">Any of the parameters supplied to the method is null.</exception>
         /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary data stream.</exception>
-        public virtual Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, DataServiceRequestArgs args, CancellationToken cancellationToken)
+        public virtual async Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, DataServiceRequestArgs args, CancellationToken cancellationToken)
         {
-            return this.FromAsync(this.BeginGetReadStream, this.EndGetReadStream, entity, args, cancellationToken);
+            GetReadStreamResult result = this.CreateGetReadStreamResult(entity, args, callback: null, state: null, name: null);
+
+            return await result.ExecuteAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>Asynchronously gets a named binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
@@ -1440,9 +1451,14 @@ namespace Microsoft.OData.Client
         /// <param name="name">The name of the binary stream to request.</param>
         /// <param name="args">Instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, string name, DataServiceRequestArgs args, CancellationToken cancellationToken)
+        public virtual async Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, string name, DataServiceRequestArgs args, CancellationToken cancellationToken)
         {
-            return this.FromAsync(this.BeginGetReadStream, this.EndGetReadStream, entity, name, args, cancellationToken);
+            Util.CheckArgumentNullAndEmpty(name, "name");
+
+            this.EnsureMinimumProtocolVersionV3();
+            GetReadStreamResult result = this.CreateGetReadStreamResult(entity, args, callback: null, state: null, name);
+
+            return await result.ExecuteAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>Called to complete the asynchronous operation of retrieving a binary data stream.</summary>
@@ -1699,14 +1715,17 @@ namespace Microsoft.OData.Client
         /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <param name="queries">The array of query requests to include in the batch request.</param>
-        public virtual Task<DataServiceResponse> ExecuteBatchAsync(SaveChangesOptions options, CancellationToken cancellationToken, params DataServiceRequest[] queries)
+        public virtual async Task<DataServiceResponse> ExecuteBatchAsync(SaveChangesOptions options, CancellationToken cancellationToken, params DataServiceRequest[] queries)
         {
             if (!Util.IsBatch(options))
             {
                 throw new InvalidOperationException();
             }
 
-            return this.FromAsync((callback, state) => this.BeginExecuteBatch(callback, state, options, queries), this.EndExecuteBatch, cancellationToken);
+            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatchAsync", queries, options, null, null);
+            await result.BatchRequestAsync(cancellationToken).ConfigureAwait(false);
+
+            return result.EndRequest();
         }
 
         /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecuteBatch(System.AsyncCallback,System.Object,Microsoft.OData.Client.DataServiceRequest[])" />.</summary>
@@ -2133,9 +2152,31 @@ namespace Microsoft.OData.Client
         /// <returns>A task that represents a <see cref="Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
         /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task<DataServiceResponse> SaveChangesAsync(SaveChangesOptions options, CancellationToken cancellationToken)
+        public virtual async Task<DataServiceResponse> SaveChangesAsync(SaveChangesOptions options, CancellationToken cancellationToken)
         {
-            return FromAsync(this.BeginSaveChanges, this.EndSaveChanges, options, cancellationToken);
+            DataServiceResponse errors = null;
+            this.ValidateSaveChangesOptions(options);
+
+            BaseSaveResult result = BaseSaveResult.CreateSaveResult(this, "SaveChangesAsync", null, options, null, null);
+            if (result.IsBatchRequest)
+            {
+                await ((BatchSaveResult)result).BatchRequestAsync(cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                await ((SaveResult)result).CreateNextChangeAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            errors = result.EndRequest();
+
+            Debug.Assert(errors != null, "null errors");
+
+            if (this.ChangesSaved != null)
+            {
+                this.ChangesSaved(this, new SaveChangesEventArgs(errors));
+            }
+
+            return errors;
         }
 
         /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginSaveChanges(System.AsyncCallback,System.Object)" /> operation.</summary>
@@ -2229,9 +2270,17 @@ namespace Microsoft.OData.Client
         /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
         /// <param name="objects">The top-level objects of the type to be deep updated.</param>
         /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of a bulk operation.</returns>
-        public virtual Task<DataServiceResponse> BulkUpdateAsync<T>(CancellationToken cancellationToken, params T[] objects)
+        public virtual async Task<DataServiceResponse> BulkUpdateAsync<T>(CancellationToken cancellationToken, params T[] objects)
         {
-            return FromAsync((objectsArg, callback, state) => BeginBulkUpdate(callback, state, objectsArg), EndBulkUpdate, objects, cancellationToken);
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(SRResources.Util_EmptyArray, nameof(objects));
+            }
+
+            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, "BulkUpdateAsync", SaveChangesOptions.BulkUpdate, null, null);
+            await result.BulkUpdateRequestAsync(cancellationToken, objects).ConfigureAwait(false);
+
+            return result.EndRequest();
         }
 
         /// <summary>Asynchronously submits top-level objects to be deep-updated to the data service.</summary>
@@ -2299,9 +2348,17 @@ namespace Microsoft.OData.Client
         /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
         /// <param name="resource">The top-level object of the type to be deep inserted.</param>
         /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of the deep insert operation.</returns>
-        public virtual Task<DataServiceResponse> DeepInsertAsync<T>(T resource, CancellationToken cancellationToken)
+        public async virtual Task<DataServiceResponse> DeepInsertAsync<T>(T resource, CancellationToken cancellationToken)
         {
-            return FromAsync((objectsArg, callback, state) => BeginDeepInsert(callback, state, objectsArg), EndDeepInsert, resource, cancellationToken);
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            DeepInsertSaveResult result = new DeepInsertSaveResult(this, "DeepInsertAsync", SaveChangesOptions.DeepInsert, callback: null, state: null);
+            await result.DeepInsertRequestAsync(resource, cancellationToken).ConfigureAwait(false);
+
+            return result.EndRequest();
         }
 
         /// <summary>Asynchronously submits top-level objects to be deep inserted to the data service.</summary>
@@ -3140,14 +3197,18 @@ namespace Microsoft.OData.Client
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>An object representing an asynchronous operation resulting in an instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the last page request.</returns>
-        [SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
-        internal Task<QueryOperationResponse> LoadPropertyAllPagesAsync(object entity, string propertyName, CancellationToken cancellationToken)
+        internal async Task<QueryOperationResponse> LoadPropertyAllPagesAsync(object entity, string propertyName, CancellationToken cancellationToken)
         {
-            var currentTask = this.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, cancellationToken);
+            QueryOperationResponse response = await LoadPropertyAsync(entity, propertyName, cancellationToken).ConfigureAwait(false);
 
-            return currentTask.ContinueWith(
-                t => ContinuePageAsync(t.Result, entity, propertyName, cancellationToken),
-                cancellationToken).Unwrap();
+            DataServiceQueryContinuation continuation = response.GetContinuation();
+            while (continuation != null)
+            {
+                response = await LoadPropertyAsync(entity, propertyName, continuation, cancellationToken).ConfigureAwait(false);
+                continuation = response.GetContinuation();
+            }
+
+            return response;
         }
 
         /// <summary>
@@ -3631,40 +3692,6 @@ namespace Microsoft.OData.Client
             }
 
             return response;
-        }
-
-        [SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
-        private Task<QueryOperationResponse> ContinuePageAsync(QueryOperationResponse response, object entity, string propertyName, CancellationToken cancellationToken)
-        {
-            var continuation = response.GetContinuation();
-            if (continuation != null)
-            {
-                IAsyncResult beginLoadPropertyResult = this.BeginLoadProperty(entity, propertyName, continuation, null, null);
-
-                // Dispose the cancellation registration once the request completes so it is removed
-                // from the (potentially long-lived) token source, otherwise the captured async result
-                // is kept alive for every page, leaking memory (issue #3583).
-                CancellationTokenRegistration registration = cancellationToken.Register(() => this.CancelRequest(beginLoadPropertyResult));
-                var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(beginLoadPropertyResult, this.EndLoadProperty);
-
-                // Schedule the disposal/continuation with CancellationToken.None so it always runs
-                // even when the token is already canceled; otherwise the continuation could be
-                // skipped and the registration would never be disposed (and stay rooted in a
-                // long-lived token source).
-                return currentTask.ContinueWith(
-                    t =>
-                    {
-                        registration.Dispose();
-                        return this.ContinuePageAsync(t.Result, entity, propertyName, cancellationToken);
-                    },
-                    CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously,
-                    TaskScheduler.Default).Unwrap();
-            }
-
-            var taskSource = new TaskCompletionSource<QueryOperationResponse>();
-            taskSource.SetResult(response);
-            return taskSource.Task;
         }
 
         /// <summary
