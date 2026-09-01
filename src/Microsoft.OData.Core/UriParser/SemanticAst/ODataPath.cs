@@ -210,15 +210,17 @@ namespace Microsoft.OData.UriParser
         internal bool Equals(ODataPath other)
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
-            if (this.segments.Count != other.segments.Count)
+            List<ODataPathSegment> thisSegments = this.segments;
+            List<ODataPathSegment> otherSegments = other.segments;
+            int segmentsCount = thisSegments.Count;
+            if (segmentsCount != otherSegments.Count)
             {
                 return false;
             }
 
-            int segmentsCount = this.segments.Count;
             for (int index = 0; index < segmentsCount; index++)
             {
-                if (!this.segments[index].Equals(other.segments[index]))
+                if (!thisSegments[index].Equals(otherSegments[index]))
                 {
                     return false;
                 }
