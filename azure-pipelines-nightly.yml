@@ -30,8 +30,6 @@ variables:
 - name: runCodesignValidationInjection
   value: false
 - group: OData-Shared
-- name: AZURE_ARTIFACTS_FEED
-  value: "$(ODataFeed)"
 - name: PackagesToPush
   value: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*nupkg
 
@@ -40,7 +38,7 @@ extends:
   parameters:
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
-      image: MSSecurity-1ES-Windows-2022
+      image: MSSecurity-1ES-Windows-2019
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
@@ -73,6 +71,8 @@ extends:
             artifactName: NuGetDebug	
         steps:	
           - template: /nightly.yml@self
+
+
       - job:  Release
         timeoutInMinutes: 120
         variables:
@@ -113,4 +113,3 @@ extends:
               publishPackageMetadata: true
         steps:
           - template: /nightly.yml@self
-

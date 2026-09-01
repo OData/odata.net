@@ -1,12 +1,7 @@
 steps:
-- task: NuGetAuthenticate@1
-  displayName: 'Authenticate to the feed'
-
-- task: UseDotNet@2
-  displayName: 'Install .NET 6 runtime'
+- task: NuGetToolInstaller@0
   inputs:
-    packageType: runtime
-    version: '6.0.x'
+    versionSpec: '6.5.0'
 
 - task: UseDotNet@2
   displayName: 'Use .NET Core SDK 1.0.4'
