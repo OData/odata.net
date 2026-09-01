@@ -71,8 +71,6 @@ extends:
             artifactName: NuGetDebug	
         steps:	
           - template: /nightly.yml@self
-
-
       - job:  Release
         timeoutInMinutes: 120
         variables:
@@ -113,3 +111,5 @@ extends:
               publishPackageMetadata: true
         steps:
           - template: /nightly.yml@self
+
+
