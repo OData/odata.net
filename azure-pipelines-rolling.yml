@@ -27,13 +27,16 @@ variables:
   value: none
 - name: runCodesignValidationInjection
   value: false
+- group: OData-Shared
+- name: AZURE_ARTIFACTS_FEED
+  value: "$(ODataFeed)"
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
-      image: MSSecurity-1ES-Windows-2019
+      image: MSSecurity-1ES-Windows-2022
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
@@ -79,4 +82,3 @@ extends:
           - template: /buildandtest.yml@self
           - template: /credscan.yml@self
       
-

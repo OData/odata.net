@@ -29,14 +29,18 @@ variables:
   value: none
 - name: runCodesignValidationInjection
   value: false
-- group: OData-ESRP-CodeSigning
+- group: OData-Shared
+- name: AZURE_ARTIFACTS_FEED
+  value: "$(ODataFeed)"
+- name: PackagesToPush
+  value: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*nupkg
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
-      image: MSSecurity-1ES-Windows-2019
+      image: MSSecurity-1ES-Windows-2022
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
@@ -99,7 +103,14 @@ extends:
               packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*.nupkg
               nuGetFeedType: external
               publishFeedCredentials: 'MyGet.org - ODL Feed'
+            - output: nuget
+              displayName: 'NuGet push - Packages to Internal Feed'
+              packageParentPath: '$(Build.ArtifactStagingDirectory)\Nuget-Release'
+              packagesToPush: '$(PackagesToPush)'
+              nuGetFeedType: internal
+              publishVstsFeed: $(ODataPublishFeed)
+              allowPackageConflicts: true
+              publishPackageMetadata: true
         steps:
           - template: /nightly.yml@self
-
 
