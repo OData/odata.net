@@ -879,6 +879,48 @@ namespace Microsoft.OData.Tests.UriParser
                 CloseBracketToken);
         }
 
+        [Theory]
+        [InlineData("\"[\"")]
+        [InlineData("\"]\"")]
+        [InlineData("\"{\"")]
+        [InlineData("\"}\"")]
+        [InlineData("\"[[[\"")]
+        [InlineData("\"]]]\"")]
+        [InlineData("\"quote \\\"[\\\" remains in the string\"")]
+        [InlineData("\"quote \\\"{\\\" remains in the string\"")]
+        [InlineData("\"\\\\\"")]
+        public void DoubleQuotedStringsWithDelimitersAreTokenizedAsSingleTokens(string literal)
+        {
+            string expression = $"[{{\"value\":{literal}}}]";
+
+            ValidateTokenSequence(this.model, expression,
+                OpenBracketToken,
+                    OpenBraceToken,
+                        StringToken("\"value\""),
+                        ColonToken,
+                        StringToken(literal),
+                    CloseBraceToken,
+                CloseBracketToken);
+        }
+
+        [Theory]
+        [InlineData("'['")]
+        [InlineData("']'")]
+        [InlineData("'{'")]
+        [InlineData("'}'")]
+        [InlineData("'[[['")]
+        [InlineData("']]]'")]
+        [InlineData("'before ''['' after'")]
+        public void SingleQuotedStringsWithDelimitersAreTokenizedAsSingleTokens(string literal)
+        {
+            string expression = $"[{literal}]";
+
+            ValidateTokenSequence(this.model, expression,
+                OpenBracketToken,
+                    StringToken(literal),
+                CloseBracketToken);
+        }
+
         [Fact]
         public void BracketedExpressionsCanHaveCrazyStuffInsideStringLiteral()
         {
