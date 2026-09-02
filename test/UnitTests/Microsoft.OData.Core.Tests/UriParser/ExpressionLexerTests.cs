@@ -806,6 +806,65 @@ namespace Microsoft.OData.Tests.UriParser
                 BracketToken("[{complex:value},{complex:value}]"));
         }
 
+        [Theory]
+        [InlineData("[{\"value\":\"[\"}]")]
+        [InlineData("[{\"value\":\"]\"}]")]
+        [InlineData("[{\"value\":\"[]\"}]")]
+        [InlineData("[{\"value\":\"[[[\"}]")]
+        [InlineData("[{\"value\":\"]]]\"}]")]
+        [InlineData("[{\"value\":\"before [ after\"}]")]
+        [InlineData("[{\"value\":\"before ] after\"}]")]
+        [InlineData("[{\"value\":\"quote \\\"[\\\" remains in the string\"}]")]
+        [InlineData("[{\"value\":\"quote \\\"[\\\" and escaped backslash \\\\\"}]")]
+        [InlineData("[{\"value\":\"\\\\\",\"nested\":[1,2,3]}]")]
+        public void BracketsInsideDoubleQuotedStringsDoNotAffectBracketDepth(string expression)
+        {
+            ValidateTokenSequence(expression, BracketToken(expression));
+        }
+
+        [Theory]
+        [InlineData("{\"value\":\"{\"}")]
+        [InlineData("{\"value\":\"}\"}")]
+        [InlineData("{\"value\":\"{}\"}")]
+        [InlineData("{\"value\":\"{{{\"}")]
+        [InlineData("{\"value\":\"}}}\"}")]
+        [InlineData("{\"value\":\"quote \\\"{\\\" remains in the string\"}")]
+        [InlineData("{\"value\":\"\\\\\",\"nested\":{\"id\":1}}")]
+        public void BracesInsideDoubleQuotedStringsDoNotAffectBraceDepth(string expression)
+        {
+            ValidateTokenSequence(expression, BracedToken(expression));
+        }
+
+        [Theory]
+        [InlineData("['[']")]
+        [InlineData("[']']")]
+        [InlineData("['[[[']")]
+        [InlineData("[']]]']")]
+        [InlineData("['before ''['' after']")]
+        public void BracketsInsideSingleQuotedStringsDoNotAffectBracketDepth(string expression)
+        {
+            ValidateTokenSequence(expression, BracketToken(expression));
+        }
+
+        [Theory]
+        [InlineData("{\"value\":'{'}")]
+        [InlineData("{\"value\":'}'}")]
+        [InlineData("{\"value\":'{{{'}")]
+        [InlineData("{\"value\":'}}}'}")]
+        [InlineData("{\"value\":'before ''{'' after'}")]
+        public void BracesInsideSingleQuotedStringsDoNotAffectBraceDepth(string expression)
+        {
+            ValidateTokenSequence(expression, BracedToken(expression));
+        }
+
+        [Theory]
+        [InlineData("[\"missing outer bracket]\"")]
+        [InlineData("{\"value\":\"missing outer brace}\"")]
+        public void DelimitersInsideDoubleQuotedStringsDoNotCloseOuterExpression(string expression)
+        {
+            ValidateLexerException<ODataException>(expression, SRResources.ExpressionLexer_UnbalancedBracketExpression);
+        }
+
         [Fact]
         public void BracketedExpressionsCanHaveCrazyStuffInsideStringLiteral()
         {
@@ -972,6 +1031,40 @@ namespace Microsoft.OData.Tests.UriParser
             // TODO: the state of the lexer is weird right now, see note in AdvanceThroughBalancedParentheticalExpression.
 
             Assert.Equal("next", lexer.NextToken().Span.ToString());
+        }
+
+        [Theory]
+        [InlineData("(\"(\")next")]
+        [InlineData("(\")\")next")]
+        [InlineData("(\"(((\")next")]
+        [InlineData("(\") ))\")next")]
+        [InlineData("(\"quote \\\"(\\\" remains in the string\")next")]
+        [InlineData("(\"\\\\\", nested(value))next")]
+        [InlineData("('(')next")]
+        [InlineData("(')')next")]
+        [InlineData("('(((')next")]
+        [InlineData("(')))')next")]
+        [InlineData("('before ''('' after')next")]
+        public void ParenthesesInsideQuotedStringsDoNotAffectParenthesisDepth(string expression)
+        {
+            ExpressionLexer lexer = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
+
+            string result = lexer.AdvanceThroughBalancedParentheticalExpression();
+
+            Assert.Equal(expression.Substring(0, expression.Length - 4), result);
+            Assert.Equal("next", lexer.NextToken().Span.ToString());
+        }
+
+        [Theory]
+        [InlineData("(\"missing outer parenthesis )\"")]
+        [InlineData("('missing outer parenthesis )'")]
+        public void ParenthesesInsideQuotedStringsDoNotCloseOuterExpression(string expression)
+        {
+            ExpressionLexer lexer = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
+
+            Action parse = () => lexer.AdvanceThroughBalancedParentheticalExpression();
+
+            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
 
         private char FindMatchingChar(UnicodeCategory category)
