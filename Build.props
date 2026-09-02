@@ -56,6 +56,10 @@
   <PropertyGroup Condition ="'$(TargetFramework)' == 'net45'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
+  </ItemGroup>
   
   
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">

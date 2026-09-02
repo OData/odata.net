@@ -38,7 +38,7 @@ extends:
   parameters:
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
-      image: MSSecurity-1ES-Windows-2019
+      image: MSSecurity-1ES-Windows-2022
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
@@ -111,5 +111,4 @@ extends:
               publishPackageMetadata: true
         steps:
           - template: /nightly.yml@self
-
 
