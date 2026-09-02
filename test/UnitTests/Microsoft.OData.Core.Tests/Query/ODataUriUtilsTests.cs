@@ -280,6 +280,36 @@ namespace Microsoft.OData.Tests.Query
             Assert.Equal(new int[] { 1, 2, 3 }, collectionValue.Items.Cast<int>());
         }
 
+        [Theory]
+        [InlineData("[{\"obj\":\"bracket[\"}]")]
+        [InlineData("[{\"obj\":\"bracket]\"}]")]
+        [InlineData("[{\"obj\":\"brackets[]\"}]")]
+        [InlineData("[{\"obj\":\"braces{}\"}]")]
+        [InlineData("[{\"obj\":\"quote \\\"[\\\" remains in the string\"}]")]
+        [InlineData("[{\"obj\":\"quote \\\"{\\\" remains in the string\"}]")]
+        [InlineData("[{\"obj\":\"\\\\\"}]")]
+        [InlineData("[{\"obj\":\"\\\\\",\"items\":[\"[\",\"]\",\"{\",\"}\"]}]")]
+        public void TestCollectionConvertIgnoresDelimitersInsideJsonStrings(string literal)
+        {
+            object collection = ODataUriUtils.ConvertFromUriLiteral(literal, ODataVersion.V4);
+            var collectionValue = Assert.IsType<ODataCollectionValue>(collection);
+
+            Assert.Single(collectionValue.Items);
+        }
+
+        [Theory]
+        [InlineData("['[']", "[")]
+        [InlineData("[']']", "]")]
+        [InlineData("['[[[']", "[[[")]
+        [InlineData("[']]]']", "]]]")]
+        public void TestCollectionConvertIgnoresBracketsInsideSingleQuotedStrings(string literal, string expected)
+        {
+            object collection = ODataUriUtils.ConvertFromUriLiteral(literal, ODataVersion.V4);
+            var collectionValue = Assert.IsType<ODataCollectionValue>(collection);
+
+            Assert.Equal(expected, Assert.Single(collectionValue.Items));
+        }
+
         [Fact]
         public void TestCollectionConvertWithMismatchedBracket()
         {
