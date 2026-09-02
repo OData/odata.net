@@ -169,6 +169,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.True(foundSa2b is IEdmContainedEntitySet);
             var foundSa2bc = foundSa2b.FindNavigationTarget(btocNavProp);
             Assert.Same(sa2bc, foundSa2bc);
+            Assert.True(foundSa2b.FindNavigationTarget(btocNavProp, new EdmPathExpression("a2/b/c")) is IEdmUnknownEntitySet);
             var foundSa2bda1 = foundSa2b.FindNavigationTarget(dtoa1NavProp, new EdmPathExpression("TestNS.dType/a1"));
             Assert.True(foundSa2bda1 is IEdmContainedEntitySet);
             var foundSa2bda1b = foundSa2bda1.FindNavigationTarget(atobNavProp);

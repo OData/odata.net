@@ -18,8 +18,6 @@ namespace Microsoft.OData.Edm
         private readonly IEdmNavigationSource parentNavigationSource;
         private readonly IEdmNavigationProperty navigationProperty;
         private IEdmPathExpression path;
-        private string fullPath;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmContainedEntitySet"/> class.
         /// </summary>
@@ -77,28 +75,6 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        private string FullNavigationPath
-        {
-            get
-            {
-                if (this.fullPath == null)
-                {
-                    List<string> fullPath = new List<string>();
-                    EdmContainedEntitySet currentSource = this;
-                    while (currentSource != null)
-                    {
-                        fullPath.AddRange(currentSource.NavigationPath.PathSegments);
-                        currentSource = currentSource.ParentNavigationSource as EdmContainedEntitySet;
-                    }
-
-                    fullPath.Reverse();
-                    this.fullPath = new EdmPathExpression(fullPath).Path;
-                }
-
-                return this.fullPath;
-            }
-        }
-
         /// <summary>
         /// Finds the bindings of the navigation property.
         /// </summary>
@@ -144,19 +120,6 @@ namespace Microsoft.OData.Edm
         /// <returns>The entity set that the navigation property targets</returns>
         public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
         {
-            // 7.4.1 expected the path to be prefixed with the path to the contained navigation source.
-            // For backward compatibility, if the binding path received starts with the path to this contained resource,
-            // we trim it off and then treat the remainder as the path to the target. This logic should be removed in
-            // the next breaking change as it could be ambiguous in the case that the prefix of the path to the contained
-            // source matches a valid path to the target of the contained source.
-            if (bindingPath != null)
-            {
-                if (bindingPath.Path.Length > this.FullNavigationPath.Length && bindingPath.Path.StartsWith(this.FullNavigationPath, System.StringComparison.Ordinal))
-                {
-                    bindingPath = new EdmPathExpression(bindingPath.Path.Substring(this.FullNavigationPath.Length + 1));
-                }
-            }
-
             IEdmNavigationSource navigationTarget = base.FindNavigationTarget(navigationProperty, bindingPath);
 
             if (navigationTarget is IEdmUnknownEntitySet)
