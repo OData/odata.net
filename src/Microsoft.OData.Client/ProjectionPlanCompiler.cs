@@ -668,7 +668,7 @@ namespace Microsoft.OData.Client
             for (int i = 0; i < init.Bindings.Count; i++)
             {
                 MemberAssignment assignment = (MemberAssignment)init.Bindings[i];
-                string memberName = ClientTypeUtil.GetServerDefinedName(assignment.Member);
+                string memberName = this.materializerContext.Model.GetServerDefinedName(assignment.Member);
                 propertyNames.Add(memberName);
 
                 LambdaExpression propertyLambda;
@@ -887,7 +887,7 @@ namespace Microsoft.OData.Client
             {
                 Expression baseTypeExpression = Expression.Constant(baseSourceExpression.Type, typeof(Type));
                 ProjectionPath nestedPath = new ProjectionPath(result as ParameterExpression, baseTypeExpression, result);
-                ProjectionPathSegment nestedSegment = new ProjectionPathSegment(nestedPath, m);
+                ProjectionPathSegment nestedSegment = ProjectionPathSegment.CreateWithModel(nestedPath, m, this.materializerContext.Model);
                 nestedPath.Add(nestedSegment);
                 result = this.CallValueForPathWithType(result, baseTypeExpression, nestedPath, m.Type);
             }
@@ -900,7 +900,7 @@ namespace Microsoft.OData.Client
                 // annotations always come from target expression
                 // that are generated anew (except parameters,
                 // but those)
-                memberSegment = new ProjectionPathSegment(baseAnnotation.Segment.StartPath, m);
+                memberSegment = ProjectionPathSegment.CreateWithModel(baseAnnotation.Segment.StartPath, m, this.materializerContext.Model);
                 baseAnnotation.Segment.StartPath.Add(memberSegment);
                 result = this.CallValueForPathWithType(
                     baseAnnotation.Segment.StartPath.RootEntry,

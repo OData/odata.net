@@ -106,7 +106,7 @@ namespace Microsoft.OData.Client.Metadata
             Debug.Assert(propertyInfo.DeclaringType != null, "Property without a declaring type");
 
             this.EdmProperty = edmProperty;
-            this.PropertyName = ClientTypeUtil.GetServerDefinedName(propertyInfo);
+            this.PropertyName = model.GetServerDefinedName(propertyInfo);
             this.PropertyInfo = propertyInfo;
             this.NullablePropertyType = propertyInfo.PropertyType;
             this.PropertyType = Nullable.GetUnderlyingType(this.NullablePropertyType) ?? this.NullablePropertyType;
