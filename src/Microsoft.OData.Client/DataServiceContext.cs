@@ -495,8 +495,11 @@ namespace Microsoft.OData.Client
         /// the target data service for it to have effect on the on the request.
         /// The value may be changed between requests to a data service and the new value
         /// will be picked up by the next data service request.
+        /// To configure a shared timeout for all requests, set the <see cref="HttpClientFactory"/> property
+        /// with an <see cref="System.Net.Http.IHttpClientFactory"/> that provides an <see cref="System.Net.Http.HttpClient"/>
+        /// with the desired <see cref="System.Net.Http.HttpClient.Timeout"/> value.
+        /// When both this property and <see cref="HttpClientFactory"/> are set, this per-request timeout takes precedence.
         /// </remarks>
-        [Obsolete("The Timeout property is obsolete. Use IHttpClientFactory to configure the timeout.")]
         public virtual int Timeout
         {
             get
