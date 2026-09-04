@@ -308,18 +308,13 @@ public class DataServiceActionQuerySingleTests
     }
 
     [Fact]
-    public async Task GetValueAsync_UsesBeginEndPattern_ReturnsSingleValue()
+    public async Task GetValueAsync_UsesNativeAsyncPath_ReturnsSingleValue()
     {
         // Arrange
-        var asyncResult = new TestAsyncResult();
         var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
-            {
-                callback?.Invoke(asyncResult);
-                return asyncResult;
-            },
-            EndExecuteFunc = (ar) => new[] { 567 }
+            ExecuteAsyncFunc = (uri, method, single, cancellationToken, parameters) =>
+                Task.FromResult<IEnumerable<int>>(new[] { 567 })
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -334,18 +329,13 @@ public class DataServiceActionQuerySingleTests
     }
 
     [Fact]
-    public async Task GetValueAsync_UsesBeginEndPattern_ThrowsInvalidOperationException_WhenNoResultsForNonNullableType()
+    public async Task GetValueAsync_UsesNativeAsyncPath_ThrowsInvalidOperationException_WhenNoResultsForNonNullableType()
     {
         // Arrange
-        var asyncResult = new TestAsyncResult();
         var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
-            {
-                callback?.Invoke(asyncResult);
-                return asyncResult;
-            },
-            EndExecuteFunc = (ar) => Enumerable.Empty<int>()
+            ExecuteAsyncFunc = (uri, method, single, cancellationToken, parameters) =>
+                Task.FromResult(Enumerable.Empty<int>())
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -357,18 +347,13 @@ public class DataServiceActionQuerySingleTests
     }
 
     [Fact]
-    public async Task GetValueAsync_UsesBeginEndPattern_Throws_WhenMultipleResults()
+    public async Task GetValueAsync_UsesNativeAsyncPath_Throws_WhenMultipleResults()
     {
         // Arrange
-        var asyncResult = new TestAsyncResult();
         var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
-            {
-                callback?.Invoke(asyncResult);
-                return asyncResult;
-            },
-            EndExecuteFunc = (ar) => new[] { 1, 2 }
+            ExecuteAsyncFunc = (uri, method, single, cancellationToken, parameters) =>
+                Task.FromResult<IEnumerable<int>>(new[] { 1, 2 })
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -380,23 +365,40 @@ public class DataServiceActionQuerySingleTests
     }
 
     [Fact]
+    public async Task GetValueAsync_UsesNativeAsyncPath_ReturnsNullForNullableType()
+    {
+        // Arrange
+        var context = new TestDataServiceContext<int?>(new Uri("http://service/"))
+        {
+            ExecuteAsyncFunc = (uri, method, single, cancellationToken, parameters) =>
+                Task.FromResult(Enumerable.Empty<int?>())
+        };
+        var query = new DataServiceActionQuerySingle<int?>(context, "http://service/Action");
+
+        // Act
+        int? result = await query.GetValueAsync();
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
     public async Task GetValueAsync_WithCancellationToken_ReturnsExpectedResult()
     {
         // Arrange
-        var asyncResult = new TestAsyncResult();
+        using var cancellationTokenSource = new CancellationTokenSource();
         var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
+            ExecuteAsyncFunc = (uri, method, single, cancellationToken, parameters) =>
             {
-                callback?.Invoke(asyncResult);
-                return asyncResult;
-            },
-            EndExecuteFunc = (ar) => new[] { 888 }
+                Assert.Equal(cancellationTokenSource.Token, cancellationToken);
+                return Task.FromResult<IEnumerable<int>>(new[] { 888 });
+            }
         };
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
 
         // Act
-        var result = await query.GetValueAsync(CancellationToken.None);
+        var result = await query.GetValueAsync(cancellationTokenSource.Token);
 
         // Assert
         Assert.Equal(888, result);
@@ -480,6 +482,7 @@ public class DataServiceActionQuerySingleTests
     private class TestDataServiceContext<T> : DataServiceContext
     {
         public Func<Uri, string, bool, BodyOperationParameter[], IEnumerable<T>> ExecuteFunc { get; set; }
+        public Func<Uri, string, bool, CancellationToken, BodyOperationParameter[], Task<IEnumerable<T>>> ExecuteAsyncFunc { get; set; }
         public Func<Uri, AsyncCallback, object, string, bool, BodyOperationParameter[], IAsyncResult> BeginExecuteFunc { get; set; }
         public Func<IAsyncResult, IEnumerable<T>> EndExecuteFunc { get; set; }
 
@@ -497,6 +500,23 @@ public class DataServiceActionQuerySingleTests
         {
             if (typeof(TElement) == typeof(T) && BeginExecuteFunc != null)
                 return BeginExecuteFunc(requestUri, callback, state, httpMethod, singleResult, operationParameters.Cast<BodyOperationParameter>().ToArray());
+
+            throw new NotImplementedException();
+        }
+
+        public override async Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, bool singleResult, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
+        {
+            if (typeof(TElement) == typeof(T) && ExecuteAsyncFunc != null)
+            {
+                IEnumerable<T> result = await ExecuteAsyncFunc(
+                    requestUri,
+                    httpMethod,
+                    singleResult,
+                    cancellationToken,
+                    operationParameters.Cast<BodyOperationParameter>().ToArray());
+
+                return (IEnumerable<TElement>)result;
+            }
 
             throw new NotImplementedException();
         }
