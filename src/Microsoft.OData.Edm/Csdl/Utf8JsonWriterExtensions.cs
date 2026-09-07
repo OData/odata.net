@@ -164,6 +164,23 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="writer">The JSON writer.</param>
         /// <param name="name">The property name.</param>
         /// <param name="value">The property value.</param>
+        public static void WriteOptionalProperty(this Utf8JsonWriter writer, string name, bool? value)
+        {
+            EdmUtil.CheckArgumentNull(writer, nameof(writer));
+
+            if (value != null)
+            {
+                writer.WritePropertyName(name);
+                writer.WriteBooleanValue(value.Value);
+            }
+        }
+
+        /// <summary>
+        /// Write the optional property (name/value).
+        /// </summary>
+        /// <param name="writer">The JSON writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
         public static void WriteOptionalProperty(this Utf8JsonWriter writer, string name, string value)
         {
             EdmUtil.CheckArgumentNull(writer, nameof(writer));

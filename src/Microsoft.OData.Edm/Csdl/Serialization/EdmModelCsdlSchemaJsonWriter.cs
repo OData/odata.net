@@ -1176,8 +1176,20 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // The type definition object MUST contain the member $Kind with a string value of TypeDefinition
             this.jsonWriter.WriteRequiredProperty("$Kind", CsdlConstants.Element_TypeDefinition);
 
-            // The type definition object MUST contain he member $UnderlyingType.
+            // The type definition object MUST contain the member $UnderlyingType.
             this.jsonWriter.WriteRequiredProperty("$UnderlyingType", typeDefinition.UnderlyingType, TypeDefinitionAsJson);
+
+            if (typeDefinition is IEdmFacetedTypeDefinition facetedTypeDefinition)
+            {
+                this.jsonWriter.WriteOptionalProperty("$MaxLength", facetedTypeDefinition.MaxLength);
+                this.jsonWriter.WriteOptionalProperty("$Unicode", facetedTypeDefinition.IsUnicode);
+                this.jsonWriter.WriteOptionalProperty("$Precision", facetedTypeDefinition.Precision);
+                this.jsonWriter.WriteOptionalProperty("$Scale", facetedTypeDefinition.Scale);
+                if (facetedTypeDefinition.UnderlyingType.IsSpatial())
+                {
+                    this.jsonWriter.WriteOptionalProperty("$SRID", facetedTypeDefinition.Srid, CsdlConstants.Default_UnspecifiedSrid);
+                }
+            }
         }
 
         /// <summary>

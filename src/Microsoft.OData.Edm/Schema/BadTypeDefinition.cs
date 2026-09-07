@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM type definition.
     /// </summary>
-    internal class BadTypeDefinition : BadType, IEdmTypeDefinition, IEdmFullNamedElement
+    internal class BadTypeDefinition : BadType, IEdmTypeDefinition, IEdmFullNamedElement, IEdmFacetedTypeDefinition
     {
         private readonly string namespaceName;
         private readonly string name;
@@ -58,5 +58,15 @@ namespace Microsoft.OData.Edm
         {
             get { return this.fullName; }
         }
+
+        public int? MaxLength => null;
+
+        public bool? IsUnicode => null;
+
+        public int? Precision => null;
+
+        public int? Scale => null;
+
+        public int? Srid => null;
     }
 }
