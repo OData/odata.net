@@ -229,7 +229,10 @@ namespace Microsoft.OData.Client
         /// <param name="context">Context of expression to analyze.</param>
         private static void AnalyzeResourceExpression(LambdaExpression lambda, ResourceExpression resource, DataServiceContext context)
         {
-            SelectExpandPathBuilder pb = new SelectExpandPathBuilder();
+            SelectExpandPathBuilder pb = new SelectExpandPathBuilder()
+            {
+                UriVersion = context.MaxProtocolVersionAsVersion
+            };
             ProjectionAnalyzer.Analyze(lambda, pb, context);
             resource.Projection = new ProjectionQueryOptionExpression(lambda.Body.Type, lambda, pb.ProjectionPaths.ToList());
             resource.ExpandPaths = pb.ExpandPaths.Union(resource.ExpandPaths, StringComparer.Ordinal).ToList();

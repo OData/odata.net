@@ -75,7 +75,6 @@ namespace Microsoft.OData.Client
         public SelectExpandPathBuilder()
         {
             firstSegmentInNewPath = true;
-            this.uriVersion = Util.ODataVersion4;
         }
 
         /// <summary>
@@ -107,7 +106,11 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                return this.uriVersion;
+                return this.uriVersion ?? Util.ODataVersion4;
+            }
+            set
+            {
+                this.uriVersion = value;
             }
         }
 
