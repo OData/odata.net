@@ -226,6 +226,14 @@ namespace Microsoft.OData
             set { this.SetInstanceAnnotations(value); }
         }
 
+        /// <summary>Gets or sets the value that shows if the resource has @odata.id or @id.</summary>
+        /// <returns>true if the resource has @odata.id or @id, false otherwise.</returns>
+        public bool HasExplicitODataId
+        {
+            get;
+            internal set;
+        }
+
         /// <summary>
         /// The metadata builder for this OData resource.
         /// </summary>

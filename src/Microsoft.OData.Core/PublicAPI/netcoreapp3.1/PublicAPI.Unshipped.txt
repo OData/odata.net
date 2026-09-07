@@ -1,0 +1,1 @@
+Microsoft.OData.ODataResourceBase.HasExplicitODataId.get -> bool

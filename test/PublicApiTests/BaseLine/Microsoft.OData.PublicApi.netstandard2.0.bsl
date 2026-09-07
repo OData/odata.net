@@ -4867,6 +4867,7 @@ public abstract class Microsoft.OData.ODataResourceBase : Microsoft.OData.ODataI
     System.Uri EditLink  { public get; public set; }
     string ETag  { public get; public set; }
     System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataFunction]] Functions  { public get; }
+    bool HasExplicitODataId  { public get; }
     System.Uri Id  { public get; public set; }
     System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
     bool IsTransient  { public get; public set; }
