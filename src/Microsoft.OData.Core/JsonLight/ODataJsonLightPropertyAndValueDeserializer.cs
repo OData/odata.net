@@ -1654,8 +1654,25 @@ namespace Microsoft.OData.JsonLight
                 throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, propertyName));
             }
 
-            string enumStr = this.JsonReader.ReadStringValue();
-            return new ODataEnumValue(enumStr, expectedValueTypeReference.FullName());
+            object enumValue = this.JsonReader.ReadPrimitiveValue();
+            string enumString;
+            if (enumValue is int enumIntValue)
+            {
+                IEdmEnumType edmEnumType = expectedValueTypeReference.EnumDefinition();
+                IEdmEnumMember selectedMember = edmEnumType.Members.FirstOrDefault(member => member.Value.Value == enumIntValue);
+                enumString = selectedMember.Name;
+            }
+            else if (enumValue is string enumStringValue)
+            {
+                enumString = enumStringValue;
+            }
+            else
+            {
+                throw new ODataException(ODataErrorStrings.ReaderValidationUtils_CannotConvertPrimitiveValue(enumValue, typeof(IEdmEnumTypeReference)));
+            }
+
+
+            return new ODataEnumValue(enumString, expectedValueTypeReference.FullName());
         }
 
         /// <summary>
