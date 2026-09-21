@@ -695,6 +695,67 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ExpandWithNestedFilterWorksWithoutEntitySet()
+        {
+            // Regression test for: https://github.com/OData/odata.net/issues/3447
+            // Nested $filter in $expand should work even when the entity set is null
+            // (e.g., unbound function that returns a collection without entity set path)
+            var results = RunParseSelectExpand(null, "MyDog($filter=Color eq 'Brown')", HardCodedTestModel.GetPersonType(), null);
+
+            Assert.True(results.AllSelected);
+            var expandItem = Assert.Single(results.SelectedItems.OfType<ExpandedNavigationSelectItem>());
+            expandItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+            Assert.NotNull(expandItem.FilterOption);
+            expandItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+        }
+
+        [Fact]
+        public void ExpandWithNestedOrderByWorksWithoutEntitySet()
+        {
+            // Regression test for: https://github.com/OData/odata.net/issues/3447
+            // Nested $orderby in $expand should work even when the entity set is null
+            var results = RunParseSelectExpand(null, "MyDog($orderby=Color)", HardCodedTestModel.GetPersonType(), null);
+
+            Assert.True(results.AllSelected);
+            var expandItem = Assert.Single(results.SelectedItems.OfType<ExpandedNavigationSelectItem>());
+            expandItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+            Assert.NotNull(expandItem.OrderByOption);
+            expandItem.OrderByOption.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp());
+        }
+
+        [Fact]
+        public void ExpandWithNestedFilterAndOrderByWorksWithoutEntitySet()
+        {
+            // Regression test for: https://github.com/OData/odata.net/issues/3447
+            // Both nested $filter and $orderby in $expand should work when entity set is null
+            var results = RunParseSelectExpand(null, "MyDog($filter=Color eq 'Brown';$orderby=Color desc)", HardCodedTestModel.GetPersonType(), null);
+
+            Assert.True(results.AllSelected);
+            var expandItem = Assert.Single(results.SelectedItems.OfType<ExpandedNavigationSelectItem>());
+            expandItem.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+            Assert.NotNull(expandItem.FilterOption);
+            Assert.NotNull(expandItem.OrderByOption);
+            Assert.Equal(OrderByDirection.Descending, expandItem.OrderByOption.Direction);
+        }
+
+        [Fact]
+        public void NestedExpandWithFilterWorksWithoutEntitySet()
+        {
+            // Regression test for: https://github.com/OData/odata.net/issues/3447
+            // Nested $filter at multiple expand levels should work when entity set is null
+            var results = RunParseSelectExpand(null, "MyDog($expand=MyPeople($filter=Name eq 'John'))", HardCodedTestModel.GetPersonType(), null);
+
+            Assert.True(results.AllSelected);
+            var myDogExpand = Assert.Single(results.SelectedItems.OfType<ExpandedNavigationSelectItem>());
+            myDogExpand.ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
+
+            var myPeopleExpand = Assert.Single(myDogExpand.SelectAndExpand.SelectedItems.OfType<ExpandedNavigationSelectItem>());
+            myPeopleExpand.ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp());
+            Assert.NotNull(myPeopleExpand.FilterOption);
+            myPeopleExpand.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+        }
+
+        [Fact]
         public void ExpandNavigationPropertyOnDerivedType()
         {
             var item = ParseSingleExpandForPerson("Fully.Qualified.Namespace.Manager/PaintingsInOffice");
