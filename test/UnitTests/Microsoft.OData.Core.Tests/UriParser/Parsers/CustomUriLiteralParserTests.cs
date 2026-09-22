@@ -645,7 +645,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             Assert.Null(output);
-            Assert.Null(exception);
+            // No custom parsers added; the built-in boolean parser cannot parse the non-conventional
+            // literal and surfaces a parsing exception (see issue #3505).
+            Assert.NotNull(exception);
         }
 
         [Fact]
@@ -992,7 +994,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             object output = DefaultUriLiteralParser.GetOrCreate(edmModel).ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
             // Assert
-            Assert.Null(exception);
+            // The custom parser has been removed, so the built-in boolean parser now handles the value.
+            // It cannot parse the non-conventional literal and surfaces a parsing exception (see issue #3505).
+            Assert.NotNull(exception);
             Assert.Null(output);
         }
 
@@ -1008,7 +1012,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             object output = DefaultUriLiteralParser.GetOrCreate(edmModel).ParseUriStringToType(CUSTOM_PARSER_INT_VALID_VALUE, Int32TypeReference, out exception);
 
             // Assert
-            Assert.Null(exception);
+            // The built-in Int32 parser cannot parse the non-conventional literal and surfaces a parsing exception (see issue #3505).
+            Assert.NotNull(exception);
             Assert.Null(output);
         }
 

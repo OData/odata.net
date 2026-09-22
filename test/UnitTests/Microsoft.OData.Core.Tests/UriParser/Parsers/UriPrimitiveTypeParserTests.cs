@@ -403,12 +403,36 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Equal(new byte[] { 0x00, 0x01, 0x00, 0xff }, (byte[])output);
         }
 
+        [Theory]
+        [InlineData("2147483648")]  // Overflow
+        [InlineData("-2147483649")] // Overflow
+        [InlineData("notanumber")]  // Format exception
+        public void TryUriStringToPrimitiveWithInvalidInt32ShouldSetParsingException(string input)
+        {
+            UriLiteralParsingException exception;
+            Assert.False(this.TryParseUriStringToPrimitiveType(input, EdmCoreModel.Instance.GetInt32(false), out _, out exception));
+            Assert.NotNull(exception);
+        }
+
+        [Fact]
+        public void TryUriStringToPrimitiveWithInvalidBooleanShouldSetParsingException()
+        {
+            UriLiteralParsingException exception;
+            Assert.False(this.TryParseUriStringToPrimitiveType("notabool", EdmCoreModel.Instance.GetBoolean(false), out _, out exception));
+            Assert.NotNull(exception);
+        }
+
         #region Private Methods
 
         private bool TryParseUriStringToPrimitiveType(string text, IEdmTypeReference targetType, out object targetValue)
         {
             UriLiteralParsingException exception;
 
+            return UriPrimitiveTypeParser.TryParseUriStringToType(text.AsSpan(), targetType, out targetValue, out exception);
+        }
+
+        private bool TryParseUriStringToPrimitiveType(string text, IEdmTypeReference targetType, out object targetValue, out UriLiteralParsingException exception)
+        {
             return UriPrimitiveTypeParser.TryParseUriStringToType(text.AsSpan(), targetType, out targetValue, out exception);
         }
 
