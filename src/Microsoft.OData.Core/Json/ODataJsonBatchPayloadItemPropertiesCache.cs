@@ -148,13 +148,13 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="propertyName"> Name of the property.</param>
         /// <returns>Property value. Null if not found.</returns>
-        internal object GetPropertyValue(string propertyName)
+        internal object GetPropertyValue(ReadOnlySpan<char> propertyName)
         {
             if (this.jsonProperties != null)
             {
-                string canonicalPropertyName = Normalize(propertyName);
+                ReadOnlySpan<char> canonicalPropertyName = Normalize(propertyName);
                 object propertyValue;
-                if (this.jsonProperties.TryGetValue(canonicalPropertyName, out propertyValue))
+                if (this.jsonProperties.TryGetValue(canonicalPropertyName.ToString(), out propertyValue))
                 {
                     return propertyValue;
                 }
@@ -186,9 +186,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="propertyName">Name to be normalized.</param>
         /// <returns>The normalized name.</returns>
-        private static string Normalize(string propertyName)
+        private static ReadOnlySpan<char> Normalize(ReadOnlySpan<char> propertyName)
         {
-            return propertyName.ToUpperInvariant();
+            Span<char> buffer = new Span<char>(new char[propertyName.Length]);
+            propertyName.ToUpperInvariant(buffer);
+            return buffer;
         }
 
         /// <summary>
@@ -211,7 +213,7 @@ namespace Microsoft.OData.Json
                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                 {
                     // Convert to upper case to support case-insensitive request property names
-                    string propertyName = Normalize(this.jsonReader.ReadPropertyName());
+                    string propertyName = Normalize(this.jsonReader.ReadPropertyName()).ToString();
 
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
@@ -265,7 +267,7 @@ namespace Microsoft.OData.Json
 
                                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                                 {
-                                    string headerName = this.jsonReader.ReadPropertyName();
+                                    string headerName = this.jsonReader.ReadPropertyName().ToString();
                                     string headerValue = this.jsonReader.ReadPrimitiveValue()?.ToString();
 
                                     // Throw an ODataException, if a duplicate header was detected
@@ -362,7 +364,7 @@ namespace Microsoft.OData.Json
                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                 {
                     // Convert to upper case to support case-insensitive request property names
-                    string propertyName = Normalize(await this.jsonReader.ReadPropertyNameAsync().ConfigureAwait(false));
+                    string propertyName = Normalize((await this.jsonReader.ReadPropertyNameAsync().ConfigureAwait(false)).Span).ToString();
 
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
@@ -416,8 +418,8 @@ namespace Microsoft.OData.Json
 
                             while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                             {
-                                string headerName = await this.jsonReader.ReadPropertyNameAsync()
-                                    .ConfigureAwait(false);
+                                string headerName = (await this.jsonReader.ReadPropertyNameAsync()
+                                    .ConfigureAwait(false)).ToString();
                                 string headerValue = (await this.jsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false))?.ToString();
 
                                 // Throw an ODataException, if a duplicate header was detected

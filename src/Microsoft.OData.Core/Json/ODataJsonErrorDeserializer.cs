@@ -127,11 +127,11 @@ namespace Microsoft.OData.Json
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = this.JsonReader.ReadPropertyName();
-                if (!string.Equals(ODataJsonConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
+                ReadOnlySpan<char> propertyName = this.JsonReader.ReadPropertyName();
+                if (!propertyName.SequenceEqual(ODataJsonConstants.ODataErrorPropertyName.AsSpan()))
                 {
                     // we only allow a single 'error' property for a top-level error object
-                    throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty, propertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty, propertyName.ToString()));
                 }
 
                 if (error != null)
@@ -491,10 +491,10 @@ namespace Microsoft.OData.Json
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = await this.JsonReader.ReadPropertyNameAsync()
+                ReadOnlyMemory<char> propertyName = await this.JsonReader.ReadPropertyNameAsync()
                     .ConfigureAwait(false);
 
-                if (!string.Equals(ODataJsonConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
+                if (!propertyName.Equals(ODataJsonConstants.ODataErrorPropertyName))
                 {
                     // We only allow a single 'error' property for a top-level error object
                     throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty, propertyName));
