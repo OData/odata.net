@@ -5189,6 +5189,16 @@ public class Microsoft.OData.ODataPropertyInfo : Microsoft.OData.ODataItem {
     Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public virtual get; public virtual set; }
 }
 
+public class Microsoft.OData.ODataPropertyStreamingContext {
+    public ODataPropertyStreamingContext ()
+
+    System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] CustomPropertyAnnotations  { public get; }
+    bool IsCollection  { public get; }
+    Microsoft.OData.Edm.IEdmPrimitiveType PrimitiveType  { public get; }
+    Microsoft.OData.Edm.IEdmProperty Property  { public get; }
+    string PropertyName  { public get; }
+}
+
 public sealed class Microsoft.OData.HttpHeaderValueElement {
     public HttpHeaderValueElement (string name, string value, System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] parameters)
 
@@ -5588,9 +5598,14 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
     Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
     Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
     System.Func`3[[System.Object],[System.String],[Microsoft.OData.Edm.IEdmTypeReference]] PrimitiveTypeResolver  { public get; public set; }
+    [
+    ObsoleteAttribute(),
+    ]
     System.Func`5[[Microsoft.OData.Edm.IEdmPrimitiveType],[System.Boolean],[System.String],[Microsoft.OData.Edm.IEdmProperty],[System.Boolean]] ReadAsStreamFunc  { public get; public set; }
+
     bool ReadUntypedAsString  { public get; public set; }
     System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
+    System.Func`2[[Microsoft.OData.ODataPropertyStreamingContext],[System.Boolean]] ShouldReadPropertyAsStream  { public get; public set; }
     Microsoft.OData.ValidationKinds Validations  { public get; public set; }
     System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 
