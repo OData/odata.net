@@ -123,7 +123,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Grows the specified byte array by the specified amount.
+        /// Ensures the specified byte array has capacity for the additional bytes, growing geometrically when needed.
         /// </summary>
         /// <param name="buffer">The byte array to grow.</param>
         /// <param name="numberOfBytesInBuffer">The number of bytes currently in the buffer.</param>
@@ -141,13 +141,16 @@ namespace Microsoft.OData
                 return;
             }
 
-            int numberOfAdditionalBytesNeeded = requiredByteCount - remainingUnusedBytesInBuffer;
-            Debug.Assert(numberOfAdditionalBytesNeeded > 0, "Expected a positive number of additional bytes.");
+            long requiredSize = (long)numberOfBytesInBuffer + requiredByteCount;
+            if (requiredSize > Array.MaxLength)
+            {
+                throw new OutOfMemoryException();
+            }
 
-            // NOTE: grow the array only by the exact number of needed bytes; we expect the
-            //       caller to specify a larger required byte count to grow the array more.
+            // Geometric growth avoids quadratic copying when a multipart line spans many buffer refills.
+            int newSize = (int)Math.Min(Array.MaxLength, Math.Max((long)buffer.Length * 2, requiredSize));
             byte[] oldBytes = buffer;
-            buffer = new byte[buffer.Length + numberOfAdditionalBytesNeeded];
+            buffer = new byte[newSize];
             Buffer.BlockCopy(oldBytes, 0, buffer, 0, numberOfBytesInBuffer);
         }
 
