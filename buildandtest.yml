@@ -1,4 +1,6 @@
 steps:
+- template: pipelines/templates/ensure-nuget-config.yml@self
+
 - task: NuGetAuthenticate@1
   displayName: 'Authenticate to the feed'
 
@@ -17,11 +19,19 @@ steps:
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
 
+- task: NuGetCommand@2
+  displayName: 'Restore through CFS'
+  inputs:
+    command: restore
+    restoreSolution: '$(Build.SourcesDirectory)\sln\OData.Pipeline.sln'
+    feedsToUse: config
+    nugetConfigPath: '$(Build.SourcesDirectory)\nuget.config'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental --no-restore'
     projects: |
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
