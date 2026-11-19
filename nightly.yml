@@ -14,7 +14,7 @@
     - template: credscan.yml
 
     # CodeSign
-    - task: EsrpCodeSigning@5
+    - task: EsrpCodeSigning@6
       displayName: 'ESRP CodeSign - OData'
       inputs:
         ConnectedServiceName: $(ODataEsrpConnectionServiceName)
@@ -150,7 +150,7 @@
         feedsToUse: config
         arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(nugetArtifactsDir) -Properties Configuration=$(buildConfiguration);ProductRoot=$(productBinPathClient)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
 
-    - task: EsrpCodeSigning@5
+    - task: EsrpCodeSigning@6
       displayName: 'ESRP CodeSigning Nuget Packages'
       inputs:
         ConnectedServiceName: $(ODataEsrpConnectionServiceName)
@@ -181,4 +181,9 @@
            }
          ]
         VerboseLogin: true
+
+    - task: NuGetToolInstaller@1
+      displayName: 'Use NuGet 7.x (minimum 7.6.0) for package publishing'
+      inputs:
+        versionSpec: '>=7.6.0 <8.0.0'
 
