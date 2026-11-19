@@ -20,7 +20,7 @@
   <PropertyGroup Condition="'$(BuildInOSS)' == 'true'">
     <DefineConstants>$(DefineConstants);ENABLE_AVRO</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net452|AnyCPU'">
     <WarningsAsErrors>NU1605</WarningsAsErrors>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>

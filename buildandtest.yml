@@ -3,6 +3,11 @@ steps:
   inputs:
     versionSpec: '6.5.0'
 
+- template: pipelines/templates/ensure-nuget-config.yml@self
+
+- task: NuGetAuthenticate@1
+  displayName: 'Authenticate to the feed'
+
 - task: UseDotNet@2
   displayName: 'Use .NET Core SDK 1.0.4'
   inputs:
@@ -33,11 +38,19 @@ steps:
   inputs:
     version: '3.1.x'
 
+- task: NuGetCommand@2
+  displayName: 'Restore through CFS'
+  inputs:
+    command: restore
+    restoreSolution: '$(Build.SourcesDirectory)\sln\OData.Pipeline.sln'
+    feedsToUse: config
+    nugetConfigPath: '$(Build.SourcesDirectory)\nuget.config'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(buildConfiguration) --no-incremental'
+    arguments: '--configuration $(buildConfiguration) --no-incremental --no-restore'
     projects: |
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
@@ -49,12 +62,21 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
+- task: NuGetCommand@2
+  condition: eq(variables.buildConfiguration, 'Release')
+  displayName: 'Restore - Microsoft.Test.OData.Tests.Client through CFS'
+  inputs:
+    command: restore
+    restoreSolution: '$(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj'
+    feedsToUse: config
+    nugetConfigPath: '$(Build.SourcesDirectory)\nuget.config'
+
 - task: DotNetCoreCLI@2
   condition: eq(variables.buildConfiguration, 'Release')
   displayName: 'Test - Microsoft.Test.OData.Tests.Client'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --collect "Code Coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-restore --collect "Code Coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
@@ -63,10 +85,18 @@ steps:
   inputs:
     version: '8.x'
 
+- task: NuGetCommand@2
+  displayName: 'Restore - Microsoft.OData.Core.Tests for NET 8.0 through CFS'
+  inputs:
+    command: restore
+    restoreSolution: '$(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.Net8.csproj'
+    feedsToUse: config
+    nugetConfigPath: '$(Build.SourcesDirectory)\nuget.config'
+
 - task: DotNetCoreCLI@2
   displayName: 'Test - Microsoft.OData.Core.Tests for NET 8.0'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --collect "Code Coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-restore --collect "Code Coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.Net8.csproj

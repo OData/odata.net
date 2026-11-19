@@ -1,0 +1,24 @@
+steps:
+- powershell: |
+    $nugetConfig = "$(Build.SourcesDirectory)\nuget.config"
+
+    if (Test-Path $nugetConfig) {
+        Write-Host "nuget.config already exists at: $nugetConfig"
+    }
+    else {
+        Write-Host "nuget.config does not exist."
+
+        $config = @"
+    <?xml version="1.0" encoding="utf-8"?>
+    <configuration>
+      <packageSources>
+        <clear />
+        <add key="ODataMsrcFeed" value="$(AZURE_ARTIFACTS_FEED)" />
+      </packageSources>
+    </configuration>
+    "@
+
+        $config | Set-Content -Encoding utf8 $nugetConfig
+        Write-Host "Created nuget.config at: $nugetConfig"
+    }
+  displayName: 'Ensure NuGet configuration exists'
