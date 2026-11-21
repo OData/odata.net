@@ -427,13 +427,36 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>Server defined name.</returns>
         internal static string GetServerDefinedName(PropertyInfo propertyInfo)
         {
+            return GetServerDefinedName(propertyInfo, null);
+        }
+
+        /// <summary>Gets the server-defined name for a property using an optional naming resolver.</summary>
+        /// <param name="propertyInfo">Property to resolve.</param>
+        /// <param name="resolvePropertyName">Optional property-name resolver.</param>
+        /// <returns>Server-defined name.</returns>
+        internal static string GetServerDefinedName(PropertyInfo propertyInfo, Func<PropertyInfo, string> resolvePropertyName)
+        {
             OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)propertyInfo.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
             if (originalNameAttribute != null)
             {
                 return originalNameAttribute.OriginalName;
             }
 
-            return propertyInfo.Name;
+            if (resolvePropertyName == null)
+            {
+                return propertyInfo.Name;
+            }
+
+            string resolvedName = resolvePropertyName(propertyInfo);
+            if (string.IsNullOrWhiteSpace(resolvedName))
+            {
+                throw Error.InvalidOperation(Error.Format(
+                    SRResources.ClientType_PropertyNameResolverReturnedInvalidName,
+                    propertyInfo.Name,
+                    propertyInfo.DeclaringType));
+            }
+
+            return resolvedName;
         }
 
         /// <summary>Gets the server defined name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="memberInfo"/>.</summary>

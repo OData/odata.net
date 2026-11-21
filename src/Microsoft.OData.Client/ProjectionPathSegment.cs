@@ -43,6 +43,29 @@ namespace Microsoft.OData.Client
         /// <param name="startPath">Path on which this segment is located.</param>
         /// <param name="memberExpression">Member expression for the projection path; possibly null.</param>
         internal ProjectionPathSegment(ProjectionPath startPath, MemberExpression memberExpression)
+            : this(startPath, memberExpression, null)
+        {
+        }
+
+        /// <summary>Creates a projection path segment using a client model's property naming policy.</summary>
+        /// <param name="startPath">Path on which this segment is located.</param>
+        /// <param name="memberExpression">Member expression for the projection path.</param>
+        /// <param name="model">Client model used to resolve the server-defined member name.</param>
+        /// <returns>The projection path segment.</returns>
+        internal static ProjectionPathSegment CreateWithModel(
+            ProjectionPath startPath,
+            MemberExpression memberExpression,
+            ClientEdmModel model)
+        {
+            Debug.Assert(model != null, "model != null");
+            return new ProjectionPathSegment(startPath, memberExpression, model);
+        }
+
+        /// <summary>Initializes a projection path segment using an optional client model.</summary>
+        private ProjectionPathSegment(
+            ProjectionPath startPath,
+            MemberExpression memberExpression,
+            ClientEdmModel model)
         {
             Debug.Assert(startPath != null, "startPath != null");
             Debug.Assert(memberExpression != null, "memberExpression != null");
@@ -50,7 +73,9 @@ namespace Microsoft.OData.Client
             this.StartPath = startPath;
 
             Expression source = ResourceBinder.StripTo<Expression>(memberExpression.Expression);
-            this.Member = ClientTypeUtil.GetServerDefinedName(memberExpression.Member);
+            this.Member = model == null
+                ? ClientTypeUtil.GetServerDefinedName(memberExpression.Member)
+                : model.GetServerDefinedName(memberExpression.Member);
             this.ProjectionType = memberExpression.Type;
             this.SourceTypeAs = source.NodeType == ExpressionType.TypeAs ? source.Type : null;
         }
