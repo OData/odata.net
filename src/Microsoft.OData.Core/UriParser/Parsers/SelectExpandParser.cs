@@ -43,6 +43,11 @@ namespace Microsoft.OData.UriParser
         private readonly bool enableCaseInsensitiveBuiltinIdentifier;
 
         /// <summary>
+        /// The depth carried from a parent parser, or zero for a top-level parser.
+        /// </summary>
+        private readonly int currentExpansionDepth;
+
+        /// <summary>
         /// Object to handle the parsing of any nested select/expand options that we discover.
         /// </summary>
         private SelectExpandOptionParser selectExpandOptionParser;
@@ -112,6 +117,41 @@ namespace Microsoft.OData.UriParser
             this.parentStructuredType = parentStructuredType;
         }
 
+        private SelectExpandParser(
+            ODataUriResolver resolver,
+            string clauseToParse,
+            IEdmStructuredType parentStructuredType,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier,
+            bool enableNoDollarQueryOptions,
+            int currentExpansionDepth)
+            : this(resolver, clauseToParse, parentStructuredType, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
+        {
+            this.currentExpansionDepth = currentExpansionDepth;
+        }
+
+        /// <summary>
+        /// Creates a parser for a nested select or expand expression.
+        /// </summary>
+        internal static SelectExpandParser CreateNestedParser(
+            ODataUriResolver resolver,
+            string clauseToParse,
+            IEdmStructuredType parentStructuredType,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier,
+            bool enableNoDollarQueryOptions,
+            int currentExpansionDepth)
+        {
+            return new SelectExpandParser(
+                resolver,
+                clauseToParse,
+                parentStructuredType,
+                maxRecursiveDepth,
+                enableCaseInsensitiveBuiltinIdentifier,
+                enableNoDollarQueryOptions,
+                currentExpansionDepth);
+        }
+
         /// <summary>
         /// Gets the parser for inner select/expand options.
         /// </summary>
@@ -121,18 +161,21 @@ namespace Microsoft.OData.UriParser
             {
                 if (this.selectExpandOptionParser == null)
                 {
+                    int expansionDepth = this.currentExpansionDepth == 0 && !this.isSelect ? 1 : this.currentExpansionDepth;
                     this.selectExpandOptionParser = new SelectExpandOptionParser(
                         this.resolver,
                         this.parentStructuredType,
                         this.maxRecursiveDepth,
                         this.enableCaseInsensitiveBuiltinIdentifier,
-                        this.enableNoDollarQueryOptions)
+                        this.enableNoDollarQueryOptions,
+                        expansionDepth)
                     {
                         MaxFilterDepth = MaxFilterDepth,
                         MaxOrderByDepth = MaxOrderByDepth,
                         MaxSearchDepth = MaxSearchDepth,
                         MaxSelectExpandDepth = MaxSelectExpandDepth,
-                        MaxAggregateDepth = MaxAggregateDepth
+                        MaxAggregateDepth = MaxAggregateDepth,
+                        MaxExpansionDepth = MaxExpansionDepth
                     };
                 }
 
@@ -169,6 +212,11 @@ namespace Microsoft.OData.UriParser
         /// The maximum depth for aggregate expressions nested in $expand.
         /// </summary>
         internal int MaxAggregateDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth of the tree that results from parsing $expand.
+        /// </summary>
+        internal int MaxExpansionDepth { get; set; } = ODataUriParserSettings.DefaultMaximumExpansionDepth;
 
         /// <summary>
         /// Parses a full $select expression.
@@ -223,6 +271,13 @@ namespace Microsoft.OData.UriParser
 
             var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
             PathSegmentToken pathToken = termParser.ParseTerm(allowRef: true);
+
+            int expansionDepth = this.currentExpansionDepth == 0 ? 1 : this.currentExpansionDepth;
+            if (expansionDepth > this.MaxExpansionDepth)
+            {
+                throw ExceptionUtil.CreateBadRequestError(
+                    Error.Format(SRResources.UriParser_ExpandDepthExceeded, expansionDepth, this.MaxExpansionDepth));
+            }
 
             string optionsText = null;
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
