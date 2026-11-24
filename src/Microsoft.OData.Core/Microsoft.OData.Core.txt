@@ -700,6 +700,7 @@ UriBuilder_NotSupportedClrLiteral=The CLR literal of type '{0}' is not supported
 UriBuilder_NotSupportedQueryToken=QueryToken '{0}' is not supported to be written as a Uri part.
 
 UriQueryExpressionParser_TooDeep=Recursion depth exceeded allowed limit.
+UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded=The aggregate expression depth exceeded the maximum allowed depth of {0}. You can adjust the depth limit by setting the 'ODataUriParserSettings.AggregateLimit' property.
 UriQueryExpressionParser_ExpressionExpected=Expression expected at position {0} in '{1}'.
 UriQueryExpressionParser_OpenParenExpected='(' expected at position {0} in '{1}'.
 UriQueryExpressionParser_CloseParenOrCommaExpected=')' or ',' expected at position {0} in '{1}'.

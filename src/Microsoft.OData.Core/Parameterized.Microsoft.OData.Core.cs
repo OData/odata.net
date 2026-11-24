@@ -5267,6 +5267,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The aggregate expression depth exceeded the maximum allowed depth of {0}. You can adjust the depth limit by setting the 'ODataUriParserSettings.AggregateLimit' property."
+        /// </summary>
+        internal static string UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, p0);
+        }
+
+        /// <summary>
         /// A string like "Recursion depth exceeded allowed limit."
         /// </summary>
         internal static string UriQueryExpressionParser_TooDeep

@@ -13,3 +13,5 @@ Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.Method.get -
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.MethodDefinition.get -> Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.TypeReference.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind.CollectionPropertyAggregate = 3 -> Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind
+Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.get -> int
+Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.set -> void

@@ -607,6 +607,7 @@ namespace Microsoft.OData
         internal const string UriBuilder_NotSupportedClrLiteral = "UriBuilder_NotSupportedClrLiteral";
         internal const string UriBuilder_NotSupportedQueryToken = "UriBuilder_NotSupportedQueryToken";
         internal const string UriQueryExpressionParser_TooDeep = "UriQueryExpressionParser_TooDeep";
+        internal const string UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded = "UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded";
         internal const string UriQueryExpressionParser_ExpressionExpected = "UriQueryExpressionParser_ExpressionExpected";
         internal const string UriQueryExpressionParser_OpenParenExpected = "UriQueryExpressionParser_OpenParenExpected";
         internal const string UriQueryExpressionParser_CloseParenOrCommaExpected = "UriQueryExpressionParser_CloseParenOrCommaExpected";

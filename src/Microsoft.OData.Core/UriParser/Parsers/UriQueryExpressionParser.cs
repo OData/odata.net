@@ -52,6 +52,8 @@ namespace Microsoft.OData.UriParser
         private int selectExpandDepth;
         private int maxSelectExpandDepth;
 
+        private int maxAggregateDepth = ODataUriParserSettings.DefaultAggregateLimit;
+
         /// <summary>
         /// The lexer being used for the parsing.
         /// </summary>
@@ -160,6 +162,15 @@ namespace Microsoft.OData.UriParser
         {
             get { return this.maxSelectExpandDepth; }
             set { this.maxSelectExpandDepth = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the nesting limit for aggregate expressions within $apply.
+        /// </summary>
+        internal int MaxAggregateDepth
+        {
+            get { return this.maxAggregateDepth; }
+            set { this.maxAggregateDepth = value; }
         }
 
         /// <summary>
@@ -532,6 +543,11 @@ namespace Microsoft.OData.UriParser
 
         internal AggregateTokenBase ParseAggregateExpression()
         {
+            if (this.parseAggregateExpressionDepth >= this.maxAggregateDepth)
+            {
+                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded(this.maxAggregateDepth));
+            }
+
             try
             {
                 this.parseAggregateExpressionDepth++;

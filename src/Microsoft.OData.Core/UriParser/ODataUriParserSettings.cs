@@ -39,6 +39,11 @@ namespace Microsoft.OData.UriParser
         internal const int DefaultSearchLimit = 100;
 
         /// <summary>
+        /// Default nesting limit for aggregate expressions.
+        /// </summary>
+        internal const int DefaultAggregateLimit = 100;
+
+        /// <summary>
         /// the recursive depth of the Syntactic tree for a filter clause
         /// </summary>
         private int filterLimit;
@@ -73,6 +78,8 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private int searchLimit;
 
+        private int aggregateLimit;
+
         /// <summary>
         /// Initializes a new instance of <see cref="ODataUriParserSettings"/> with default values.
         /// </summary>
@@ -83,6 +90,7 @@ namespace Microsoft.OData.UriParser
             this.PathLimit = DefaultPathLimit;
             this.SelectExpandLimit = DefaultSelectExpandLimit;
             this.SearchLimit = DefaultSearchLimit;
+            this.AggregateLimit = DefaultAggregateLimit;
 
             this.MaximumExpansionDepth = int.MaxValue;
             this.MaximumExpansionCount = int.MaxValue;
@@ -110,6 +118,24 @@ namespace Microsoft.OData.UriParser
                 }
 
                 this.maxExpandDepth = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum nesting depth for aggregate expressions.
+        /// </summary>
+        /// <exception cref="ODataException">Throws if the input value is negative.</exception>
+        public int AggregateLimit
+        {
+            get { return this.aggregateLimit; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                }
+
+                this.aggregateLimit = value;
             }
         }
 

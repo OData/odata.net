@@ -64,6 +64,7 @@ namespace Microsoft.OData.UriParser
             this.maxRecursionDepth = maxRecursionDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            this.MaxAggregateDepth = ODataUriParserSettings.DefaultAggregateLimit;
         }
 
         /// <summary>
@@ -105,6 +106,11 @@ namespace Microsoft.OData.UriParser
         /// The maximum allowed nesting depth for nested $expand and expand(...) within $apply clauses.
         /// </summary>
         internal int MaxSelectExpandDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth for aggregate expressions nested in $expand.
+        /// </summary>
+        internal int MaxAggregateDepth { get; set; }
 
         /// <summary>
         /// Building off a PathSegmentToken, continue parsing any select options (nested $filter, $expand, etc)
@@ -571,7 +577,8 @@ namespace Microsoft.OData.UriParser
                 this.enableCaseInsensitiveBuiltinIdentifier,
                 this.enableNoDollarQueryOptions)
             {
-                MaxSelectExpandDepth = this.MaxSelectExpandDepth
+                MaxSelectExpandDepth = this.MaxSelectExpandDepth,
+                MaxAggregateDepth = this.MaxAggregateDepth
             };
 
             return innerSelectParser.ParseSelect();
@@ -612,7 +619,8 @@ namespace Microsoft.OData.UriParser
                 this.enableCaseInsensitiveBuiltinIdentifier,
                 this.enableNoDollarQueryOptions)
             {
-                MaxSelectExpandDepth = this.MaxSelectExpandDepth
+                MaxSelectExpandDepth = this.MaxSelectExpandDepth,
+                MaxAggregateDepth = this.MaxAggregateDepth
             };
 
             return innerExpandParser.ParseExpand();
@@ -674,7 +682,8 @@ namespace Microsoft.OData.UriParser
 
             UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier)
             {
-                MaxSelectExpandDepth = this.MaxSelectExpandDepth
+                MaxSelectExpandDepth = this.MaxSelectExpandDepth,
+                MaxAggregateDepth = this.MaxAggregateDepth
             };
             return applyParser.ParseApply(applyText);
         }
