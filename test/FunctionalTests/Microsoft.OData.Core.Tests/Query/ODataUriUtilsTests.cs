@@ -15,6 +15,16 @@ namespace Microsoft.OData.Tests.Query
     public class ODataUriUtilsTests
     {
         [Theory]
+        [InlineData("binary'--8='")]
+        [InlineData("binary'__8='")]
+        [InlineData("binary'+/8='")]
+        public void ConvertFromUriLiteralAcceptsBase64UrlBinary(string literal)
+        {
+            string encoded = literal.Substring(7, literal.Length - 8).Replace('-', '+').Replace('_', '/');
+            Assert.Equal(Convert.FromBase64String(encoded), Assert.IsType<byte[]>(ODataUriUtils.ConvertFromUriLiteral(literal, ODataVersion.V4)));
+        }
+
+        [Theory]
         [InlineData(EdmPrimitiveTypeKind.SByte, (sbyte)2)]
         [InlineData(EdmPrimitiveTypeKind.Byte, (byte)2)]
         [InlineData(EdmPrimitiveTypeKind.Int16, (short)2)]

@@ -155,7 +155,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of primitive type</returns>
         internal override object Parse(String text)
         {
-            return Convert.FromBase64String(text);
+            return Json.JsonSharedUtils.ConvertFromBase64String(text);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of primitive type</returns>
         internal override object Parse(String text)
         {
-            return Activator.CreateInstance(BinaryType, Convert.FromBase64String(text));
+            return Activator.CreateInstance(BinaryType, Json.JsonSharedUtils.ConvertFromBase64String(text));
         }
 
         /// <summary>
