@@ -206,7 +206,7 @@ namespace Microsoft.OData.Json
             }
 
             Stream result = this.Value == null ? Stream.Null :
-                new MemoryStream(Convert.FromBase64String((string)this.Value));
+                new MemoryStream(JsonSharedUtils.ConvertFromBase64String((string)this.Value));
             this.innerReader.Read();
             return result;
         }
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                result = new MemoryStream(Convert.FromBase64String((string)value));
+                result = new MemoryStream(JsonSharedUtils.ConvertFromBase64String((string)value));
             }
 
             await this.asyncInnerReader.ReadAsync()

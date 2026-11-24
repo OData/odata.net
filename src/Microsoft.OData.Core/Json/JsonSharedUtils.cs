@@ -26,6 +26,37 @@ namespace Microsoft.OData.Json
             return Double.IsInfinity(value) || Double.IsNaN(value);
         }
 
+        /// <summary>Converts a Base64 or Base64Url string to bytes.</summary>
+        /// <param name="value">The encoded string.</param>
+        /// <returns>The decoded bytes.</returns>
+        internal static byte[] ConvertFromBase64String(string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.IndexOf('-') >= 0 || value.IndexOf('_') >= 0)
+            {
+                char[] chars = value.ToCharArray();
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    if (chars[i] == '-')
+                    {
+                        chars[i] = '+';
+                    }
+                    else if (chars[i] == '_')
+                    {
+                        chars[i] = '/';
+                    }
+                }
+
+                return Convert.FromBase64CharArray(chars, 0, chars.Length);
+            }
+
+            return Convert.FromBase64String(value);
+        }
+
         /// <summary>
         /// Determines if the given float is serialized as a string in JSON.
         /// </summary>

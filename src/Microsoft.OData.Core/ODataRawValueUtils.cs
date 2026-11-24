@@ -153,7 +153,7 @@ namespace Microsoft.OData
                 switch (primitiveKind)
                 {
                     case EdmPrimitiveTypeKind.Binary:
-                        return Convert.FromBase64String(text);
+                        return Json.JsonSharedUtils.ConvertFromBase64String(text);
                     case EdmPrimitiveTypeKind.Boolean:
                         return ConvertXmlBooleanValue(text);
                     case EdmPrimitiveTypeKind.Byte:
