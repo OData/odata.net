@@ -414,7 +414,7 @@ namespace Microsoft.OData.UriParser
             // Get the syntactic representation of the apply expression
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
-                MaxSelectExpandDepth = configuration.Settings.SelectExpandLimit,
+                MaxApplyExpandDepth = configuration.Settings.SelectExpandLimit,
                 MaxAggregateDepth = configuration.Settings.AggregateLimit
             };
             var applyTokens = expressionParser.ParseApply(apply);
