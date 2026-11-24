@@ -90,6 +90,79 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void RepeatedInstanceAnnotationsHaveBoundedAllocationGrowth()
+        {
+            const int smallerCount = 256;
+            const int largerCount = smallerCount * 4;
+
+            MeasureReorderingAllocations(CreateRepeatedInstanceAnnotationPayload(4));
+
+            long smallerAllocations = MeasureReorderingAllocations(
+                CreateRepeatedInstanceAnnotationPayload(smallerCount));
+            long largerAllocations = MeasureReorderingAllocations(
+                CreateRepeatedInstanceAnnotationPayload(largerCount));
+
+            Assert.True(
+                largerAllocations < smallerAllocations * 8,
+                $"Expected bounded allocation growth, but allocations increased from {smallerAllocations} to {largerAllocations} bytes.");
+        }
+
+        [Fact]
+        public void RepeatedInstanceAnnotationsRetainValuesAtInitialRelativePosition()
+        {
+            const string json = @"
+            {
+                ""before"": 0,
+                ""@custom.note"": 1,
+                ""between"": 2,
+                ""@custom.note"": 3,
+                ""after"": 4
+            }";
+
+            var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
+
+            Assert.Equal("before", reader.ReadPropertyName());
+            Assert.Equal(0, reader.ReadPrimitiveValue());
+            Assert.Equal("@custom.note", reader.ReadPropertyName());
+            Assert.Equal(1, reader.ReadPrimitiveValue());
+            Assert.Equal("@custom.note", reader.ReadPropertyName());
+            Assert.Equal(3, reader.ReadPrimitiveValue());
+            Assert.Equal("between", reader.ReadPropertyName());
+            Assert.Equal(2, reader.ReadPrimitiveValue());
+            Assert.Equal("after", reader.ReadPropertyName());
+            Assert.Equal(4, reader.ReadPrimitiveValue());
+        }
+
+        [Fact]
+        public void RepeatedPropertyAnnotationsRetainValuesAtInitialRelativePosition()
+        {
+            const string json = @"
+            {
+                ""before"": 0,
+                ""Name@custom.first"": 1,
+                ""between"": 2,
+                ""Name@custom.second"": 3,
+                ""Name@custom.first"": 4,
+                ""after"": 5
+            }";
+
+            var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
+
+            Assert.Equal("before", reader.ReadPropertyName());
+            Assert.Equal(0, reader.ReadPrimitiveValue());
+            Assert.Equal("Name@custom.first", reader.ReadPropertyName());
+            Assert.Equal(1, reader.ReadPrimitiveValue());
+            Assert.Equal("Name@custom.second", reader.ReadPropertyName());
+            Assert.Equal(3, reader.ReadPrimitiveValue());
+            Assert.Equal("Name@custom.first", reader.ReadPropertyName());
+            Assert.Equal(4, reader.ReadPrimitiveValue());
+            Assert.Equal("between", reader.ReadPropertyName());
+            Assert.Equal(2, reader.ReadPrimitiveValue());
+            Assert.Equal("after", reader.ReadPropertyName());
+            Assert.Equal(5, reader.ReadPrimitiveValue());
+        }
+
+        [Fact]
         public async Task ReadReorderedPayloadAsync()
         {
             var payload = "{\"Id\":1," +
@@ -667,6 +740,34 @@ namespace Microsoft.OData.Tests.Json
             reader.Read();
             Assert.Equal(JsonNodeType.Property, reader.NodeType);
             return reader;
+        }
+
+        private static string CreateRepeatedInstanceAnnotationPayload(int count)
+        {
+            var properties = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                properties[i] = $"\"@custom.note\":{i}";
+            }
+
+            return "{" + string.Join(",", properties) + "}";
+        }
+
+        private static long MeasureReorderingAllocations(string payload)
+        {
+            using (var stringReader = new StringReader(payload))
+            using (var jsonReader = new JsonReader(stringReader, isIeee754Compatible: false))
+            {
+                var reorderingReader = new ReorderingJsonReader(jsonReader, maxInnerErrorDepth: 0);
+
+                long initialAllocations = GC.GetAllocatedBytesForCurrentThread();
+                bool readResult = reorderingReader.Read();
+                long allocations = GC.GetAllocatedBytesForCurrentThread() - initialAllocations;
+
+                Assert.True(readResult);
+                Assert.Equal(JsonNodeType.StartObject, reorderingReader.NodeType);
+                return allocations;
+            }
         }
 
         private async Task SetupReorderingJsonReaderAndRunTestAsync(
