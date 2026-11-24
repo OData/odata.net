@@ -387,7 +387,7 @@ namespace Microsoft.OData
         public override sealed bool Read()
         {
             this.VerifyCanRead(true);
-            return this.InterceptException(this.ReadSynchronously);
+            return this.InterceptException(thisParam => thisParam.ReadSynchronously());
         }
 
         /// <summary>
@@ -419,7 +419,7 @@ namespace Microsoft.OData
             }
 
             scope.StreamingState = StreamingState.Streaming;
-            return new ODataNotificationStream(this.InterceptException(this.CreateReadStreamImplementation), this);
+            return new ODataNotificationStream(this.InterceptException(thisParam => thisParam.CreateReadStreamImplementation()), this);
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace Microsoft.OData
                 }
 
                 scope.StreamingState = StreamingState.Streaming;
-                return new ODataNotificationReader(this.InterceptException(this.CreateTextReaderImplementation), this);
+                return new ODataNotificationReader(this.InterceptException(thisParam => thisParam.CreateTextReaderImplementation()), this);
             }
             else
             {
@@ -934,11 +934,11 @@ namespace Microsoft.OData
         /// <typeparam name="T">The type returned from the <paramref name="action"/> to execute.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of executing the <paramref name="action"/>.</returns>
-        private T InterceptException<T>(Func<T> action)
+        private T InterceptException<T>(Func<ODataReaderCore, T> action)
         {
             try
             {
-                return action();
+                return action(this);
             }
             catch (Exception e)
             {
