@@ -22,6 +22,10 @@ namespace Microsoft.OData.Json
     /// </summary>
     internal class BufferingJsonReader : IJsonStreamReader, IJsonStreamReaderAsync
     {
+        private const int MaxPooledNodesPerThread = 256;
+        [ThreadStatic]
+        private static Stack<BufferedNode> bufferedNodePool;
+
         /// <summary>The (possibly empty) list of buffered nodes.</summary>
         /// <remarks>This is a circular linked list where this field points to the first item of the list.</remarks>
         protected BufferedNode bufferedNodesHead;
@@ -498,7 +502,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously puts the reader into the state where it buffers read nodes.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        internal async Task StartBufferingAsync()
+        internal Task StartBufferingAsync()
         {
             Debug.Assert(!this.isBuffering, "Buffering is already turned on. Must not call StartBuffering again.");
             this.AssertAsynchronous();
@@ -506,27 +510,44 @@ namespace Microsoft.OData.Json
             if (this.bufferedNodesHead == null)
             {
                 // capture the current state of the reader as the first item in the buffer (if there are none)
-                this.bufferedNodesHead = new BufferedNode(
-                    this.asyncInnerReader.NodeType,
-                    await this.asyncInnerReader.GetValueAsync().ConfigureAwait(false));
+                Task<object> getTask = this.asyncInnerReader.GetValueAsync();
+                if (!(getTask.Status == TaskStatus.RanToCompletion))
+                {
+                    return AwaitGetValueAndStartBufferingAsync(this, getTask);
+                }
+
+                this.bufferedNodesHead = RentNode(this.asyncInnerReader.NodeType, getTask.Result);
+                CompleteStartBuffering(this);
+                return CachedTasks.Completed;
             }
-            else
+
+            // Already have a head node
+            this.removeOnNextRead = false;
+            CompleteStartBuffering(this);
+            return CachedTasks.Completed;
+
+            void CompleteStartBuffering(BufferingJsonReader thisParam)
             {
-                this.removeOnNextRead = false;
+                Debug.Assert(thisParam.bufferedNodesHead != null, "Expected at least the current node in the buffer when starting buffering.");
+
+                // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the
+                // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
+                // want to blindly continuing to read. The model is that with every call to StartBufferingAsync you reset the position of the
+                // current node in the list and start reading through the buffer again.
+                if (thisParam.currentBufferedNode == null)
+                {
+                    thisParam.currentBufferedNode = thisParam.bufferedNodesHead;
+                }
+
+                thisParam.isBuffering = true;
             }
 
-            Debug.Assert(this.bufferedNodesHead != null, "Expected at least the current node in the buffer when starting buffering.");
-
-            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the
-            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
-            // want to blindly continuing to read. The model is that with every call to StartBufferingAsync you reset the position of the
-            // current node in the list and start reading through the buffer again.
-            if (this.currentBufferedNode == null)
+            async Task AwaitGetValueAndStartBufferingAsync(BufferingJsonReader thisParam, Task<object> getTask)
             {
-                this.currentBufferedNode = this.bufferedNodesHead;
+                object value = await getTask.ConfigureAwait(false);
+                thisParam.bufferedNodesHead = RentNode(thisParam.asyncInnerReader.NodeType, value);
+                CompleteStartBuffering(thisParam);
             }
-
-            this.isBuffering = true;
         }
 
         /// <summary>
@@ -697,7 +718,7 @@ namespace Microsoft.OData.Json
         /// represents an in-stream error. If so, it throws an <see cref="ODataErrorException"/>. If false, this check will not happen.
         /// This parsingInStremError field is set to true when trying to parse an in-stream error; in normal operation it is false.
         /// </remarks>
-        protected async Task<bool> ReadInternalAsync()
+        protected Task<bool> ReadInternalAsync()
         {
             this.AssertAsynchronous();
 
@@ -706,11 +727,22 @@ namespace Microsoft.OData.Json
                 Debug.Assert(this.bufferedNodesHead != null, "If removeOnNextRead is true we must have at least one node in the buffer.");
 
                 this.RemoveFirstNodeInBuffer();
-
                 this.removeOnNextRead = false;
             }
 
-            bool result;
+            // Fast path: non-buffering replay from buffer
+            if (!this.isBuffering && this.bufferedNodesHead != null)
+            {
+                Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
+
+                // Non-buffering read from the buffer
+                bool result = this.bufferedNodesHead.NodeType != JsonNodeType.EndOfInput;
+                this.removeOnNextRead = true;
+
+                return Task.FromResult(result);
+            }
+
+            // Fast path: still walking inside buffer
             if (this.isBuffering)
             {
                 Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
@@ -718,46 +750,139 @@ namespace Microsoft.OData.Json
                 if (this.currentBufferedNode.Next != this.bufferedNodesHead)
                 {
                     this.currentBufferedNode = this.currentBufferedNode.Next;
-                    result = true;
+                    return Task.FromResult(true);
                 }
-                else if (this.parsingInStreamError)
-                {
-                    // Read more from the input stream and buffer it
-                    result = await this.asyncInnerReader.ReadAsync()
-                        .ConfigureAwait(false);
+            }
 
-                    // Add the new node to the end
-                    this.AddNewNodeToTheEndOfBufferedNodesList(
-                        this.asyncInnerReader.NodeType,
-                        await this.asyncInnerReader.GetValueAsync().ConfigureAwait(false));
-                }
-                else
+            return ReadInternalLocalAsync(this);
+
+            Task<bool> ReadInternalLocalAsync(BufferingJsonReader thisParam)
+            {
+                if (thisParam.isBuffering)
                 {
-                    // Read the next node from the input stream and check
+                    Debug.Assert(thisParam.currentBufferedNode != null, "thisParam.currentBufferedNode != null");
+
+                    if (thisParam.parsingInStreamError)
+                    {
+                        // Read more from the input stream and buffer it
+                        Task<bool> innerReadTask = thisParam.asyncInnerReader.ReadAsync();
+                        if (!(innerReadTask.Status == TaskStatus.RanToCompletion))
+                        {
+                            return AwaitInnerReaderAsync(thisParam, innerReadTask);
+                        }
+
+                        bool localResult = innerReadTask.Result;
+                        if (!localResult)
+                        {
+                            return Task.FromResult(false);
+                        }
+
+                        return BufferValueIfNeededAsync(thisParam);
+                    }
+                    else
+                    {
+                        // Read the next node from the input stream and check
+                        // whether it is an in-stream error
+                        Task<bool> checkForInStreamErrorTask = thisParam.ReadNextAndCheckForInStreamErrorAsync();
+                        if ((checkForInStreamErrorTask.Status == TaskStatus.RanToCompletion))
+                        {
+                            return Task.FromResult(checkForInStreamErrorTask.Result);
+                        }
+
+                        return checkForInStreamErrorTask;
+                    }
+                }
+
+                // Non-buffering + no buffered nodes yet
+                if (thisParam.bufferedNodesHead == null)
+                {
+                    // If parsingInStreamError nothing in the buffer; read from the base,
+                    // else read the next node from the input stream and check
                     // whether it is an in-stream error
-                    result = await this.ReadNextAndCheckForInStreamErrorAsync()
-                        .ConfigureAwait(false);
+                    if (thisParam.parsingInStreamError)
+                    {
+                        Task<bool> readTask = thisParam.asyncInnerReader.ReadAsync();
+                        if (!(readTask.Status == TaskStatus.RanToCompletion))
+                        {
+                            return readTask;
+                        }
+
+                        return Task.FromResult(readTask.Result);
+                    }
+                    else
+                    {
+                        Task<bool> checkForInStreamErrorTask = thisParam.ReadNextAndCheckForInStreamErrorAsync();
+
+                        if ((checkForInStreamErrorTask.Status == TaskStatus.RanToCompletion))
+                        {
+                            return Task.FromResult(checkForInStreamErrorTask.Result);
+                        }
+
+                        return checkForInStreamErrorTask;
+                    }
                 }
-            }
-            else if (this.bufferedNodesHead == null)
-            {
-                // If parsingInStreamError nothing in the buffer; read from the base,
-                // else read the next node from the input stream and check
-                // whether it is an in-stream error
-                result = this.parsingInStreamError ?
-                    await this.asyncInnerReader.ReadAsync().ConfigureAwait(false) :
-                    await this.ReadNextAndCheckForInStreamErrorAsync().ConfigureAwait(false);
-            }
-            else
-            {
-                Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
 
-                // Non-buffering read from the buffer
-                result = this.bufferedNodesHead.NodeType != JsonNodeType.EndOfInput;
-                this.removeOnNextRead = true;
+                // Should not reach here - buffered replay handled above
+                bool result = thisParam.bufferedNodesHead.NodeType != JsonNodeType.EndOfInput;
+                thisParam.removeOnNextRead = true;
+
+                return Task.FromResult(result);
             }
 
-            return result;
+            Task<bool> BufferValueIfNeededAsync(BufferingJsonReader thisParam)
+            {
+                object value = null;
+                JsonNodeType localNodeType = thisParam.asyncInnerReader.NodeType;
+                // GetValueAsync returns null for everything other than primitive value and property nameof
+                // This check should help us avoid pointless calls
+                // TODO: Verify correctness of this check
+                if (localNodeType == JsonNodeType.PrimitiveValue || localNodeType == JsonNodeType.Property)
+                {
+                    Task<object> getTask = thisParam.asyncInnerReader.GetValueAsync();
+                    if (!(getTask.Status == TaskStatus.RanToCompletion))
+                    {
+                        return AwaitGetValueAsync(thisParam, getTask);
+                    }
+
+                    value = getTask.Result;
+                }
+
+                thisParam.AddNewNodeToTheEndOfBufferedNodesList(thisParam.asyncInnerReader.NodeType, value);
+
+                return Task.FromResult(true);
+            }
+
+            async Task<bool> AwaitInnerReaderAsync(BufferingJsonReader thisParam, Task<bool> innerReadTask)
+            {
+                if (!await innerReadTask.ConfigureAwait(false))
+                {
+                    return false;
+                }
+
+                object value = null;
+                JsonNodeType localNodeType = thisParam.asyncInnerReader.NodeType;
+                // GetValueAsync returns null for everything other than primitive value and property nameof
+                // This check should help us avoid pointless calls
+                // TODO: Verify correctness of this check
+                if (localNodeType == JsonNodeType.PrimitiveValue || localNodeType == JsonNodeType.Property)
+                {
+                    value = await thisParam.asyncInnerReader.GetValueAsync().ConfigureAwait(false);
+                }
+
+                // Add new node to the end
+                thisParam.AddNewNodeToTheEndOfBufferedNodesList(thisParam.asyncInnerReader.NodeType, value);
+
+                return true;
+            }
+
+            async Task<bool> AwaitGetValueAsync(BufferingJsonReader thisParam, Task<object> getTask)
+            {
+                object value = await getTask.ConfigureAwait(false);
+                // Add new node to the end
+                thisParam.AddNewNodeToTheEndOfBufferedNodesList(thisParam.asyncInnerReader.NodeType, value);
+
+                return true;
+            }
         }
 
         /// <summary>
@@ -1340,6 +1465,8 @@ namespace Microsoft.OData.Json
         /// </summary>
         private void RemoveFirstNodeInBuffer()
         {
+            BufferedNode firstNodeInBuffer = this.bufferedNodesHead;
+
             if (this.bufferedNodesHead.Next == this.bufferedNodesHead)
             {
                 Debug.Assert(this.bufferedNodesHead.Previous == this.bufferedNodesHead, "The linked list is corrupted.");
@@ -1351,6 +1478,8 @@ namespace Microsoft.OData.Json
                 this.bufferedNodesHead.Next.Previous = this.bufferedNodesHead.Previous;
                 this.bufferedNodesHead = this.bufferedNodesHead.Next;
             }
+
+            ReturnNode(firstNodeInBuffer);
         }
 
         /// <summary>
@@ -1359,7 +1488,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains true if a new node was found, or false if end of input was reached.</returns>
-        private async Task<bool> ReadNextAndCheckForInStreamErrorAsync()
+        private Task<bool> ReadNextAndCheckForInStreamErrorAsync()
         {
             Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
             this.AssertAsynchronous();
@@ -1368,47 +1497,90 @@ namespace Microsoft.OData.Json
 
             try
             {
-                // Read the next node in the current reader mode (buffering or non-buffering)
-                bool result = await this.ReadInternalAsync()
-                    .ConfigureAwait(false);
-
-                if (this.asyncInnerReader.NodeType == JsonNodeType.StartObject)
+                Task<bool> readInternalTask = ReadInternalAsync();
+                if (!(readInternalTask.Status == TaskStatus.RanToCompletion))
                 {
-                    // If we find a StartObject node we have to read ahead and check whether this
-                    // JSON object represents an in-stream error. If we are currently in buffering
-                    // mode remember the current position in the buffer; otherwise start buffering.
-                    bool wasBuffering = this.isBuffering;
-                    BufferedNode storedPosition = null;
-                    if (this.isBuffering)
-                    {
-                        storedPosition = this.currentBufferedNode;
-                    }
-                    else
-                    {
-                        await this.StartBufferingAsync()
-                            .ConfigureAwait(false);
-                    }
-
-                    await this.ProcessObjectValueAsync()
-                        .ConfigureAwait(false);
-
-                    // Reset the reader state to non-buffering or to the previously
-                    // backed up position in the buffer.
-                    if (wasBuffering)
-                    {
-                        this.currentBufferedNode = storedPosition;
-                    }
-                    else
-                    {
-                        this.StopBuffering();
-                    }
+                    // Asynchronous completion path; continuation will reset parsingInStreamError and fault the Task if needed
+                    return AwaitReadInternalAsync(this, readInternalTask);
                 }
 
-                return result;
+                // Synchronous completion path
+                return ContinueAfterReadInternalAsync(this, readInternalTask.Result);
             }
-            finally
+            catch (Exception ex)
             {
                 this.parsingInStreamError = false;
+                return TaskUtils.GetFaultedTask<bool>(ex);
+            }
+
+            Task<bool> ContinueAfterReadInternalAsync(BufferingJsonReader thisParam, bool innerResult)
+            {
+                // If not StartObject we can finish immediately.
+                if (thisParam.asyncInnerReader.NodeType != JsonNodeType.StartObject)
+                {
+                    thisParam.parsingInStreamError = false;
+                    return Task.FromResult(innerResult);
+                }
+
+                // If we find a StartObject node we have to read ahead and check whether this
+                // JSON object represents an in-stream error.
+                Task checkObjectForInStreamErrorTask;
+
+                try
+                {
+                    checkObjectForInStreamErrorTask = thisParam.ReadObjectAndCheckForInStreamErrorAsync();
+                }
+                catch (Exception ex)
+                {
+                    thisParam.parsingInStreamError = false;
+                    return TaskUtils.GetFaultedTask<bool>(ex);
+                }
+
+                if ((checkObjectForInStreamErrorTask.Status == TaskStatus.RanToCompletion))
+                {
+                    // Completed synchronously
+                    thisParam.parsingInStreamError = false;
+                    return Task.FromResult(innerResult);
+                }
+
+                // Asynchronous completion path; continuation will reset this.parsingInStreamError and fault the Task if needed
+                return AwaitReadObjectAndCheckForInStreamErrorAsync(thisParam, checkObjectForInStreamErrorTask, innerResult);
+            }
+
+            async Task<bool> AwaitReadInternalAsync(BufferingJsonReader thisParam, Task<bool> pendingReadInternalTask)
+            {
+                // Any exception propagates as faulted task since method is async
+                bool innerResult;
+
+                try
+                {
+                    innerResult = await pendingReadInternalTask.ConfigureAwait(false);
+                }
+                catch
+                {
+                    thisParam.parsingInStreamError = false;
+                    throw;
+                }
+
+                // May return a completed Task or an async path
+                bool finalResult = await ContinueAfterReadInternalAsync(thisParam, innerResult).ConfigureAwait(false);
+                Debug.Assert(!thisParam.parsingInStreamError, "parsingInStreamError must be false after ContinueAfterReadInternalAsync.");
+
+                return finalResult;
+            }
+
+            async Task<bool> AwaitReadObjectAndCheckForInStreamErrorAsync(BufferingJsonReader thisParam, Task pendingCheckObjectForInStreamErrorTask, bool result)
+            {
+                // Any exception propagates as faulted task since method is async
+                try
+                {
+                    await pendingCheckObjectForInStreamErrorTask.ConfigureAwait(false);
+                    return result;
+                }
+                finally
+                {
+                    thisParam.parsingInStreamError = false;
+                }
             }
         }
 
@@ -1921,9 +2093,120 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nodeType">The node type.</param>
         /// <param name="value">The node value.</param>
+        private Task ReadObjectAndCheckForInStreamErrorAsync()
+        {
+            Debug.Assert(
+                this.asyncInnerReader.NodeType == JsonNodeType.StartObject,
+                "this.asyncInnerReader.NodeType == JsonNodeType.StartObject");
+
+            BufferedNode storedPosition = null;
+
+            // If we are currently in buffering mode remember the current position in the buffer;
+            // otherwise start buffering.
+            if (this.isBuffering)
+            {
+                // Already buffering; remember position - restore on success
+                storedPosition = this.currentBufferedNode;
+
+                Task processObjectTask = this.ProcessObjectValueAsync();
+                if ((processObjectTask.Status == TaskStatus.RanToCompletion))
+                {
+                    // Completed synchronously
+                    this.currentBufferedNode = storedPosition;
+                    return CachedTasks.Completed;
+                }
+
+                return AwaitProcessObjectValueAsync(this, storedPosition, processObjectTask);
+            }
+            else
+            {
+                // Need to start buffering first
+                Task startBufferingTask = this.StartBufferingAsync();
+                if (!(startBufferingTask.Status == TaskStatus.RanToCompletion))
+                {
+                    return AwaitStartBufferingThenProcessObjectValueAsync(this, startBufferingTask);
+                }
+
+                // StartBufferingAsync completed synchronously
+                Task processObjectTask = this.ProcessObjectValueAsync();
+                if ((processObjectTask.Status == TaskStatus.RanToCompletion))
+                {
+                    // Fast path
+                    this.StopBuffering();
+                    return CachedTasks.Completed;
+                }
+
+                return AwaitProcessObjectValueThenStopBufferingAsync(this, processObjectTask);
+            }
+
+            // We were already buffering. Only restore position on success; on fault keep the advanced position - preserve semantics before refactor
+            async Task AwaitProcessObjectValueAsync(
+                BufferingJsonReader thisParam,
+                BufferedNode storedPosition,
+                Task pendingProcessObjectTask)
+            {
+                await pendingProcessObjectTask.ConfigureAwait(false);
+                thisParam.currentBufferedNode = storedPosition;
+            }
+
+            // If start buffering faults, we propagate and leave buffering turned on - preserve semantics before refactor
+            async Task AwaitStartBufferingThenProcessObjectValueAsync(BufferingJsonReader thisParam, Task pendingStartBufferingTask)
+            {
+                await pendingStartBufferingTask.ConfigureAwait(false);
+
+                Task processObjectTask = thisParam.ProcessObjectValueAsync();
+                if (!(processObjectTask.Status == TaskStatus.RanToCompletion))
+                {
+                    await processObjectTask.ConfigureAwait(false);
+                }
+
+                // On success stop buffering
+                thisParam.StopBuffering();
+            }
+
+            async Task AwaitProcessObjectValueThenStopBufferingAsync(BufferingJsonReader thisParam, Task pendingProcessObjectTask)
+            {
+                await pendingProcessObjectTask.ConfigureAwait(false);
+                thisParam.StopBuffering();
+            }
+        }
+
+        private static BufferedNode RentNode(JsonNodeType nodeType, object nodeValue)
+        {
+            Stack<BufferedNode> nodePool = bufferedNodePool;
+            if (nodePool != null && nodePool.Count > 0)
+            {
+                BufferedNode node = nodePool.Pop();
+                node.Reset(nodeType, nodeValue);
+
+                return node;
+            }
+
+            return new BufferedNode(nodeType, nodeValue);
+        }
+
+        private static void ReturnNode(BufferedNode node)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            // Break object graph and value references
+            node.Reset(JsonNodeType.None, null);
+
+            Stack<BufferedNode> nodePool = bufferedNodePool ?? new Stack<BufferedNode>();
+            if (nodePool.Count < MaxPooledNodesPerThread)
+            {
+                nodePool.Push(node);
+                bufferedNodePool = nodePool;
+            }
+            // else let it be GC'ed
+        }
+
         private void AddNewNodeToTheEndOfBufferedNodesList(JsonNodeType nodeType, object value)
         {
-            BufferedNode newNode = new BufferedNode(nodeType, value);
+            BufferedNode newNode = RentNode(nodeType, value);
             newNode.Previous = this.bufferedNodesHead.Previous;
             newNode.Next = this.bufferedNodesHead;
             this.bufferedNodesHead.Previous.Next = newNode;
@@ -1974,10 +2257,10 @@ namespace Microsoft.OData.Json
         protected internal sealed class BufferedNode
         {
             /// <summary>The type of the node read.</summary>
-            private readonly JsonNodeType nodeType;
+            private JsonNodeType nodeType;
 
             /// <summary>The value of the node.</summary>
-            private readonly object nodeValue;
+            private object nodeValue;
 
             /// <summary>
             /// Constructor.
@@ -1995,6 +2278,15 @@ namespace Microsoft.OData.Json
             /// <summary>
             /// The type of the node read.
             /// </summary>
+            internal void Reset(JsonNodeType nodeType, object nodeValue)
+            {
+                this.nodeType = nodeType;
+                this.nodeValue = nodeValue;
+                // Break any previous links
+                this.Previous = this;
+                this.Next = this;
+            }
+
             internal JsonNodeType NodeType
             {
                 get
