@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.MultipartMixed;
@@ -104,6 +105,79 @@ OData-Version: 4.0
                 { "Accept", "application/json;odata.metadata=minimal" },
                 { "Accept-Charset", "UTF-8" }
             };
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(7)]
+        [InlineData(4093)]
+        [InlineData(8000)]
+        public void ReadCompleteBatchPreservesLongLinesWithShortReads(int maximumReadSize)
+        {
+            const string boundary = "batch_long_lines";
+            string longValue = new string('a', 32001);
+            string firstUrl = "http://example.org/Customers?padding=" + longValue;
+            const string secondUrl = "http://example.org/Orders";
+
+            string payload =
+                "--" + boundary + "\r\n" +
+                "Content-Type: application/http\r\n" +
+                "Content-Transfer-Encoding: binary\r\n" +
+                "X-Mime-Padding: " + longValue + "\r\n" +
+                "\r\n" +
+                "GET " + firstUrl + " HTTP/1.1\r\n" +
+                "X-Trace: " + longValue + "\r\n" +
+                "Content-Length: 0\r\n" +
+                "\r\n" +
+                "\r\n" +
+                "--" + boundary + "\r\n" +
+                "Content-Type: application/http\r\n" +
+                "Content-Transfer-Encoding: binary\r\n" +
+                "\r\n" +
+                "GET " + secondUrl + " HTTP/1.1\r\n" +
+                "Content-Length: 0\r\n" +
+                "\r\n" +
+                "\r\n" +
+                "--" + boundary + "--\r\n";
+
+            using var stream = new ShortReadMemoryStream(Encoding.UTF8.GetBytes(payload), maximumReadSize);
+            var message = new InMemoryMessage
+            {
+                Stream = stream,
+                Method = "POST",
+                Url = new Uri("http://example.org/$batch")
+            };
+            message.SetHeader("Content-Type", "multipart/mixed; boundary=" + boundary);
+
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message);
+            var batchReader = messageReader.CreateODataBatchReader();
+
+            Assert.True(batchReader.Read());
+            Assert.Equal(ODataBatchReaderState.Operation, batchReader.State);
+            var firstOperation = batchReader.CreateOperationRequestMessage();
+            Assert.Equal("GET", firstOperation.Method);
+            Assert.Equal(firstUrl, firstOperation.Url.OriginalString);
+            Assert.Equal(longValue, firstOperation.GetHeader("X-Trace"));
+            Assert.Equal("0", firstOperation.GetHeader("Content-Length"));
+            using (Stream body = firstOperation.GetStream())
+            {
+                Assert.Equal(-1, body.ReadByte());
+            }
+
+            Assert.True(batchReader.Read());
+            Assert.Equal(ODataBatchReaderState.Operation, batchReader.State);
+            var secondOperation = batchReader.CreateOperationRequestMessage();
+            Assert.Equal("GET", secondOperation.Method);
+            Assert.Equal(secondUrl, secondOperation.Url.OriginalString);
+            Assert.Null(secondOperation.GetHeader("X-Trace"));
+            Assert.Equal("0", secondOperation.GetHeader("Content-Length"));
+            using (Stream body = secondOperation.GetStream())
+            {
+                Assert.Equal(-1, body.ReadByte());
+            }
+
+            Assert.False(batchReader.Read());
+            Assert.Equal(ODataBatchReaderState.Completed, batchReader.State);
         }
 
         [Fact]
@@ -587,6 +661,22 @@ OData-Version: 4.0
         }
 
         #endregion BatchOperationWriteStream
+
+        private sealed class ShortReadMemoryStream : MemoryStream
+        {
+            private readonly int maximumReadSize;
+
+            public ShortReadMemoryStream(byte[] bytes, int maximumReadSize)
+                : base(bytes, writable: false)
+            {
+                this.maximumReadSize = maximumReadSize;
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                return base.Read(buffer, offset, Math.Min(count, this.maximumReadSize));
+            }
+        }
 
         private void InitializeEdmModel()
         {
