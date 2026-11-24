@@ -79,16 +79,44 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParsePathRespectsSlashAsSegmentMarkerOverSingleQuotes()
+        public void ParsePathDoesNotSplitOnSlashInsideSingleQuotes()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "EntitySet('string/key')"), this.baseUri);
-            string[] expectedListOrder = new[] { "EntitySet('string", "key')" };
+            string[] expectedListOrder = new[] { "EntitySet('string/key')" };
 
 #if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
 #endif
+        }
+
+        [Theory]
+        [InlineData("http://x/api/", "http://x/api/People('Foo/Bar')", "People('Foo/Bar')")]
+        [InlineData("http://x/api", "http://x/api/People('Foo/Bar')", "People('Foo/Bar')")]
+        [InlineData("api/", "api/People%28%27Foo/Bar%27%29", "People('Foo/Bar')")]
+        [InlineData("api/", "api/People('O%27'Neil/Jack')", "People('O''Neil/Jack')")]
+        [InlineData("api/", "api/People(%27Foo%252FBar%27)", "People('Foo%2FBar')")]
+        [InlineData("http://x//api/", "http://x//api/People('Foo/Bar')", "People('Foo/Bar')")]
+        [InlineData("http://x/API/", "http://y/api/People('Foo/Bar')", "People('Foo/Bar')")]
+        public void QuoteAwarePathSegments(string root, string request, string expected)
+        {
+            var segments = this.pathParser.ParsePathIntoSegments(
+                new Uri(request, UriKind.RelativeOrAbsolute), new Uri(root, UriKind.RelativeOrAbsolute));
+            Assert.Equal(expected, Assert.Single(segments));
+        }
+
+        [Fact]
+        public void QuoteAwarePathPreservesSegmentLimitAndUnprotectedSlashes()
+        {
+            var parser = new UriPathParser(new ODataUriParserSettings { PathLimit = 2 });
+            Assert.Equal(new[] { "People('Foo/Bar')", "Orders" },
+                parser.ParsePathIntoSegments(new Uri("api/People('Foo/Bar')/Orders", UriKind.Relative), new Uri("api/", UriKind.Relative)));
+            Assert.Throws<ODataException>(() => parser.ParsePathIntoSegments(
+                new Uri("api/People('Foo/Bar')/Orders/Items", UriKind.Relative), new Uri("api/", UriKind.Relative)));
+            Assert.Equal(new[] { "a'", "b'", "c" }, this.pathParser.ParsePathIntoSegments(
+                new Uri("api/a'/b'/c", UriKind.Relative), new Uri("api/", UriKind.Relative)));
+            Assert.False(UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://x//api/"), new Uri("http://x/api/People")));
         }
 
         [Fact]
