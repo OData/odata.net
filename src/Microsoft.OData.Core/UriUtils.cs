@@ -19,6 +19,7 @@ namespace Microsoft.OData
     /// </summary>
     internal static class UriUtils
     {
+        private static readonly Uri DefaultMockBase = new Uri("http://host/");
         /// <summary>
         /// Returns an absolute URI constructed from the specified base URI and a relative URI
         /// </summary>
@@ -236,11 +237,9 @@ namespace Microsoft.OData
         /// <returns>The mock Uri, the base Uri if given <paramref name="uri"/> is null</returns>
         internal static Uri CreateMockAbsoluteUri(Uri uri = null)
         {
-            Uri BaseMockUri = new Uri("http://host/");
-
             if (uri == null)
             {
-                return BaseMockUri;
+                return DefaultMockBase;
             }
 
             if (uri.IsAbsoluteUri)
@@ -249,7 +248,7 @@ namespace Microsoft.OData
             }
             else
             {
-                return new Uri(BaseMockUri, uri);
+                return new Uri(DefaultMockBase, uri);
             }
         }
 
