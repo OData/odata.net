@@ -6,9 +6,12 @@
 
 using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -19,6 +22,99 @@ namespace Microsoft.OData.Tests
     /// </summary>
     public class ODataWriterCoreTests
     {
+        [Theory]
+        [InlineData(false, false, true, false)]
+        [InlineData(false, true, true, false)]
+        [InlineData(false, false, false, false)]
+        [InlineData(true, false, false, false)]
+        [InlineData(true, true, false, false)]
+        [InlineData(false, false, false, true)]
+        public void ContainedResourcesRecoverPathsFromExplicitIds(bool collection, bool absoluteIds, bool parentHasId, bool invalidIds)
+        {
+            var model = new EdmModel();
+            var parent = new EdmEntityType("NS", "Parent");
+            parent.AddKeys(parent.AddStructuralProperty("id", EdmPrimitiveTypeKind.String));
+            var child = new EdmEntityType("NS", "Child");
+            child.AddKeys(child.AddStructuralProperty("id", EdmPrimitiveTypeKind.String));
+            var fields = new EdmEntityType("NS", "Fields");
+            fields.AddKeys(fields.AddStructuralProperty("id", EdmPrimitiveTypeKind.String));
+            parent.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "items", Target = child, ContainsTarget = true,
+                TargetMultiplicity = collection ? EdmMultiplicity.Many : EdmMultiplicity.ZeroOrOne
+            });
+            child.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "fields", Target = fields, ContainsTarget = true, TargetMultiplicity = EdmMultiplicity.ZeroOrOne
+            });
+            var container = new EdmEntityContainer("NS", "Container");
+            var parents = container.AddEntitySet("Parents", parent);
+            model.AddElements(new IEdmSchemaElement[] { parent, child, fields, container });
+            var root = new Uri("http://svc/");
+            string parentPath = invalidIds ? "Unknown('parent')" : "Parents('parent')";
+            string childPath = parentPath + (collection ? "/items('child')" : "/items");
+            var parentId = new Uri(parentPath, UriKind.Relative);
+            var childId = absoluteIds ? new Uri(root, childPath) : new Uri(childPath, UriKind.Relative);
+            var fieldsId = absoluteIds ? new Uri(root, childPath + "/fields") : new Uri(childPath + "/fields", UriKind.Relative);
+            var settings = new ODataMessageWriterSettings
+            {
+                EnableMessageStreamDisposal = false,
+                ODataUri = new ODataUri
+                {
+                    ServiceRoot = root,
+                    Path = new ODataUriParser(model, root, new Uri(root, "Parents('parent')")).ParsePath()
+                }
+            };
+            settings.SetContentType("application/json;odata.metadata=full", null);
+            using (var stream = new MemoryStream())
+            using (var messageWriter = new ODataMessageWriter((IODataResponseMessage)new InMemoryMessage { Stream = stream }, settings, model))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(parents, parent);
+                Action write = () =>
+                {
+                    writer.WriteStart(new ODataResource { Id = parentHasId ? parentId : null });
+                    writer.WriteStart(new ODataNestedResourceInfo
+                    {
+                        Name = "items", IsCollection = collection,
+                        Url = parentHasId ? null : childId,
+                        AssociationLinkUrl = parentHasId ? null : new Uri(childPath + "/$ref", UriKind.Relative)
+                    });
+                    if (collection)
+                    {
+                        writer.WriteStart(new ODataResourceSet());
+                    }
+
+                    writer.WriteStart(new ODataResource { Id = childId });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "fields", IsCollection = false });
+                    var scopeProperty = typeof(ODataWriterCore).GetProperty("CurrentScope", BindingFlags.Instance | BindingFlags.NonPublic);
+                    var scope = (ODataWriterCore.Scope)scopeProperty.GetValue(writer);
+                    Assert.Equal(collection ? 2 : 1, scope.ODataUri.Path.OfType<KeySegment>().Count());
+                    writer.WriteStart(new ODataResource { Id = fieldsId });
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    if (collection)
+                    {
+                        writer.WriteEnd();
+                    }
+
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.Flush();
+                };
+                if (invalidIds)
+                {
+                    Assert.Equal(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement,
+                        Assert.Throws<ODataException>(write).Message);
+                }
+                else
+                {
+                    write();
+                    Assert.Contains("\"@odata.id\":\"" + fieldsId.OriginalString + "\"", Encoding.UTF8.GetString(stream.ToArray()));
+                }
+            }
+        }
+
         [Fact]
         public void ValidateWriteMethodGroup()
         {
