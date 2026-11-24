@@ -106,6 +106,36 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.Color"), (int)Color.Green);
         }
 
+        [Theory]
+        [InlineData("ColorFlags in (7, 'GreenRed, Blue')")]
+        [InlineData("ColorFlags in (NS.ColorFlags'GreenRed, Blue', '3')")]
+        [InlineData("ColorFlags in (\"greenred, blue\", 7)")]
+        public void ParseCombinedFlagsCollection(string filter)
+        {
+            var parser = new ODataQueryOptionParser(this.userModel, this.entityType, this.entitySet,
+                new Dictionary<string, string> { { "$filter", filter } });
+            parser.Resolver.EnableCaseInsensitive = true;
+            var node = Assert.IsType<InNode>(parser.ParseFilter().Expression);
+            Assert.Equal(2, Assert.IsType<CollectionConstantNode>(node.Right).Collection.Count());
+        }
+
+        [Fact]
+        public void FlagsDecompositionPreservesModelMembersAndAliases()
+        {
+            var type = new EdmEnumType("NS", "Access", EdmPrimitiveTypeKind.Int64, true);
+            type.AddMember("Execute", new EdmEnumMemberValue(4));
+            type.AddMember("Read", new EdmEnumMemberValue(1));
+            type.AddMember("ReadAlias", new EdmEnumMemberValue(1));
+            type.AddMember("ReadWrite", new EdmEnumMemberValue(3));
+            type.AddMember("Write", new EdmEnumMemberValue(2));
+            var members = type.Members.ToArray();
+            Assert.Equal("ReadWrite,Execute", type.ParseFlagsFromIntegralValue(7));
+            Assert.Equal(members, type.Members);
+            Assert.Equal("ReadAlias,Write", type.ParseFlagsFromStringValue(" readalias, WRITE ", StringComparison.OrdinalIgnoreCase));
+            Assert.Null(type.ParseFlagsFromIntegralValue(8));
+            Assert.Null(type.ParseFlagsFromStringValue("Read,", StringComparison.Ordinal));
+        }
+
         [Fact]
         public void ParseFilterWithEnumInt()
         {

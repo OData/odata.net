@@ -25,8 +25,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="source">The source node to apply the conversion to.</param>
         /// <param name="targetTypeReference">The target primitive type. May be null - this method will do nothing in that case.</param>
+        /// <param name="enableCaseInsensitive">Whether enum member matching ignores case.</param>
         /// <returns>The converted query node, or the original source node unchanged.</returns>
-        internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference)
+        internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference, bool enableCaseInsensitive = false)
         {
             Debug.Assert(source != null, "source != null");
 
@@ -64,17 +65,25 @@ namespace Microsoft.OData.UriParser
                 {
                     string memberName = constantNode.Value.ToString();
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
-                    if(enumType.ContainsMember(memberName, StringComparison.Ordinal))
+                    StringComparison comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+                    if (long.TryParse(memberName, out long integralValue))
                     {
-                        string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(memberName, enumType.ToString()), literalText, targetTypeReference);
+                        string name = enumType.TryParse(integralValue, out IEdmEnumMember member)
+                            ? member.Name : enumType.IsFlags ? enumType.ParseFlagsFromIntegralValue(integralValue) : null;
+                        if (name != null)
+                        {
+                            return new ConstantNode(new ODataEnumValue(name, enumType.FullName()),
+                                ODataUriUtils.ConvertToUriLiteral(name, ODataVersion.V4), targetTypeReference);
+                        }
                     }
 
-                    // If the member name is an integral value, we should try to convert it to the enum member name and find the enum member with the matching integral value
-                    if (long.TryParse(memberName, out long memberIntegralValue) && enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
+                    var namedMember = enumType.FindMember(memberName, comparison);
+                    string flagsName = namedMember != null ? namedMember.Name :
+                        enumType.IsFlags ? enumType.ParseFlagsFromStringValue(memberName, comparison) : null;
+                    if (flagsName != null)
                     {
-                        string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
+                        return new ConstantNode(new ODataEnumValue(flagsName, enumType.FullName()),
+                            ODataUriUtils.ConvertToUriLiteral(flagsName, ODataVersion.V4), targetTypeReference);
                     }
 
                     throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(memberName));
@@ -131,6 +140,39 @@ namespace Microsoft.OData.UriParser
                 // If the source doesn't have a type (possibly an open property), then it's possible to convert it
                 // cause we don't know for sure.
                 return new ConvertNode(source, targetTypeReference);
+            }
+        }
+
+        internal static void VerifyCollectionNode(CollectionNode node, bool enableCaseInsensitive)
+        {
+            var collection = node as CollectionConstantNode;
+            if (collection == null || !collection.ItemType.IsEnum())
+            {
+                return;
+            }
+
+            var enumType = (IEdmEnumType)collection.ItemType.Definition;
+            var comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            foreach (var item in collection.Collection)
+            {
+                var value = item.Value as ODataEnumValue;
+                if (value == null || enumType.ContainsMember(value.Value, comparison))
+                {
+                    continue;
+                }
+
+                if (long.TryParse(value.Value, out long number) &&
+                    (enumType.TryParse(number, out IEdmEnumMember member) || enumType.IsValidFlagsEnumValue(number)))
+                {
+                    continue;
+                }
+
+                if (enumType.IsFlags && enumType.ParseFlagsFromStringValue(value.Value, comparison) != null)
+                {
+                    continue;
+                }
+
+                throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(value.Value));
             }
         }
 
