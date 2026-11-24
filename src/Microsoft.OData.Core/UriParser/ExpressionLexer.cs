@@ -1245,11 +1245,11 @@ namespace Microsoft.OData.UriParser
                     this.AdvanceToNextOccurenceOf('\'');
                 }
 
-                if (this.ch == startingCharacter)
+                if (!this.parsingDoubleQuotedString && this.ch == startingCharacter)
                 {
                     currentBracketDepth++;
                 }
-                else if (this.ch == endingCharacter)
+                else if (!this.parsingDoubleQuotedString && this.ch == endingCharacter)
                 {
                     currentBracketDepth--;
                 }
@@ -1296,7 +1296,13 @@ namespace Microsoft.OData.UriParser
 
         private void DoubleQuotedStringCheckpoint()
         {
-            if (this.textPos != 0 && this.Text[this.textPos - 1] != '\\')
+            int precedingBackslashCount = 0;
+            for (int index = this.textPos - 1; index >= 0 && this.Text[index] == '\\'; index--)
+            {
+                precedingBackslashCount++;
+            }
+
+            if (precedingBackslashCount % 2 == 0)
             {
                 this.parsingDoubleQuotedString = !this.parsingDoubleQuotedString;
             }

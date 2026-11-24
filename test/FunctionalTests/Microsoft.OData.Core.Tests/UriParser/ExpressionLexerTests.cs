@@ -815,6 +815,52 @@ namespace Microsoft.OData.Tests.UriParser
                 BracedToken("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }"));
         }
 
+        [Theory]
+        [InlineData("[{\"value\":\"[\"}]")]
+        [InlineData("[{\"value\":\"]\"}]")]
+        [InlineData("[{\"value\":\"quote \\\"[\\\" and escaped backslash \\\\\"}]")]
+        [InlineData("[{\"value\":\"\\\\\",\"nested\":[1,2,3]}]")]
+        [InlineData("['before ''['' after']")]
+        public void QuotedBracketsDoNotChangeTheBalancedExpressionDepth(string expression)
+        {
+            var lexer = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+
+            Assert.Equal(expression, lexer.CurrentToken.Text);
+            Assert.Equal(ExpressionTokenKind.End, lexer.NextToken().Kind);
+        }
+
+        [Theory]
+        [InlineData("{\"value\":\"}\"}")]
+        [InlineData("{\"value\":\"\\\\\",\"nested\":{\"id\":1}}")]
+        [InlineData("{\"value\":'before ''{'' after'}")]
+        public void QuotedBracesDoNotChangeTheBalancedExpressionDepth(string expression)
+        {
+            var lexer = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+
+            Assert.Equal(expression, lexer.CurrentToken.Text);
+            Assert.Equal(ExpressionTokenKind.End, lexer.NextToken().Kind);
+        }
+
+        [Theory]
+        [InlineData("(\"(\")next")]
+        [InlineData("(\"\\\\\", nested(value))next")]
+        [InlineData("('before ''('' after')next")]
+        public void QuotedParenthesesDoNotChangeTheBalancedExpressionDepth(string expression)
+        {
+            var lexer = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
+
+            Assert.Equal(expression.Substring(0, expression.Length - 4), lexer.AdvanceThroughBalancedParentheticalExpression());
+            Assert.Equal("next", lexer.NextToken().Text);
+        }
+
+        [Theory]
+        [InlineData("[\"missing outer bracket]\"")]
+        [InlineData("{\"value\":\"missing outer brace}\"")]
+        public void QuotedDelimitersDoNotCloseTheOuterExpression(string expression)
+        {
+            Assert.Equal(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression, Assert.Throws<ODataException>(() => new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: false)).Message);
+        }
+
         [Fact]
         public void FunctionWithComplexParameter()
         {
