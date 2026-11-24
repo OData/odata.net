@@ -856,15 +856,17 @@ namespace Microsoft.OData.JsonLight
             {
                 this.CurrentProperty = bufferedProperty;
                 string lookupName = propertyName ?? annotationName;
+                object storedValue;
+                bool hasStoredValue = this.propertyCache.TryGetValue(lookupName, out storedValue);
 
                 // We have to record the relative positions of all properties so we can later on properly sort them.
                 // Note that we have to also capture the positions of the property annotations as long as we have not
                 // seen a data property for that annotation since the data property might be missing.
-                if (propertyName == null)
+                if (propertyName == null && !hasStoredValue)
                 {
                     this.propertyNamesWithAnnotations.Add(new KeyValuePair<string, string>(annotationName, null));
                 }
-                else if (!this.dataProperties.Contains(propertyName))
+                else if (propertyName != null && !this.dataProperties.Contains(propertyName) && (annotationName == null || !hasStoredValue))
                 {
                     if (annotationName == null)
                     {
@@ -874,8 +876,7 @@ namespace Microsoft.OData.JsonLight
                     this.propertyNamesWithAnnotations.Add(new KeyValuePair<string, string>(propertyName, annotationName));
                 }
 
-                object storedValue;
-                if (this.propertyCache.TryGetValue(lookupName, out storedValue))
+                if (hasStoredValue)
                 {
                     Debug.Assert(storedValue != null, "storedValue != null");
                     List<BufferedProperty> storedProperties;
