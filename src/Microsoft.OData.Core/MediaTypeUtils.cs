@@ -54,14 +54,14 @@ namespace Microsoft.OData
         private static readonly UTF8Encoding encodingUtf8NoPreamble = new UTF8Encoding(false, true);
 
         /// <summary>
-        /// Max size to cache match info.
+        /// Maximum number of media type matches retained in the cache.
         /// </summary>
-        private const int MatchInfoCacheInitialSize = 256;
+        internal const int MatchInfoCacheMaxSize = 256;
 
         /// <summary>
         /// Concurrent cache to cache match info.
         /// </summary>
-        private static MatchInfoConcurrentCache MatchInfoCache = new MatchInfoConcurrentCache(MatchInfoCacheInitialSize);
+        private static readonly MatchInfoConcurrentCache MatchInfoCache = new MatchInfoConcurrentCache(MatchInfoCacheMaxSize);
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
@@ -416,6 +416,14 @@ namespace Microsoft.OData
         internal static IEnumerable<string> GetCacheKeys()
         {
             return MatchInfoCache.GetKeys();
+        }
+
+        /// <summary>
+        /// Clears the cached media type matches.
+        /// </summary>
+        internal static void ClearCache()
+        {
+            MatchInfoCache.Clear();
         }
 
         /// <summary>
@@ -1006,12 +1014,28 @@ namespace Microsoft.OData
             private readonly ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo> dict;
 
             /// <summary>
+            /// Synchronizes cache writes and clears.
+            /// </summary>
+            private readonly object cacheLock = new object();
+
+            /// <summary>
+            /// Maximum number of elements retained in the cache.
+            /// </summary>
+            private readonly int maxSize;
+
+            /// <summary>
+            /// Number of elements currently retained in the cache.
+            /// </summary>
+            private int count;
+
+            /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="initialSize">Initial size of the cache.</param>
-            public MatchInfoConcurrentCache(int initialSize)
+            /// <param name="maxSize">Maximum size of the cache.</param>
+            public MatchInfoConcurrentCache(int maxSize)
             {
-                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, initialSize);
+                this.maxSize = maxSize;
+                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, maxSize);
             }
 
             /// <summary>
@@ -1032,16 +1056,35 @@ namespace Microsoft.OData
             /// <param name="value">The value of the element to add.</param>
             public void Add(MatchInfoCacheKey key, MediaTypeMatchInfo value)
             {
-                try
+                lock (this.cacheLock)
                 {
-                    // Try to add the key to the dictionary. If we are overflowing
-                    // clear the dictionary and attempt to add the entry again.
-                    this.dict.TryAdd(key, value);
+                    if (this.dict.ContainsKey(key))
+                    {
+                        return;
+                    }
+
+                    if (this.count >= this.maxSize)
+                    {
+                        this.dict.Clear();
+                        this.count = 0;
+                    }
+
+                    if (this.dict.TryAdd(key, value))
+                    {
+                        this.count++;
+                    }
                 }
-                catch (OverflowException)
+            }
+
+            /// <summary>
+            /// Removes all elements from the cache.
+            /// </summary>
+            public void Clear()
+            {
+                lock (this.cacheLock)
                 {
                     this.dict.Clear();
-                    this.dict.TryAdd(key, value);
+                    this.count = 0;
                 }
             }
 
