@@ -5,9 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
@@ -39,6 +41,40 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
 
             Uri result = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(query, Uri.UnescapeDataString(result.OriginalString));
+        }
+
+        [Fact]
+        public void BuildUrlWithApplyAggregateOnCollectionProperty()
+        {
+            string customFunctionName = "NS.UnionDate";
+            string query = $"http://gobbledygook/People?$apply=aggregate(MyDates with {customFunctionName} as UnionDate)";
+
+            try
+            {
+                var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+                var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+                var parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(query));
+                ODataUri odataUri = parser.ParseUri();
+
+                Uri result = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+                Assert.Equal(query, Uri.UnescapeDataString(result.OriginalString));
+                var aggregate = Assert.IsType<AggregateTransformationNode>(Assert.Single(odataUri.Apply.Transformations));
+                var expression = Assert.IsType<AggregateCollectionExpression>(Assert.Single(aggregate.AggregateExpressions));
+                Assert.Equal("Collection(Edm.Date)", expression.TypeReference.FullName());
+                Assert.Equal(AggregationMethod.Custom, expression.Method);
+                Assert.Equal("UnionDate", expression.Alias);
+                Assert.IsType<CollectionPropertyAccessNode>(expression.Expression);
+
+                var invalid = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot,
+                    new Uri("http://gobbledygook/People?$apply=aggregate(MyDates with sum as Total)"));
+                Assert.Throws<ODataException>(() => invalid.ParseApply());
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            }
         }
     }
 }
