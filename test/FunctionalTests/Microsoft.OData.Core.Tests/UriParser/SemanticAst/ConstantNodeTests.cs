@@ -57,5 +57,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ConstantNode constantNode = new ConstantNode(null, "foo");
             Assert.Equal("foo", constantNode.LiteralText);
         }
+
+        [Fact]
+        public void EmptyLiteralTextShouldThrow()
+        {
+            Assert.Throws<ArgumentNullException>("literalText", () => new ConstantNode(string.Empty, string.Empty));
+            Assert.Throws<ArgumentNullException>("literalText",
+                () => new ConstantNode(string.Empty, string.Empty, EdmCoreModel.Instance.GetString(false)));
+        }
     }
 }
