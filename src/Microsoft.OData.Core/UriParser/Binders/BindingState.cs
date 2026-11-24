@@ -36,7 +36,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The current recursion depth of binding.
         /// </summary>
-        private int BindingRecursionDepth;
+        private int bindingRecursionDepth;
 
         /// <summary>
         /// Collection of query option tokens associated with the current query being processed.
@@ -57,15 +57,32 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             this.configuration = configuration;
-            this.BindingRecursionDepth = 0;
+            this.bindingRecursionDepth = 0;
         }
 
         internal BindingState(ODataUriParserConfiguration configuration, List<ODataPathSegment> parsedSegments)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             this.configuration = configuration;
-            this.BindingRecursionDepth = 0;
+            this.bindingRecursionDepth = 0;
             this.parsedSegments = parsedSegments;
+        }
+
+        /// <summary>
+        /// Creates a nested binding context without resetting the outer depth budget.
+        /// </summary>
+        internal BindingState(ODataUriParserConfiguration configuration, int initialRecursionDepth)
+            : this(configuration)
+        {
+            this.bindingRecursionDepth = initialRecursionDepth;
+        }
+
+        /// <summary>
+        /// Gets the depth already consumed by the current binding context.
+        /// </summary>
+        internal int BindingRecursionDepth
+        {
+            get { return this.bindingRecursionDepth; }
         }
 
         /// <summary>
@@ -169,10 +186,10 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         internal void RecurseEnter()
         {
-            this.BindingRecursionDepth++;
+            this.bindingRecursionDepth++;
 
             // TODO: add BindingLimit, use uniform error message
-            if (this.BindingRecursionDepth > this.configuration.Settings.FilterLimit)
+            if (this.bindingRecursionDepth > this.configuration.Settings.FilterLimit)
             {
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
             }
@@ -183,9 +200,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         internal void RecurseLeave()
         {
-            Debug.Assert(this.BindingRecursionDepth > 0, "Decreasing recursion depth below zero, imbalanced recursion calls.");
+            Debug.Assert(this.bindingRecursionDepth > 0, "Decreasing recursion depth below zero, imbalanced recursion calls.");
 
-            this.BindingRecursionDepth--;
+            this.bindingRecursionDepth--;
         }
     }
 }

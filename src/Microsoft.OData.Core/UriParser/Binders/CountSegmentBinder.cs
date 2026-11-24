@@ -55,7 +55,7 @@ namespace Microsoft.OData.UriParser
             FilterClause filterClause = null;
             SearchClause searchClause = null;
 
-            BindingState innerBindingState = new BindingState(state.Configuration);            
+            BindingState innerBindingState = new BindingState(state.Configuration, state.BindingRecursionDepth);
             innerBindingState.ImplicitRangeVariable = NodeFactory.CreateParameterNode(ExpressionConstants.It, node);
             MetadataBinder binder = new MetadataBinder(innerBindingState);
 

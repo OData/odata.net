@@ -163,6 +163,19 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Gets the configured recursion limit and the depth already consumed.
+        /// </summary>
+        internal int MaxDepth
+        {
+            get { return this.maxDepth; }
+        }
+
+        internal int CurrentRecursionDepth
+        {
+            get { return this.recursionDepth; }
+        }
+
+        /// <summary>
         /// Gets if this parser is currently within an aggregate expression parsing stack.
         /// </summary>
         private bool IsInAggregateExpression

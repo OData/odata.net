@@ -25,6 +25,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
     public class FilterAndOrderByFunctionalTests
     {
         [Theory]
+        [InlineData(1, 20)]
+        [InlineData(3, 3)]
+        [InlineData(100, 10)]
+        public void NestedCountFiltersShareTheDepthBudget(int nestingDepth, int limit)
+        {
+            string filter = "true";
+            for (int i = 0; i < nestingDepth; i++)
+            {
+                filter = "MyFriendsDogs/$count($filter=" + filter + ") gt 0";
+            }
+
+            var parser = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string> { { "$filter", filter } });
+            parser.Settings.FilterLimit = limit;
+            if (nestingDepth == 1)
+            {
+                Assert.IsType<BinaryOperatorNode>(parser.ParseFilter().Expression);
+            }
+            else
+            {
+                Assert.Equal(ODataErrorStrings.UriQueryExpressionParser_TooDeep, Assert.Throws<ODataException>(() => parser.ParseFilter()).Message);
+            }
+        }
+
+        [Theory]
         [InlineData("ID eq 123")]
         [InlineData("ID eq 123L")]
         [InlineData("ID eq NaN")]
