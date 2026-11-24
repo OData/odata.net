@@ -43,7 +43,7 @@ namespace Microsoft.OData.Client.Tests
 
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
         {
-            // APM is deprecated in .NET Core and Task.CompletedTask is not available in NET45
+            // APM is deprecated in .NET Core and Task.CompletedTask is not available in NET452
             callback.Invoke(Task.FromResult(0));
             return Task.FromResult(0);
         }

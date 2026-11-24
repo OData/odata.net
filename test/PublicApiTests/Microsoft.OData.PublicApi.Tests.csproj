@@ -11,12 +11,12 @@
   <Import Project="..\Build.props"/>
   
   <ItemGroup>
-    <None Remove="BaseLine\Microsoft.OData.PublicApi.net45.bsl" />
+    <None Remove="BaseLine\Microsoft.OData.PublicApi.net452.bsl" />
     <None Remove="BaseLine\Microsoft.OData.PublicApi.netstandard1.1.bsl" />
     <None Remove="BaseLine\Microsoft.OData.PublicApi.netstandard2.0.bsl" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BaseLine\Microsoft.OData.PublicApi.net45.bsl" />
+    <EmbeddedResource Include="BaseLine\Microsoft.OData.PublicApi.net452.bsl" />
     <EmbeddedResource Include="BaseLine\Microsoft.OData.PublicApi.netstandard1.1.bsl" />
     <EmbeddedResource Include="BaseLine\Microsoft.OData.PublicApi.netstandard2.0.bsl" />
   </ItemGroup>

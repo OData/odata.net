@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using Xunit;
 
 namespace Microsoft.OData.PublicApi.Tests
@@ -15,7 +16,7 @@ namespace Microsoft.OData.PublicApi.Tests
     public class PublicApiTest
     {
         [Theory]
-        [InlineData("net45")]
+        [InlineData("net452")]
         [InlineData("netstandard2.0")]
         public void TestODataPublicApiOnMultipleFramework(string framework)
         {
@@ -42,6 +43,40 @@ namespace Microsoft.OData.PublicApi.Tests
             };
 
             TestPublicApi(packages, "netstandard1.1");
+        }
+
+        [Theory]
+        [InlineData("netstandard2.0", "netstandard1.1")]
+        [InlineData("netstandard1.1", "netstandard2.0")]
+        public void TestODataPublicApiOnDifferentFrameworksUsesRequestedAssembly(string firstFramework, string secondFramework)
+        {
+            foreach (string framework in new[] { firstFramework, secondFramework })
+            {
+                string outputPath = Environment.CurrentDirectory;
+                string buildConfig = Directory.GetParent(outputPath).Name;
+                string template = @"test\PublicApiTests\bin\" + buildConfig + @"\netcoreapp3.1";
+                string assemblyPath = outputPath.Replace(template, @"src\Microsoft.OData.Edm\bin\" + buildConfig + @"\" + framework);
+                string assemblyFullPath = Path.Combine(assemblyPath, "Microsoft.OData.Edm.dll");
+
+                using (var stream = new MemoryStream())
+                {
+                    using (var writer = new StreamWriter(stream, Encoding.UTF8, 1024, leaveOpen: true))
+                    {
+                        PublicApiHelper.DumpPublicApi(writer, assemblyFullPath);
+                    }
+
+                    string api = Encoding.UTF8.GetString(stream.ToArray());
+                    Assert.Contains("Microsoft.OData.Edm.Csdl.CsdlReader", api);
+                    if (framework == "netstandard2.0")
+                    {
+                        Assert.Contains("Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings", api);
+                    }
+                    else
+                    {
+                        Assert.DoesNotContain("Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings", api);
+                    }
+                }
+            }
         }
 
         private static void TestPublicApi(IList<string> packageNames, string framework)

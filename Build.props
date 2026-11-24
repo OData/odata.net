@@ -33,7 +33,7 @@
     <DefineConstants Condition="'$(AllowPartialTrustedCalls)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS</DefineConstants>
     <DefineConstants Condition="'$(ConditionalAPTCA_L2)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2</DefineConstants>
     <DefineConstants Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST</DefineConstants>
-    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.5'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
+    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.5.2'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
   </PropertyGroup>
 
  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.1'">
@@ -45,15 +45,15 @@
   </PropertyGroup>
 
 
-  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net45'">
+  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net452'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
   
-  <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v4.5'">
+  <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v4.5.2'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition ="'$(TargetFramework)' == 'net45'">
+  <PropertyGroup Condition ="'$(TargetFramework)' == 'net452'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>
   
