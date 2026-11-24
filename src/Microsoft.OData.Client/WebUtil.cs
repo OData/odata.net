@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -21,10 +23,28 @@ namespace Microsoft.OData.Client
     /// <summary>web utility functions</summary>
     internal static partial class WebUtil
     {
+        /// <summary>Asynchronously copies a response using legacy array-based stream APIs.</summary>
+        /// <param name="input">The source stream.</param>
+        /// <param name="output">The destination stream.</param>
+        /// <param name="buffer">The reusable copy buffer.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>The number of bytes copied.</returns>
+        internal static async Task<long> CopyStreamAsync(Stream input, Stream output, byte[] buffer, CancellationToken cancellationToken)
+        {
+            long total = 0;
+            int count;
+            while (input.CanRead && (count = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) > 0)
+            {
+                await output.WriteAsync(buffer, 0, count, cancellationToken).ConfigureAwait(false);
+                total += count;
+            }
+
+            return total;
+        }
         /// <summary>
         /// Default buffer size used for stream copy.
         /// </summary>
-        internal const int DefaultBufferSizeForStreamCopy = 64 * 1024;
+        internal const int DefaultBufferSizeForStreamCopy = 4096;
 
         /// <summary>
         /// Whether DataServiceCollection&lt;&gt; type is available.
@@ -100,7 +120,7 @@ namespace Microsoft.OData.Client
                 if (webexception != null)
                 {
                     response = webexception.Response;
-                    return (InvalidOperationException)webexception.InnerException;
+                    return webexception.InnerException as InvalidOperationException ?? webexception;
                 }
             }
 

@@ -8062,6 +8062,11 @@ public abstract class Microsoft.OData.Client.DataServiceClientRequestMessage : I
     public abstract Microsoft.OData.IODataResponseMessage EndGetResponse (System.IAsyncResult asyncResult)
     public abstract string GetHeader (string headerName)
     public abstract Microsoft.OData.IODataResponseMessage GetResponse ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.IODataResponseMessage]] GetResponseAsync (System.Threading.CancellationToken cancellationToken)
+
     public abstract System.IO.Stream GetStream ()
     public abstract void SetHeader (string headerName, string headerValue)
 }
@@ -8076,6 +8081,7 @@ public abstract class Microsoft.OData.Client.DataServiceQuery : Microsoft.OData.
     internal abstract System.Collections.IEnumerable EndExecuteInternal (System.IAsyncResult asyncResult)
     public virtual System.Collections.IEnumerable Execute ()
     public virtual System.Threading.Tasks.Task`1[[System.Collections.IEnumerable]] ExecuteAsync ()
+    internal abstract System.Threading.Tasks.Task`1[[System.Collections.IEnumerable]] ExecuteAsyncInternal (System.Threading.CancellationToken cancellationToken)
     internal abstract System.Collections.IEnumerable ExecuteInternal ()
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 }
@@ -8321,7 +8327,11 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.IAsyncResult BeginSaveChanges (Microsoft.OData.Client.SaveChangesOptions options, System.AsyncCallback callback, object state)
     public virtual Microsoft.OData.Client.DataServiceResponse BulkUpdate (T[] objects)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] BulkUpdateAsync (T[] objects)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] BulkUpdateAsync (System.Threading.CancellationToken cancellationToken, T[] objects)
+
     public virtual void CancelRequest (System.IAsyncResult asyncResult)
     public virtual void ChangeState (object entity, Microsoft.OData.Client.EntityStates state)
     public virtual DataServiceQuery`1 CreateFunctionQuery ()
@@ -8332,7 +8342,11 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual DataServiceQuery`1 CreateSingletonQuery (string singletonName)
     public virtual Microsoft.OData.Client.DataServiceResponse DeepInsert (T resource)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] DeepInsertAsync (T resource)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] DeepInsertAsync (T resource, System.Threading.CancellationToken cancellationToken)
+
     protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
     public virtual void DeleteLink (object source, string sourceProperty, object target)
     public virtual void DeleteObject (object entity)
@@ -8354,20 +8368,44 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual IEnumerable`1 Execute (System.Uri requestUri, string httpMethod, bool singleResult, Microsoft.OData.Client.OperationParameter[] operationParameters)
     public virtual Task`1 ExecuteAsync (DataServiceQueryContinuation`1 continuation)
     public virtual Task`1 ExecuteAsync (System.Uri requestUri)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual Task`1 ExecuteAsync (DataServiceQueryContinuation`1 continuation, System.Threading.CancellationToken cancellationToken)
+
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual Task`1 ExecuteAsync (System.Uri requestUri, System.Threading.CancellationToken cancellationToken)
+
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.OperationResponse]] ExecuteAsync (System.Uri requestUri, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
     public virtual Task`1 ExecuteAsync (System.Uri requestUri, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
     public virtual Task`1 ExecuteAsync (System.Uri requestUri, string httpMethod, bool singleResult, Microsoft.OData.Client.OperationParameter[] operationParameters)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.OperationResponse]] ExecuteAsync (System.Uri requestUri, string httpMethod, System.Threading.CancellationToken cancellationToken, Microsoft.OData.Client.OperationParameter[] operationParameters)
+
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual Task`1 ExecuteAsync (System.Uri requestUri, string httpMethod, System.Threading.CancellationToken cancellationToken, Microsoft.OData.Client.OperationParameter[] operationParameters)
+
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual Task`1 ExecuteAsync (System.Uri requestUri, string httpMethod, bool singleResult, System.Threading.CancellationToken cancellationToken, Microsoft.OData.Client.OperationParameter[] operationParameters)
+
     public virtual Microsoft.OData.Client.DataServiceResponse ExecuteBatch (Microsoft.OData.Client.DataServiceRequest[] queries)
     public virtual Microsoft.OData.Client.DataServiceResponse ExecuteBatch (Microsoft.OData.Client.SaveChangesOptions options, Microsoft.OData.Client.DataServiceRequest[] queries)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] ExecuteBatchAsync (Microsoft.OData.Client.DataServiceRequest[] queries)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] ExecuteBatchAsync (Microsoft.OData.Client.SaveChangesOptions options, Microsoft.OData.Client.DataServiceRequest[] queries)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] ExecuteBatchAsync (System.Threading.CancellationToken cancellationToken, Microsoft.OData.Client.DataServiceRequest[] queries)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] ExecuteBatchAsync (Microsoft.OData.Client.SaveChangesOptions options, System.Threading.CancellationToken cancellationToken, Microsoft.OData.Client.DataServiceRequest[] queries)
+
     internal virtual Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable GetEdmOperationOrOperationImport (System.Reflection.MethodInfo methodInfo)
     public virtual Microsoft.OData.Client.EntityDescriptor GetEntityDescriptor (object entity)
     internal virtual Microsoft.OData.Client.ODataResourceMetadataBuilder GetEntityMetadataBuilder (string entitySetName, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue entityInstance)
@@ -8378,9 +8416,17 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual Microsoft.OData.Client.DataServiceStreamResponse GetReadStream (object entity, string acceptContentType)
     public virtual Microsoft.OData.Client.DataServiceStreamResponse GetReadStream (object entity, string name, Microsoft.OData.Client.DataServiceRequestArgs args)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceStreamResponse]] GetReadStreamAsync (object entity, Microsoft.OData.Client.DataServiceRequestArgs args)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceStreamResponse]] GetReadStreamAsync (object entity, Microsoft.OData.Client.DataServiceRequestArgs args, System.Threading.CancellationToken cancellationToken)
+
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceStreamResponse]] GetReadStreamAsync (object entity, string name, Microsoft.OData.Client.DataServiceRequestArgs args)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceStreamResponse]] GetReadStreamAsync (object entity, string name, Microsoft.OData.Client.DataServiceRequestArgs args, System.Threading.CancellationToken cancellationToken)
+
     public virtual System.Uri GetReadStreamUri (object entity)
     public virtual System.Uri GetReadStreamUri (object entity, string name)
     public virtual Microsoft.OData.Client.QueryOperationResponse LoadProperty (object entity, string propertyName)
@@ -8389,16 +8435,32 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual Microsoft.OData.Client.QueryOperationResponse LoadProperty (object entity, string propertyName, System.Uri nextLinkUri)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName, Microsoft.OData.Client.DataServiceQueryContinuation continuation)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName, System.Threading.CancellationToken cancellationToken)
+
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName, System.Uri nextLinkUri)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName, Microsoft.OData.Client.DataServiceQueryContinuation continuation, System.Threading.CancellationToken cancellationToken)
+
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName, System.Uri nextLinkUri, System.Threading.CancellationToken cancellationToken)
+
     public virtual Microsoft.OData.Client.DataServiceResponse SaveChanges ()
     public virtual Microsoft.OData.Client.DataServiceResponse SaveChanges (Microsoft.OData.Client.SaveChangesOptions options)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync ()
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (Microsoft.OData.Client.SaveChangesOptions options)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (System.Threading.CancellationToken cancellationToken)
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (Microsoft.OData.Client.SaveChangesOptions options, System.Threading.CancellationToken cancellationToken)
+
     public virtual void SetLink (object source, string sourceProperty, object target)
     public virtual void SetRelatedObject (object source, string sourceProperty, object target)
     public virtual void SetRelatedObjectLink (object source, string sourceProperty, object target)
@@ -8438,13 +8500,26 @@ public class Microsoft.OData.Client.DataServiceQuery`1 : Microsoft.OData.Client.
     internal virtual System.Collections.IEnumerable EndExecuteInternal (System.IAsyncResult asyncResult)
     public virtual IEnumerable`1 Execute ()
     public virtual Task`1 ExecuteAsync ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual Task`1 ExecuteAsync (System.Threading.CancellationToken cancellationToken)
+
+    [
+    AsyncStateMachineAttribute(),
+    ]
+    internal virtual System.Threading.Tasks.Task`1[[System.Collections.IEnumerable]] ExecuteAsyncInternal (System.Threading.CancellationToken cancellationToken)
+
     internal virtual System.Collections.IEnumerable ExecuteInternal ()
     public virtual Microsoft.OData.Client.DataServiceQuery`1 Expand (Expression`1 navigationPropertyAccessor)
     public virtual Microsoft.OData.Client.DataServiceQuery`1 Expand (string path)
     public virtual IEnumerable`1 GetAllPages ()
     public virtual Task`1 GetAllPagesAsync ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual Task`1 GetAllPagesAsync (System.Threading.CancellationToken cancellationToken)
+
     public virtual IEnumerator`1 GetEnumerator ()
     public virtual string GetKeyPath (string keyString)
     public virtual string GetPath (string nextSegment)
@@ -8488,7 +8563,11 @@ public class Microsoft.OData.Client.DataServiceQuerySingle`1 {
     public virtual string GetPath (string nextSegment)
     public virtual TElement GetValue ()
     public virtual Task`1 GetValueAsync ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public virtual Task`1 GetValueAsync (System.Threading.CancellationToken cancellationToken)
+
     public DataServiceQuerySingle`1 Select (Expression`1 selector)
 }
 
@@ -8555,6 +8634,11 @@ public class Microsoft.OData.Client.HttpClientRequestMessage : Microsoft.OData.C
     public virtual Microsoft.OData.IODataResponseMessage EndGetResponse (System.IAsyncResult asyncResult)
     public virtual string GetHeader (string headerName)
     public virtual Microsoft.OData.IODataResponseMessage GetResponse ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.IODataResponseMessage]] GetResponseAsync (System.Threading.CancellationToken cancellationToken)
+
     public virtual System.IO.Stream GetStream ()
     void Microsoft.OData.Client.ISendingRequest2.AfterSendingRequest2Event ()
     void Microsoft.OData.Client.ISendingRequest2.BeforeSendingRequest2Event ()
@@ -8706,6 +8790,9 @@ public sealed class Microsoft.OData.Client.DataServiceActionQuerySingle`1 {
     public T EndGetValue (System.IAsyncResult asyncResult)
     public T GetValue ()
     public Task`1 GetValueAsync ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public Task`1 GetValueAsync (System.Threading.CancellationToken cancellationToken)
 }
 

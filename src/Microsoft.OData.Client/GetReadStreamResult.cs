@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using System;
     using System.Diagnostics;
     using System.Net;
@@ -115,6 +117,34 @@ namespace Microsoft.OData.Client
             {
                 this.responseMessage = this.requestInfo.GetSynchronousResponse(this.requestMessage, true);
                 Debug.Assert(this.responseMessage != null, "Can't set a null response.");
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(e);
+                throw;
+            }
+            finally
+            {
+                this.SetCompleted();
+                this.CompletedRequest();
+            }
+
+            if (this.Failure != null)
+            {
+                throw this.Failure;
+            }
+
+            return this.End();
+        }
+
+        /// <summary>Asynchronously executes the request and returns the stream response.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task containing the stream response.</returns>
+        internal async Task<DataServiceStreamResponse> ExecuteAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                this.responseMessage = await this.requestInfo.GetResponseAsync(this.requestMessage, true, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {

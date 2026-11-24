@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -311,6 +313,17 @@ namespace Microsoft.OData.Client
             return this.requestMessage.GetResponse();
         }
 
+        /// <summary>Asynchronously gets the response from the request.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task containing the response message.</returns>
+        internal Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
+        {
+#if DEBUG
+            this.ValidateHeaders();
+#endif
+            return this.requestMessage.GetResponseAsync(cancellationToken);
+        }
+
         /// <summary>
         /// Sets the content length header for the given request message.
         /// </summary>
@@ -532,7 +545,10 @@ namespace Microsoft.OData.Client
             {
                 get
                 {
-                    this.cachedRequestStream.Stream.Position = 0;
+                    if (this.cachedRequestStream != null)
+                    {
+                        this.cachedRequestStream.Stream.Position = 0;
+                    }
                     return this.cachedRequestStream;
                 }
             }

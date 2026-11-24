@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     #region Namespaces
 
     using System;
@@ -31,7 +33,7 @@ namespace Microsoft.OData.Client
         #region Private Fields
 
         /// <summary>The size of the copy buffer to create.</summary>
-        private const int StreamCopyBufferSize = 4000;
+        private const int StreamCopyBufferSize = WebUtil.DefaultBufferSizeForStreamCopy;
 
         /// <summary>Array of queries being executed</summary>
         private readonly DataServiceRequest[] Queries;
@@ -150,9 +152,37 @@ namespace Microsoft.OData.Client
             Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
         }
 
-        /// <summary>
-        /// Synchronous batch request
-        /// </summary>
+        /// <summary>Asynchronously sends the generated batch request.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the batch request.</returns>
+        internal async Task BatchRequestAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ODataRequestMessageWrapper request = this.GenerateBatchRequest();
+            if (request == null)
+            {
+                return;
+            }
+
+            request.SetRequestStream(request.CachedRequestStream);
+            try
+            {
+                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(request, false, cancellationToken).ConfigureAwait(false);
+            }
+            catch (DataServiceTransportException ex)
+            {
+                throw WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
+            }
+            finally
+            {
+                if (this.batchResponseMessage != null)
+                {
+                    this.responseStream = this.batchResponseMessage.GetStream();
+                }
+            }
+        }
+
+        /// <summary>Synchronous batch request.</summary>
         internal void BatchRequest()
         {
             ODataRequestMessageWrapper batchRequestMessage = this.GenerateBatchRequest();
