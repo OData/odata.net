@@ -16,6 +16,60 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class ReorderingJsonReaderTests
     {
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public void RepeatedInstanceAnnotationsHaveBoundedAllocationGrowth()
+        {
+            long[] allocations = new long[3];
+            int[] counts = { 4, 256, 1024 };
+            for (int sample = 0; sample < counts.Length; sample++)
+            {
+                string[] properties = new string[counts[sample]];
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    properties[i] = $"\"@custom.note\":{i}";
+                }
+
+                using (var input = new StringReader("{" + string.Join(",", properties) + "}"))
+                using (var jsonReader = new JsonReader(input, isIeee754Compatible: false))
+                {
+                    var reader = new ReorderingJsonReader(jsonReader, maxInnerErrorDepth: 0);
+                    long initialAllocations = GC.GetAllocatedBytesForCurrentThread();
+                    bool readResult = reader.Read();
+                    allocations[sample] = GC.GetAllocatedBytesForCurrentThread() - initialAllocations;
+                    Assert.True(readResult);
+                    Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+                }
+            }
+
+            Assert.True(allocations[2] < allocations[1] * 8, $"Expected bounded allocation growth, but allocations increased from {allocations[1]} to {allocations[2]} bytes.");
+        }
+#endif
+
+        [Theory]
+        [InlineData("@custom.note")]
+        [InlineData("Name@custom.note")]
+        public void RepeatedAnnotationsRetainValuesAtInitialRelativePosition(string annotationName)
+        {
+            using (var input = new StringReader("{\"before\":0,\"" + annotationName + "\":1,\"between\":2,\"" + annotationName + "\":3,\"after\":4}"))
+            using (var jsonReader = new JsonReader(input, isIeee754Compatible: false))
+            {
+                var reader = new ReorderingJsonReader(jsonReader, maxInnerErrorDepth: 0);
+                Assert.True(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal("before", reader.ReadPropertyName());
+                Assert.Equal(0, reader.ReadPrimitiveValue());
+                Assert.Equal(annotationName, reader.ReadPropertyName());
+                Assert.Equal(1, reader.ReadPrimitiveValue());
+                Assert.Equal(annotationName, reader.ReadPropertyName());
+                Assert.Equal(3, reader.ReadPrimitiveValue());
+                Assert.Equal("between", reader.ReadPropertyName());
+                Assert.Equal(2, reader.ReadPrimitiveValue());
+                Assert.Equal("after", reader.ReadPropertyName());
+                Assert.Equal(4, reader.ReadPrimitiveValue());
+            }
+        }
+
         [Fact]
         public void TypeShouldBeMovedToTop()
         {
