@@ -24,6 +24,22 @@ namespace Microsoft.OData.Tests
         private const string invalidRuleText = "This rule is invalid.";
 
         [Fact]
+        public static void ValidatorValidatesCustomQueryOptions()
+        {
+            var rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[]
+            {
+                new ODataUrlValidationRule<CustomQueryOptionNode>("customQueryOptionNode", (context, node) =>
+                    context.AddMessage("customQueryOptionCode", node.Name + "=" + node.Value, Microsoft.OData.UriParser.Validation.Severity.Warning))
+            });
+            IEnumerable<ODataUrlValidationMessage> errors;
+            new Uri("company?customQueryOption=value", UriKind.Relative).ValidateODataUrl(CreateModel(), rules, out errors);
+            var error = Assert.Single(errors);
+            Assert.Equal("customQueryOptionCode", error.MessageCode);
+            Assert.Equal("customQueryOption=value", error.Message);
+            Assert.Equal(Microsoft.OData.UriParser.Validation.Severity.Warning, error.Severity);
+        }
+
+        [Fact]
         public static void InvalidRule()
         {
             const string request = @"company";
