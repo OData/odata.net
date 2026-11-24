@@ -37,6 +37,24 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         }
 
         #region Enum vesus string
+        [Theory]
+        [InlineData("PetColorPattern eq 'Blue'", true)]
+        [InlineData("'Blue' eq PetColorPattern", true)]
+        [InlineData("PetColorPattern eq 'Blue'", false)]
+        [InlineData("'Blue' eq PetColorPattern", false)]
+        public void EnumStringLiteralRoundtripPreservesQuotes(string filter, bool useResolver)
+        {
+            var uri = new Uri("http://host/Pet2Set?$filter=" + filter);
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, uri);
+            if (useResolver)
+            {
+                parser.Resolver = new StringAsEnumResolver();
+            }
+
+            var rebuilt = parser.ParseUri().BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(Uri.UnescapeDataString(uri.Query), Uri.UnescapeDataString(rebuilt.Query));
+        }
+
         [Fact]
         public void StringAsEnumTest()
         {
