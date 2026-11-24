@@ -16,6 +16,8 @@ namespace Microsoft.OData.Tests
 {
     public class ODataBatchReaderStreamTests
     {
+        private const string BatchBoundary = "batch_862fb28e-dc50-4af1-aad5-9608647761d1";
+
         [Fact]
         public void ReadFirstNonEmptyLineShouldThrowOnEndOfInput()
         {
@@ -62,9 +64,83 @@ Second line";
             Assert.Equal("First non-empty line", CreateBatchReaderStream(input).ReadFirstNonEmptyLine());
         }
 
+        [Theory]
+        [InlineData(1999)]
+        [InlineData(2000)]
+        [InlineData(2001)]
+        [InlineData(7999)]
+        [InlineData(8000)]
+        [InlineData(8001)]
+        [InlineData(15999)]
+        [InlineData(16000)]
+        [InlineData(16001)]
+        public void ReadFirstNonEmptyLinePreservesLongLinesAndFollowingLine(int length)
+        {
+            string line = new string('a', length);
+            foreach (string lineEnding in new[] { "\r", "\n", "\r\n" })
+            {
+                var stream = CreateBatchReaderStream(line + lineEnding + "Next line\r\n");
+
+                Assert.Equal(line, stream.ReadFirstNonEmptyLine());
+                Assert.Equal("Next line", stream.ReadFirstNonEmptyLine());
+            }
+
+            Assert.Equal(line, CreateBatchReaderStream(line).ReadFirstNonEmptyLine());
+        }
+
+        [Fact]
+        public void ReadFirstNonEmptyLinePreservesMultibyteCharactersAcrossRefills()
+        {
+            string line = new string('a', 7999) + new string('\u00e9', 16000);
+            var stream = CreateBatchReaderStream(line + "\r\nNext line\r\n");
+
+            Assert.Equal(line, stream.ReadFirstNonEmptyLine());
+            Assert.Equal("Next line", stream.ReadFirstNonEmptyLine());
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("\r")]
+        [InlineData("\n")]
+        [InlineData("\r\n")]
+        public void ReadFirstNonEmptyLineAllocatesLinearSpaceForLongLines(string lineEnding)
+        {
+            const int length = 1024 * 1024;
+            string line = new string('a', length);
+            var stream = CreateBatchReaderStream(line + lineEnding);
+            CreateBatchReaderStream("Warmup\r\n").ReadFirstNonEmptyLine();
+
+            long before = GC.GetAllocatedBytesForCurrentThread();
+            string result = stream.ReadFirstNonEmptyLine();
+            long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+
+            Assert.Equal(line, result);
+            Assert.InRange(allocated, 0L, 8L * length);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("\r\n")]
+        public void ProcessPartHeaderRejectsLongMalformedHeaderWithLinearAllocations(string lineEnding)
+        {
+            const int length = 1024 * 1024;
+            string header = new string('a', length);
+            var stream = CreateBatchReaderStream("--" + BatchBoundary + "\r\n" + header + lineEnding);
+            Assert.True(stream.SkipToBoundary(out bool isEndBoundary, out bool isParentBoundary));
+            Assert.False(isEndBoundary);
+            Assert.False(isParentBoundary);
+
+            long before = GC.GetAllocatedBytesForCurrentThread();
+            var exception = Assert.Throws<ODataException>(() => stream.ProcessPartHeader(out _));
+            long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+
+            Assert.Equal(Error.Format(SRResources.ODataBatchReaderStream_InvalidHeaderSpecified, header), exception.Message);
+            Assert.InRange(allocated, 0L, 16L * length);
+        }
+
         private static ODataMultipartMixedBatchReaderStream CreateBatchReaderStream(string inputString)
         {
-            string boundary = "batch_862fb28e-dc50-4af1-aad5-9608647761d1";
+            string boundary = BatchBoundary;
             var messageInfo = new ODataMessageInfo
             {
                 Encoding = Encoding.UTF8,
