@@ -22,6 +22,33 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class SelectExpandParserTests
     {
+        [Fact]
+        public void ExpandDepthIsCheckedBeforeParsingInvalidNestedOptions()
+        {
+            var parser = new SelectExpandParser("one($expand=two($filter=))", 800) { MaxExpansionDepth = 1 };
+
+            Assert.Equal(ODataErrorStrings.UriParser_ExpandDepthExceeded(2, 1), Assert.Throws<ODataException>(() => parser.ParseExpand()).Message);
+        }
+
+        [Fact]
+        public void SiblingExpansionsAtTheDepthLimitAreAllowed()
+        {
+            var parser = new SelectExpandParser("one($expand=two),three($expand=four)", 800) { MaxExpansionDepth = 2 };
+
+            ExpandToken result = parser.ParseExpand();
+
+            Assert.Equal(2, result.ExpandTerms.Count());
+            Assert.All(result.ExpandTerms, term => Assert.Single(term.ExpandOption.ExpandTerms));
+        }
+
+        [Fact]
+        public void ZeroExpansionDepthRejectsTopLevelExpand()
+        {
+            var parser = new SelectExpandParser("one", 800) { MaxExpansionDepth = 0 };
+
+            Assert.Equal(ODataErrorStrings.UriParser_ExpandDepthExceeded(1, 0), Assert.Throws<ODataException>(() => parser.ParseExpand()).Message);
+        }
+
         #region ParseSelect
         [Fact]
         public void SelectParsesEachTermOnce()
