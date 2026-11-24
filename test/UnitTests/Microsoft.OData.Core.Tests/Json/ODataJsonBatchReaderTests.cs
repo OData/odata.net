@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
+using Microsoft.OData.Tests;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.Json
@@ -1142,6 +1143,453 @@ namespace Microsoft.OData.Core.Tests.Json
                 Error.Format(SRResources.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed, "1", "1"),
                 exception.Message);
         }
+
+        [Theory]
+        [InlineData(false, 0, 0, 3)]
+        [InlineData(true, 0, 0, 3)]
+        [InlineData(false, 1, 1, 3)]
+        [InlineData(true, 1, 1, 3)]
+        [InlineData(false, 3, 1, 3)]
+        [InlineData(true, 3, 1, 3)]
+        [InlineData(false, 0, 0, 0)]
+        [InlineData(true, 0, 0, 0)]
+        [InlineData(false, 0, 0, 1)]
+        [InlineData(true, 0, 0, 1)]
+        [InlineData(false, 0, 0, 1000)]
+        [InlineData(true, 0, 0, 1000)]
+        [InlineData(false, 1, 100, 1000)]
+        [InlineData(true, 1, 100, 1000)]
+        [InlineData(false, 3, 100, 0)]
+        [InlineData(true, 3, 100, 0)]
+        [InlineData(false, 3, 100, 1)]
+        [InlineData(true, 3, 100, 1)]
+        [InlineData(false, 3, 100, 1000)]
+        [InlineData(true, 3, 100, 1000)]
+        public async Task ReadBatchPreservesRepeatedTopLevelDependencies(bool asynchronous, int groupCount, int membersPerGroup, int dependencyCount)
+        {
+            var payload = new StringBuilder("""{"requests":[""");
+            var expectedIds = new List<string>();
+            for (int group = 0; group < groupCount; group++)
+            {
+                for (int member = 0; member < membersPerGroup; member++)
+                {
+                    string id = $"m{group}_{member}";
+                    expectedIds.Add(id);
+                    payload.Append($$$"""{"id":"{{{id}}}","atomicityGroup":"g{{{group}}}","method":"PATCH","url":"Customers(1)","headers":{}},""");
+                }
+            }
+
+            expectedIds.Add("target");
+            expectedIds.Add("dependent");
+            payload.Append("""{"id":"target","method":"GET","url":"Customers","headers":{}},""");
+            payload.Append("""{"id":"dependent","dependsOn":[""").AppendJoin(',', Enumerable.Repeat("\"target\"", dependencyCount)).Append("""],"method":"GET","url":"Orders","headers":{}}]}""");
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload.ToString()));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            var settings = new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") };
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, settings, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+            int operationCount = 0;
+
+            while (asynchronous ? await reader.ReadAsync() : reader.Read())
+            {
+                if (reader.State != ODataBatchReaderState.Operation)
+                {
+                    continue;
+                }
+
+                var operation = asynchronous ? await reader.CreateOperationRequestMessageAsync() : reader.CreateOperationRequestMessage();
+                Assert.Equal(expectedIds[operationCount], operation.ContentId);
+                Assert.Equal(operationCount < groupCount * membersPerGroup ? $"g{operationCount / membersPerGroup}" : null, operation.GroupId);
+                if (operation.ContentId == "dependent")
+                {
+                    Assert.Equal(Enumerable.Repeat("target", dependencyCount), operation.DependsOnIds);
+                }
+                else
+                {
+                    Assert.Empty(operation.DependsOnIds);
+                }
+
+                operationCount++;
+            }
+
+            Assert.Equal(expectedIds.Count, operationCount);
+            Assert.Equal(ODataBatchReaderState.Completed, reader.State);
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task ReadBatchPreservesRepeatedGroupExpansion(bool asynchronous)
+        {
+            const string payload = """{"requests":[{"id":"top","method":"GET","url":"Customers","headers":{}},{"id":"one","atomicityGroup":"g1","method":"PATCH","url":"Customers(1)","headers":{}},{"id":"two","atomicityGroup":"g1","method":"PATCH","url":"Customers(2)","headers":{}},{"id":"dependent","dependsOn":["g1","top","g1","top"],"method":"GET","url":"Orders","headers":{}}]}""";
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") }, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+            int operationCount = 0;
+
+            while (asynchronous ? await reader.ReadAsync() : reader.Read())
+            {
+                if (reader.State == ODataBatchReaderState.Operation)
+                {
+                    var operation = asynchronous ? await reader.CreateOperationRequestMessageAsync() : reader.CreateOperationRequestMessage();
+                    if (operation.ContentId == "dependent")
+                    {
+                        Assert.Equal(new[] { "one", "two", "top", "one", "two", "top" }, operation.DependsOnIds);
+                    }
+
+                    operationCount++;
+                }
+            }
+
+            Assert.Equal(4, operationCount);
+            Assert.Equal(ODataBatchReaderState.Completed, reader.State);
+        }
+
+        [Theory]
+        [InlineData(false, false)]
+        [InlineData(true, false)]
+        [InlineData(false, true)]
+        [InlineData(true, true)]
+        public async Task ReadBatchRejectsDependencyOnMemberOfCompletedGroup(bool asynchronous, bool includeDependentId)
+        {
+            string dependentIdProperty = includeDependentId ? "\"id\":\"dependent\"," : "";
+            string payload = $$$"""{"requests":[{"id":"member","atomicityGroup":"group","method":"PATCH","url":"Customers(1)","headers":{}},{{{{dependentIdProperty}}}"dependsOn":["member"],"method":"GET","url":"Orders","headers":{}}]}""";
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") }, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+            var exception = await Assert.ThrowsAsync<ODataException>(async () =>
+            {
+                while (asynchronous ? await reader.ReadAsync() : reader.Read())
+                {
+                    if (reader.State == ODataBatchReaderState.Operation)
+                    {
+                        if (asynchronous)
+                        {
+                            await reader.CreateOperationRequestMessageAsync();
+                        }
+                        else
+                        {
+                            reader.CreateOperationRequestMessage();
+                        }
+                    }
+                }
+            });
+
+            Assert.Equal(Error.Format(SRResources.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, "member", "group"), exception.Message);
+        }
+
+        [Theory]
+        [InlineData(false, 1)]
+        [InlineData(true, 1)]
+        [InlineData(false, 100)]
+        [InlineData(true, 100)]
+        [InlineData(false, 499)]
+        [InlineData(true, 499)]
+        public async Task ReadBatchAcceptsEarlierMembersOfSameGroup(bool asynchronous, int memberCount)
+        {
+            var payload = new StringBuilder("""{"requests":[""");
+            var expected = new List<string>();
+            for (int member = 0; member < memberCount; member++)
+            {
+                string id = $"r{member}";
+                expected.Add(id);
+                payload.Append($$$"""{"id":"{{{id}}}","atomicityGroup":"group","method":"PATCH","url":"Customers(1)","headers":{}},""");
+            }
+
+            payload.Append("{\"id\":\"dependent\",\"atomicityGroup\":\"group\",\"dependsOn\":[\"").AppendJoin("\",\"", expected).Append("\"],\"method\":\"PATCH\",\"url\":\"Customers(1)\",\"headers\":{}}]}");
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload.ToString()));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") }, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+            int operationCount = 0;
+
+            while (asynchronous ? await reader.ReadAsync() : reader.Read())
+            {
+                if (reader.State == ODataBatchReaderState.Operation)
+                {
+                    var operation = asynchronous ? await reader.CreateOperationRequestMessageAsync() : reader.CreateOperationRequestMessage();
+                    Assert.Equal(operationCount < memberCount ? expected[operationCount] : "dependent", operation.ContentId);
+                    Assert.Equal("group", operation.GroupId);
+                    if (operation.ContentId == "dependent")
+                    {
+                        Assert.Equal(expected, operation.DependsOnIds);
+                    }
+                    else
+                    {
+                        Assert.Empty(operation.DependsOnIds);
+                    }
+
+                    operationCount++;
+                }
+            }
+
+            Assert.Equal(memberCount + 1, operationCount);
+            Assert.Equal(ODataBatchReaderState.Completed, reader.State);
+        }
+
+        [Theory]
+        [InlineData(false, "")]
+        [InlineData(true, "")]
+        [InlineData(false, "\"dependsOn\":[],")]
+        [InlineData(true, "\"dependsOn\":[],")]
+        public async Task ReadBatchAcceptsUnconfiguredDependencies(bool asynchronous, string dependsOnProperty)
+        {
+            string payload = $$$"""{"requests":[{"id":"one",{{{dependsOnProperty}}}"method":"GET","url":"Customers","headers":{}}]}""";
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") }, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+
+            int operationCount = 0;
+            while (asynchronous ? await reader.ReadAsync() : reader.Read())
+            {
+                if (reader.State == ODataBatchReaderState.Operation)
+                {
+                    var operation = asynchronous ? await reader.CreateOperationRequestMessageAsync() : reader.CreateOperationRequestMessage();
+                    Assert.Equal("one", operation.ContentId);
+                    Assert.Empty(operation.DependsOnIds);
+                    operationCount++;
+                }
+            }
+
+            Assert.Equal(1, operationCount);
+            Assert.Equal(ODataBatchReaderState.Completed, reader.State);
+        }
+
+        [Theory]
+        [InlineData(false, "self")]
+        [InlineData(true, "self")]
+        [InlineData(false, "own-group")]
+        [InlineData(true, "own-group")]
+        [InlineData(false, "missing")]
+        [InlineData(true, "missing")]
+        [InlineData(false, "forward")]
+        [InlineData(true, "forward")]
+        [InlineData(false, "case")]
+        [InlineData(true, "case")]
+        [InlineData(false, "duplicate")]
+        [InlineData(true, "duplicate")]
+        [InlineData(false, "reopened")]
+        [InlineData(true, "reopened")]
+        [InlineData(false, "other-group")]
+        [InlineData(true, "other-group")]
+        public async Task ReadBatchPreservesDependencyValidationErrors(bool asynchronous, string scenario)
+        {
+            string dependentId = scenario == "duplicate" ? "target" : "dependent";
+            string groupProperty = scenario == "own-group" || scenario == "other-group" ? "\"atomicityGroup\":\"g2\"," : scenario == "reopened" ? "\"atomicityGroup\":\"g1\"," : "";
+            string dependency = scenario == "self" ? "dependent" : scenario == "own-group" ? "g2" : scenario == "case" ? "TARGET" : scenario == "other-group" ? "member" : scenario == "forward" ? "future" : "missing";
+            string dependencies = scenario == "duplicate" || scenario == "reopened" ? "" : $"\"dependsOn\":[\"target\",\"{dependency}\",\"second-missing\"],";
+            string payload = $$$"""{"requests":[{"id":"member","atomicityGroup":"g1","method":"PATCH","url":"Customers(1)","headers":{}},{"id":"target","method":"GET","url":"Customers","headers":{}},{"id":"{{{dependentId}}}",{{{groupProperty}}}{{{dependencies}}}"method":"PATCH","url":"Customers(1)","headers":{}},{"id":"future","method":"GET","url":"Customers","headers":{}}]}""";
+            string expectedMessage;
+            switch (scenario)
+            {
+                case "self":
+                    expectedMessage = Error.Format(SRResources.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed, "dependent", "dependent");
+                    break;
+                case "own-group":
+                    expectedMessage = Error.Format(SRResources.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed, "g2", "g2");
+                    break;
+                case "duplicate":
+                    expectedMessage = Error.Format(SRResources.ODataBatchReader_DuplicateContentIDsNotAllowed, "target");
+                    break;
+                case "reopened":
+                    expectedMessage = Error.Format(SRResources.ODataBatchReader_MessageIdPositionedIncorrectly, "dependent", "g1");
+                    break;
+                case "other-group":
+                    expectedMessage = Error.Format(SRResources.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, "member", "g1");
+                    break;
+                default:
+                    expectedMessage = Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, dependency, "dependent");
+                    break;
+            }
+
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") }, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+            var exception = await Assert.ThrowsAsync<ODataException>(async () =>
+            {
+                while (asynchronous ? await reader.ReadAsync() : reader.Read())
+                {
+                    if (reader.State == ODataBatchReaderState.Operation)
+                    {
+                        if (asynchronous)
+                        {
+                            await reader.CreateOperationRequestMessageAsync();
+                        }
+                        else
+                        {
+                            reader.CreateOperationRequestMessage();
+                        }
+                    }
+                }
+            });
+
+            Assert.Equal(expectedMessage, exception.Message);
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task ReadEmptyBatchPreservesExistingRejection(bool asynchronous)
+        {
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("""{"requests":[]}"""));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings(), this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(async () =>
+            {
+                while (asynchronous ? await reader.ReadAsync() : reader.Read())
+                {
+                }
+            });
+
+            Assert.Equal(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetected, JsonNodeType.StartObject, JsonNodeType.EndArray), exception.Message);
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task ReadBatchPreservesNullDependencyArrayRejection(bool asynchronous)
+        {
+            const string payload = """{"requests":[{"id":"one","dependsOn":null,"method":"GET","url":"Customers","headers":{}}]}""";
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") }, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+            var exception = await Assert.ThrowsAsync<ODataException>(async () =>
+            {
+                while (asynchronous ? await reader.ReadAsync() : reader.Read())
+                {
+                }
+            });
+
+            Assert.Equal(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetected, JsonNodeType.StartArray, JsonNodeType.PrimitiveValue), exception.Message);
+        }
+
+        [Theory]
+        [InlineData(false, "parts", false)]
+        [InlineData(true, "parts", false)]
+        [InlineData(false, "parts", true)]
+        [InlineData(true, "parts", true)]
+        [InlineData(false, "changeset", false)]
+        [InlineData(true, "changeset", false)]
+        [InlineData(false, "changeset", true)]
+        [InlineData(true, "changeset", true)]
+        [InlineData(false, "bytes", false)]
+        [InlineData(true, "bytes", false)]
+        [InlineData(false, "bytes", true)]
+        [InlineData(true, "bytes", true)]
+        public async Task ReadBatchPreservesConfiguredQuotaBoundaries(bool asynchronous, string quota, bool exceeded)
+        {
+            string groupProperty = quota == "changeset" ? "\"atomicityGroup\":\"group\"," : "";
+            string payload = $$$"""{"requests":[{"id":"one",{{{groupProperty}}}"method":"PATCH","url":"Customers(1)","headers":{}},{"id":"two",{{{groupProperty}}}"dependsOn":["one"],"method":"PATCH","url":"Customers(1)","headers":{}}]}""";
+            byte[] bytes = Encoding.UTF8.GetBytes(payload);
+            using var stream = new MemoryStream(bytes);
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            var settings = new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") };
+            if (quota == "parts")
+            {
+                settings.MessageQuotas.MaxPartsPerBatch = exceeded ? 1 : 2;
+            }
+            else if (quota == "changeset")
+            {
+                settings.MessageQuotas.MaxOperationsPerChangeset = exceeded ? 1 : 2;
+            }
+            else
+            {
+                settings.MessageQuotas.MaxReceivedMessageSize = exceeded ? bytes.Length - 1 : bytes.Length;
+            }
+
+            int operationCount = 0;
+            Exception exception = await Record.ExceptionAsync(async () =>
+            {
+                using var messageReader = new ODataMessageReader((IODataRequestMessage)message, settings, this.model);
+                var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+                while (asynchronous ? await reader.ReadAsync() : reader.Read())
+                {
+                    if (reader.State == ODataBatchReaderState.Operation)
+                    {
+                        var operation = asynchronous ? await reader.CreateOperationRequestMessageAsync() : reader.CreateOperationRequestMessage();
+                        if (operation.ContentId == "two")
+                        {
+                            Assert.Equal(new[] { "one" }, operation.DependsOnIds);
+                        }
+
+                        operationCount++;
+                    }
+                }
+
+                Assert.Equal(ODataBatchReaderState.Completed, reader.State);
+            });
+
+            if (exceeded)
+            {
+                var quotaException = Assert.IsType<ODataException>(exception);
+                if (quota == "parts")
+                {
+                    Assert.Equal(Error.Format(SRResources.ODataBatchReader_MaxBatchSizeExceeded, 1), quotaException.Message);
+                }
+                else if (quota == "changeset")
+                {
+                    Assert.Equal(Error.Format(SRResources.ODataBatchReader_MaxChangeSetSizeExceeded, 1), quotaException.Message);
+                }
+                else
+                {
+                    Assert.Equal(Error.Format(SRResources.MessageStreamWrappingStream_ByteLimitExceeded, bytes.Length, bytes.Length - 1), quotaException.Message);
+                }
+            }
+            else
+            {
+                Assert.Null(exception);
+                Assert.Equal(2, operationCount);
+            }
+        }
+
+#if !DEBUG
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task ReadBatchPreservesNullDependencyElementRejection(bool asynchronous)
+        {
+            const string payload = """{"requests":[{"id":"one","dependsOn":[null],"method":"GET","url":"Customers","headers":{}}]}""";
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json");
+            using var messageReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings { BaseUri = new Uri($"{ServiceUri}/") }, this.model);
+            var reader = asynchronous ? await messageReader.CreateODataBatchReaderAsync() : messageReader.CreateODataBatchReader();
+
+            await Assert.ThrowsAsync<NullReferenceException>(async () =>
+            {
+                while (asynchronous ? await reader.ReadAsync() : reader.Read())
+                {
+                    if (reader.State == ODataBatchReaderState.Operation)
+                    {
+                        if (asynchronous)
+                        {
+                            await reader.CreateOperationRequestMessageAsync();
+                        }
+                        else
+                        {
+                            reader.CreateOperationRequestMessage();
+                        }
+                    }
+                }
+            });
+        }
+#endif
 
         private async Task DoReadAsync(
             ODataReader jsonReader,
