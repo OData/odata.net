@@ -237,7 +237,7 @@ namespace Microsoft.OData
             {
                 // We are done sniffing; stop buffering
                 this.message.UseBufferingReadStream = false;
-                this.message.BufferingReadStream.StopBuffering();
+                this.message.BufferingReadStream?.StopBuffering();
             }
 
             // Always sort by payload kind to guarantee stable order of results in case clients rely on it
@@ -267,13 +267,13 @@ namespace Microsoft.OData
             List<ODataPayloadKindDetectionResult> detectedPayloadKinds = new List<ODataPayloadKindDetectionResult>();
 
             // NOTE: this relies on the lazy eval of the enumerator
-            return Task.Factory.Iterate(this.GetPayloadKindDetectionTasks(payloadKindsFromContentType, detectedPayloadKinds))
+            return this.DetectPayloadKindsAsync(payloadKindsFromContentType, detectedPayloadKinds)
                 .FollowAlwaysWith(
                     t =>
                     {
                         // We are done sniffing; stop buffering.
                         this.message.UseBufferingReadStream = false;
-                        this.message.BufferingReadStream.StopBuffering();
+                        this.message.BufferingReadStream?.StopBuffering();
                     })
                 .FollowOnSuccessWith(
                     t =>
@@ -1418,44 +1418,43 @@ namespace Microsoft.OData
         /// <param name="payloadKindsFromContentType">All payload kinds for which we found matches in some format based on the content type.</param>
         /// <param name="detectionResults">The list of combined detection results after sniffing.</param>
         /// <returns>A lazy enumerable of tasks to get the supported payload kinds for all formats.</returns>
-        private IEnumerable<Task> GetPayloadKindDetectionTasks(
+        private async Task DetectPayloadKindsAsync(
             IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentType,
             List<ODataPayloadKindDetectionResult> detectionResults)
         {
-            // Group the payload kinds by format so we call the payload kind detection method only
-            // once per format.
-            IEnumerable<IGrouping<ODataFormat, ODataPayloadKindDetectionResult>> payloadKindFromContentTypeGroups =
-                payloadKindsFromContentType.GroupBy(kvp => kvp.Format);
-
-            foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
+            List<ODataPayloadKindDetectionResult> expectedPayloadKinds = payloadKindsFromContentType.ToList();
+            foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> group in expectedPayloadKinds.GroupBy(result => result.Format))
             {
-                // Call the payload kind detection code on the format
-                Task<IEnumerable<ODataPayloadKind>> detectionResult =
-                    this.message.GetStreamAsync()
-                        .FollowOnSuccessWithTask(streamTask =>
-                            payloadKindGroup.Key.DetectPayloadKindAsync(
-                            this.GetOrCreateMessageInfo(streamTask.Result, true),
-                            this.settings));
+                Stream stream = await this.message.GetStreamAsync().ConfigureAwait(false);
+                IEnumerable<ODataPayloadKind> payloadKinds = await group.Key.DetectPayloadKindAsync(
+                    this.GetOrCreateMessageInfo(stream, true), this.settings).ConfigureAwait(false);
+                if (payloadKinds == null)
+                {
+                    continue;
+                }
 
-                yield return detectionResult
-                    .FollowOnSuccessWith(
-                    t =>
+                foreach (ODataPayloadKind kind in payloadKinds)
+                {
+                    if (ContainsKind(expectedPayloadKinds, kind))
                     {
-                        IEnumerable<ODataPayloadKind> result = t.Result;
-                        if (result != null)
-                        {
-                            foreach (ODataPayloadKind kind in result)
-                            {
-                                // Only include the payload kinds that we expect
-                                if (payloadKindsFromContentType.Any(pk => pk.PayloadKind == kind))
-                                {
-                                    Debug.Assert(!detectionResults.Any(dpk => dpk.PayloadKind == kind), "Each kind must appear at most once.");
-                                    detectionResults.Add(new ODataPayloadKindDetectionResult(kind, payloadKindGroup.Key));
-                                }
-                            }
-                        }
-                    });
+                        Debug.Assert(!ContainsKind(detectionResults, kind), "Each kind must appear at most once.");
+                        detectionResults.Add(new ODataPayloadKindDetectionResult(kind, group.Key));
+                    }
+                }
             }
+        }
+
+        private static bool ContainsKind(IList<ODataPayloadKindDetectionResult> list, ODataPayloadKind kind)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].PayloadKind == kind)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

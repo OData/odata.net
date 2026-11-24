@@ -214,7 +214,7 @@ namespace Microsoft.OData
             BufferedReadStream bufferedReadStream = new BufferedReadStream(inputStream);
 
             // Note that this relies on lazy eval of the enumerator
-            return Task.Factory.Iterate(bufferedReadStream.BufferInputStream())
+            return bufferedReadStream.BufferEntireStreamAsync()
                 .FollowAlwaysWith((task) => inputStream.Dispose())
                 .FollowOnSuccessWith(
                     (task) =>
@@ -242,16 +242,16 @@ namespace Microsoft.OData
         /// <returns>Enumeration of tasks to run to buffer the input stream.</returns>
         /// <remarks>This method relies on lazy eval of the enumerator, never enumerate through it synchronously.</remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
-        private IEnumerable<Task> BufferInputStream()
+        private async Task BufferEntireStreamAsync()
         {
             while (this.inputStream != null)
             {
-                Debug.Assert(this.currentBufferIndex >= -1 && this.currentBufferIndex < this.buffers.Count, "The currentBufferIndex is outside of the valid range.");
+                Debug.Assert(this.currentBufferIndex >= -1 && this.currentBufferIndex < this.buffers.Count,
+                    "The currentBufferIndex is outside of the valid range.");
 
                 DataBuffer currentBuffer = this.currentBufferIndex == -1 ? null : this.buffers[this.currentBufferIndex];
 
-                // Here we intentionally leave some memory unused (smaller than MinReadBufferSize)
-                // in order to issue big enough read requests. This is a perf optimization.
+                // Ensure we issue sufficiently large reads
                 if (currentBuffer != null && currentBuffer.FreeBytes < DataBuffer.MinReadBufferSize)
                 {
                     currentBuffer = null;
@@ -262,32 +262,27 @@ namespace Microsoft.OData
                     currentBuffer = this.AddNewBuffer();
                 }
 
-                yield return inputStream.ReadAsync(currentBuffer.Buffer, currentBuffer.OffsetToWriteTo, currentBuffer.FreeBytes)
-                    .ContinueWith(t =>
-                    {
-                        try
-                        {
-                            int bytesRead = t.Result;
-                            if (bytesRead == 0)
-                            {
-                                this.inputStream = null;
-                            }
-                            else
-                            {
-                                currentBuffer.MarkBytesAsWritten(bytesRead);
-                            }
-                        }
-                        catch (Exception exception)
-                        {
-                            if (!ExceptionUtils.IsCatchableExceptionType(exception))
-                            {
-                                throw;
-                            }
+                int bytesRead;
+                try
+                {
+                    bytesRead = await this.inputStream.ReadAsync(currentBuffer.Buffer, currentBuffer.OffsetToWriteTo, currentBuffer.FreeBytes).ConfigureAwait(false);
+                }
+                catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+                {
+                    // Mark end of buffering and rethrow
+                    this.inputStream = null;
+                    throw;
+                }
 
-                            this.inputStream = null;
-                            throw;
-                        }
-                    });
+                if (bytesRead == 0)
+                {
+                    // EOF
+                    this.inputStream = null;
+                }
+                else
+                {
+                    currentBuffer.MarkBytesAsWritten(bytesRead);
+                }
             }
         }
 
