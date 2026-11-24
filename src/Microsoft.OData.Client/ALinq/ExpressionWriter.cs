@@ -578,12 +578,6 @@ namespace Microsoft.OData.Client
                     listExpr.Append(uriLiteral);
                 }
 
-                // Contains cannot be used with an empty static collection
-                if (listExpr.Length == 0)
-                {
-                    throw new InvalidOperationException(Strings.ALinq_ContainsNotValidOnEmptyCollection);
-                }
-
                 listExpr.Insert(0, UriHelper.LEFTPAREN);
                 listExpr.Append(UriHelper.RIGHTPAREN);
 

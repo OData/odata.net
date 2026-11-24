@@ -213,7 +213,6 @@ namespace Microsoft.OData.Client
         internal const string ALinq_IllegalSystemQueryOption = "ALinq_IllegalSystemQueryOption";
         internal const string ALinq_IllegalPathStructure = "ALinq_IllegalPathStructure";
         internal const string ALinq_TypeTokenWithNoTrailingNavProp = "ALinq_TypeTokenWithNoTrailingNavProp";
-        internal const string ALinq_ContainsNotValidOnEmptyCollection = "ALinq_ContainsNotValidOnEmptyCollection";
         internal const string ALinq_AggregationMethodNotSupported = "ALinq_AggregationMethodNotSupported";
         internal const string ALinq_InvalidAggregateExpression = "ALinq_InvalidAggregateExpression";
         internal const string ALinq_InvalidGroupingExpression = "ALinq_InvalidGroupingExpression";

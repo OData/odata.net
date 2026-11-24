@@ -78,7 +78,7 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
-        public void ThrowsForEnumerableContainsWithEmptyCollection()
+        public void TranslatesEnumerableContainsWithEmptyCollectionToEmptyInOperator()
         {
             // Arrange
             var sut = new DataServiceQueryProvider(dsc);
@@ -86,10 +86,22 @@ namespace Microsoft.OData.Client.Tests
                 .Where(product => Enumerable.Empty<string>().Contains(product.Name));
 
             // Act
-            var exception = Assert.ThrowsAny<InvalidOperationException>(() => sut.Translate(products.Expression));
+            var queryComponents = sut.Translate(products.Expression);
 
             // Assert
-            Assert.Equal(Strings.ALinq_ContainsNotValidOnEmptyCollection, exception.Message);
+            Assert.Equal(@"http://root/Products?$filter=Name in ()", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesEmptyArrayAndListContainsIncludingNegation()
+        {
+            var sut = new DataServiceQueryProvider(dsc);
+            var names = new string[0];
+            var ids = new List<int>();
+            var arrayQuery = dsc.CreateQuery<Product>("Products").Where(product => !names.Contains(product.Name));
+            var listQuery = dsc.CreateQuery<Product>("Products").Where(product => Enumerable.Contains(ids, product.Id));
+            Assert.Equal(@"http://root/Products?$filter=not Name in ()", sut.Translate(arrayQuery.Expression).Uri.ToString());
+            Assert.Equal(@"http://root/Products?$filter=Id in ()", sut.Translate(listQuery.Expression).Uri.ToString());
         }
 
         [Fact]
