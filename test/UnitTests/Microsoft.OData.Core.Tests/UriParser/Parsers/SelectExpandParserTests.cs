@@ -83,6 +83,323 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void SelectAtConfiguredSelectExpandDepthIsParsed()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=two($select=three($filter=true)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
+
+            // Assert
+            SelectTermToken first = Assert.Single(selectToken.SelectTerms);
+            SelectTermToken second = Assert.Single(first.SelectOption.SelectTerms);
+            SelectTermToken third = Assert.Single(second.SelectOption.SelectTerms);
+            third.FilterOption.ShouldBeLiteralQueryToken(true);
+        }
+
+        [Fact]
+        public void ZeroSelectExpandDepthAllowsPathsAndNonSelectNestedOptions()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one/two,three($filter=true)",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxSelectExpandDepth = 0
+            };
+
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
+
+            // Assert
+            SelectTermToken[] terms = selectToken.SelectTerms.ToArray();
+            Assert.Equal(2, terms.Length);
+            terms[0].PathToProperty.ShouldBeNonSystemToken("two");
+            terms[0].PathToProperty.NextToken.ShouldBeNonSystemToken("one");
+            terms[1].FilterOption.ShouldBeLiteralQueryToken(true);
+        }
+
+        [Fact]
+        public void ZeroSelectExpandDepthRejectsFirstNestedSelectBeforeNestedOptionIsParsed()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=)",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxSelectExpandDepth = 0
+            };
+
+            // Act
+            Action parse = () => parser.ParseSelect();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$select", 1, 0));
+        }
+
+        [Fact]
+        public void SelectBeyondConfiguredSelectExpandDepthIsRejectedBeforeNestedOptionIsParsed()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=two($select=three($select=)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseSelect();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$select", 3, 2));
+        }
+
+        [Fact]
+        public void MultipleSelectBranchesUseSelectExpandDepthIndependently()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=two($select=three)),four($select=five($select=six))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
+
+            // Assert
+            Assert.Equal(2, selectToken.SelectTerms.Count());
+        }
+
+        [Fact]
+        public void MultipleTermsWithinNestedSelectUseSelectExpandDepthIndependently()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=two($select=three),four($select=five))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
+
+            // Assert
+            SelectTermToken outer = Assert.Single(selectToken.SelectTerms);
+            SelectTermToken[] nestedTerms = outer.SelectOption.SelectTerms.ToArray();
+            Assert.Equal(2, nestedTerms.Length);
+            Assert.Single(nestedTerms[0].SelectOption.SelectTerms);
+            Assert.Single(nestedTerms[1].SelectOption.SelectTerms);
+        }
+
+        [Fact]
+        public void NoDollarSelectBeyondConfiguredSelectExpandDepthIsRejected()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one(select=two(select=three(select=four)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit,
+                enableNoDollarQueryOptions: true)
+            {
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseSelect();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$select", 3, 2));
+        }
+
+        [Fact]
+        public void CaseInsensitiveSelectBeyondConfiguredSelectExpandDepthIsRejected()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($SELECT=two($SELECT=three($SELECT=four)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit,
+                enableCaseInsensitiveBuiltinIdentifier: true)
+            {
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseSelect();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$select", 3, 2));
+        }
+
+        [Fact]
+        public void SelectNestedInExpandUsesConfiguredSelectExpandDepth()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=two($select=three($select=four)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseExpand();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$select", 3, 2));
+        }
+
+        [Fact]
+        public void NestedSelectDoesNotUseExpansionDepthLimit()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=two($select=three))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 0,
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
+
+            // Assert
+            SelectTermToken first = Assert.Single(selectToken.SelectTerms);
+            SelectTermToken second = Assert.Single(first.SelectOption.SelectTerms);
+            Assert.Single(second.SelectOption.SelectTerms);
+        }
+
+        [Fact]
+        public void NestedExpandUsesSelectExpandDepthLimit()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($expand=two($expand=three))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 3,
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
+
+            // Assert
+            ExpandTermToken first = Assert.Single(expandToken.ExpandTerms);
+            ExpandTermToken second = Assert.Single(first.ExpandOption.ExpandTerms);
+            Assert.Single(second.ExpandOption.ExpandTerms);
+        }
+
+        [Fact]
+        public void ExpandBeyondConfiguredSelectExpandDepthIsRejectedBeforeNestedOptionIsParsed()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($expand=two($expand=three($expand=)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 4,
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseExpand();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$expand", 3, 2));
+        }
+
+        [Fact]
+        public void NoDollarExpandBeyondConfiguredSelectExpandDepthIsRejected()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one(expand=two(expand=three(expand=four)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit,
+                enableNoDollarQueryOptions: true)
+            {
+                MaxExpansionDepth = 4,
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseExpand();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$expand", 3, 2));
+        }
+
+        [Fact]
+        public void CaseInsensitiveExpandBeyondConfiguredSelectExpandDepthIsRejected()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($EXPAND=two($EXPAND=three($EXPAND=four)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit,
+                enableCaseInsensitiveBuiltinIdentifier: true)
+            {
+                MaxExpansionDepth = 4,
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseExpand();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$expand", 3, 2));
+        }
+
+        [Fact]
+        public void ExpandAndSelectNestingContributeToSameDepth()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($expand=two($expand=three($select=four)))",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 3,
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            Action parse = () => parser.ParseExpand();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_SelectExpandDepthExceeded, "$select", 3, 2));
+        }
+
+        [Fact]
+        public void SelectAndExpandSiblingBranchesUseSelectExpandDepthIndependently()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(
+                "one($select=two($select=three);$expand=four)",
+                ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 2,
+                MaxSelectExpandDepth = 2
+            };
+
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
+
+            // Assert
+            ExpandTermToken outer = Assert.Single(expandToken.ExpandTerms);
+            SelectTermToken first = Assert.Single(outer.SelectOption.SelectTerms);
+            Assert.Single(first.SelectOption.SelectTerms);
+            Assert.Single(outer.ExpandOption.ExpandTerms);
+        }
+
+        [Fact]
         public void SemicolonOnlyAllowedInParensInSelect()
         {
             // Arrange

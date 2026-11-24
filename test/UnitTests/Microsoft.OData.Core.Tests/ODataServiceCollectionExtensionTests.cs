@@ -214,7 +214,11 @@ namespace Microsoft.OData.Tests
         {
             var services = new ServiceCollection();
             // @robertmclaws: Configure a setting that defaults to false.
-            services.AddDefaultODataServices(configureUriParserAction: (parser) => parser.MaximumExpansionCount = 1);
+            services.AddDefaultODataServices(configureUriParserAction: (parser) =>
+            {
+                parser.MaximumExpansionCount = 1;
+                parser.MaximumSelectExpandDepth = 25;
+            });
             Assert.True(services.Count == 11);
 
             var provider = services.BuildServiceProvider();
@@ -228,6 +232,7 @@ namespace Microsoft.OData.Tests
             var parserSettings = scope.ServiceProvider.GetService<ODataUriParserSettings>();
             Assert.NotNull(parserSettings);
             Assert.Equal(1, parserSettings.MaximumExpansionCount);
+            Assert.Equal(25, parserSettings.MaximumSelectExpandDepth);
         }
 
         [Fact]

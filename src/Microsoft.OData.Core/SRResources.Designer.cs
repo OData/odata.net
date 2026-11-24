@@ -6652,6 +6652,15 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The query option nesting depth was at least {1} while parsing {0}, but the maximum allowed is {2}..
+        /// </summary>
+        internal static string UriParser_SelectExpandDepthExceeded {
+            get {
+                return ResourceManager.GetString("UriParser_SelectExpandDepthExceeded", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; is not valid for $select or $expand, only structured types are allowed..
         /// </summary>
         internal static string UriParser_TypeInvalidForSelectExpand {

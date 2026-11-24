@@ -47,15 +47,15 @@ namespace Microsoft.OData.UriParser
         private int recursionDepth;
 
         /// <summary>
-        /// The current nesting depth of expand(...) within a $apply clause.
+        /// The current nesting depth of expand(...) transformations within a $apply clause.
         /// </summary>
-        private int selectExpandDepth = 0;
+        private int applyExpandDepth = 0;
 
         /// <summary>
-        /// The maximum allowed nesting depth for nested $expand and expand(...) within $apply clauses.
+        /// The maximum allowed nesting depth for expand(...) transformations within $apply clauses.
         /// Defaults to <see cref="maxDepth"/> when not explicitly set.
         /// </summary>
-        private int maxSelectExpandDepth;
+        private int maxApplyExpandDepth;
 
         /// <summary>
         /// The maximum allowed depth for aggregate expression recursion.
@@ -118,7 +118,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
             this.maxDepth = maxDepth;
-            this.maxSelectExpandDepth = maxDepth;
+            this.maxApplyExpandDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
@@ -165,13 +165,13 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or sets the maximum allowed nesting depth for nested <c>$expand</c> and <c>expand(...)</c> within <c>$apply</c> clauses.
+        /// Gets or sets the maximum allowed nesting depth for <c>expand(...)</c> transformations within <c>$apply</c> clauses.
         /// Defaults to the <c>maxDepth</c> value passed to the constructor.
         /// </summary>
-        internal int MaxSelectExpandDepth
+        internal int MaxApplyExpandDepth
         {
-            get { return this.maxSelectExpandDepth; }
-            set { this.maxSelectExpandDepth = value; }
+            get { return this.maxApplyExpandDepth; }
+            set { this.maxApplyExpandDepth = value; }
         }
 
         /// <summary>
@@ -388,8 +388,8 @@ namespace Microsoft.OData.UriParser
 
         internal ExpandToken ParseExpand()
         {
-            this.selectExpandDepth++;
-            if (this.selectExpandDepth > this.maxSelectExpandDepth)
+            this.applyExpandDepth++;
+            if (this.applyExpandDepth > this.maxApplyExpandDepth)
             {
                 throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
             }
@@ -459,7 +459,7 @@ namespace Microsoft.OData.UriParser
 
             this.lexer.NextToken();
 
-            this.selectExpandDepth--;
+            this.applyExpandDepth--;
             return new ExpandToken(termTokens);
         }
 
@@ -475,7 +475,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
-            this.selectExpandDepth = 0;
+            this.applyExpandDepth = 0;
             this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply);
 
             while (true)
