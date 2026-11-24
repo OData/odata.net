@@ -22,9 +22,16 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
-    [DebuggerDisplay("{NodeType}: {Value}")]
+    [DebuggerDisplay("{NodeType}")]
     internal class JsonReader : IJsonStreamReader, IJsonStreamReaderAsync, IDisposable
     {
+        private static readonly string[] CommonTokenStrings =
+        {
+            "id", "Id", "url", "@id", "null", "true", "name", "type", "false", "value", "error",
+            "delta", "@type", "reason", "source", "target", "changed", "deleted", "@context",
+            "@removed", "@odata.id", "@odata.type", "@odata.null", "@odata.context", "@odata.removed"
+        };
+
         /// <summary>
         /// The initial size of the buffer of characters.
         /// </summary>
@@ -1562,7 +1569,39 @@ namespace Microsoft.OData.Json
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
             Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
 
-            string result = new string(this.characterBuffer, this.tokenStartIndex, characterCount);
+            string result = null;
+            if (characterCount == 0)
+            {
+                result = string.Empty;
+            }
+            else if (characterCount <= 14)
+            {
+                foreach (string commonValue in CommonTokenStrings)
+                {
+                    if (commonValue.Length != characterCount || commonValue[0] != this.characterBuffer[this.tokenStartIndex])
+                    {
+                        continue;
+                    }
+
+                    int index = 1;
+                    while (index < characterCount && commonValue[index] == this.characterBuffer[this.tokenStartIndex + index])
+                    {
+                        index++;
+                    }
+
+                    if (index == characterCount)
+                    {
+                        result = commonValue;
+                        break;
+                    }
+                }
+            }
+
+            if (result == null)
+            {
+                result = new string(this.characterBuffer, this.tokenStartIndex, characterCount);
+            }
+
             this.tokenStartIndex += characterCount;
 
             return result;
@@ -2605,6 +2644,29 @@ namespace Microsoft.OData.Json
                 ch == '-' || ch == '+';
         }
 
+        private static int ParseFourHexDigits(char hexChar1, char hexChar2, char hexChar3, char hexChar4)
+        {
+            int digit1 = HexCharToInt(hexChar1);
+            int digit2 = HexCharToInt(hexChar2);
+            int digit3 = HexCharToInt(hexChar3);
+            int digit4 = HexCharToInt(hexChar4);
+
+            if ((digit1 | digit2 | digit3 | digit4) < 0)
+            {
+                return -1;
+            }
+
+            return (digit1 << 12) | (digit2 << 8) | (digit3 << 4) | digit4;
+        }
+
+        private static int HexCharToInt(char hexChar)
+        {
+            if ((uint)(hexChar - '0') <= 9u) return hexChar - '0';
+            if ((uint)(hexChar - 'A') <= 5u) return hexChar - 'A' + 10;
+            if ((uint)(hexChar - 'a') <= 5u) return hexChar - 'a' + 10;
+            return -1;
+        }
+
         private void CopyInputToBuffer()
         {
             // initialize the buffer
@@ -2670,11 +2732,17 @@ namespace Microsoft.OData.Json
         /// <returns>32-bit signed integer equivalent.</returns>
         private int ParseUnicodeHexValue()
         {
-            string unicodeHexValue = this.ConsumeTokenToString(4);
-            int characterValue;
-            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+            Debug.Assert(this.tokenStartIndex + 4 <= this.storedCharacterCount, "4 specified characters outside of the available range.");
+
+            char hexChar1 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar2 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar3 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar4 = this.characterBuffer[this.tokenStartIndex++];
+
+            int characterValue = ParseFourHexDigits(hexChar1, hexChar2, hexChar3, hexChar4);
+            if (characterValue < 0)
             {
-                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + new string(new char[] {hexChar1, hexChar2, hexChar3, hexChar4})));
             }
 
             return characterValue;

@@ -18,6 +18,21 @@ namespace Microsoft.OData.Tests.Json
 {
     public class JsonReaderTests
     {
+        [Fact]
+        public async Task CommonTokensReuseSharedStringsWithoutChangingUnknownNames()
+        {
+            var reader = new JsonReader(new StringReader("{\"@odata.id\":\"value\",\"custom\":\"different\"}"), false);
+            Assert.True(await reader.ReadAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Same("@odata.id", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Same("value", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("custom", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("different", await reader.GetValueAsync());
+        }
+
         [Theory]
         [InlineData("-42", -42)]
         [InlineData(".5", 0.5)]
