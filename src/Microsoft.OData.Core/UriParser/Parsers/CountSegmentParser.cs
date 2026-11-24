@@ -124,7 +124,13 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string filterText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier);
+            int remainingDepth = this.UriQueryExpressionParser.MaxDepth - this.UriQueryExpressionParser.CurrentRecursionDepth;
+            if (remainingDepth <= 0)
+            {
+                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            }
+
+            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(remainingDepth, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier, this.UriQueryExpressionParser.EnableNoDollarQueryOptions);
             return filterParser.ParseFilter(filterText);
         }
 
