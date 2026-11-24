@@ -149,6 +149,91 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void ExpandAtConfiguredDepthIsParsed()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(HardCodedTestModel.TestModel, "one($expand=two)", ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 2
+            };
+
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
+
+            // Assert
+            ExpandTermToken outerTerm = Assert.Single(expandToken.ExpandTerms);
+            Assert.Single(outerTerm.ExpandOption.ExpandTerms);
+        }
+
+        [Fact]
+        public void ExpandBeyondConfiguredDepthIsRejectedBeforeNestedOptionIsParsed()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(HardCodedTestModel.TestModel, "one($expand=two($filter=))", ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 1
+            };
+
+            // Act
+            Action parse = () => parser.ParseExpand();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, 2, 1));
+        }
+
+        [Fact]
+        public void ZeroExpansionDepthAllowsNoExpandTerms()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(HardCodedTestModel.TestModel, "one", ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 0
+            };
+
+            // Act
+            Action parse = () => parser.ParseExpand();
+
+            // Assert
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, 1, 0));
+        }
+
+        [Fact]
+        public void RestoringDefaultExpansionDepthAllowsNestedExpand()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(HardCodedTestModel.TestModel, "one($expand=two($expand=three))", ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 1
+            };
+            parser.MaxExpansionDepth = int.MaxValue;
+
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
+
+            // Assert
+            ExpandTermToken first = Assert.Single(expandToken.ExpandTerms);
+            ExpandTermToken second = Assert.Single(first.ExpandOption.ExpandTerms);
+            Assert.Single(second.ExpandOption.ExpandTerms);
+        }
+
+        [Fact]
+        public void MultipleExpandTermsWithinConfiguredDepthAreParsed()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser(HardCodedTestModel.TestModel, "one($expand=two),three($expand=four)", ODataUriParserSettings.DefaultSelectExpandLimit)
+            {
+                MaxExpansionDepth = 2
+            };
+
+            // Act
+            ExpandToken expandToken = parser.ParseExpand();
+
+            // Assert
+            Assert.Equal(2, expandToken.ExpandTerms.Count());
+            Assert.All(expandToken.ExpandTerms, term => Assert.Single(term.ExpandOption.ExpandTerms));
+        }
+
+        [Fact]
         public void EmptyExpandTermShouldThrow()
         {
             // Arrange
