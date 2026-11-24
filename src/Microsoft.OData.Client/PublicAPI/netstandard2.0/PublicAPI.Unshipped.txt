@@ -1,0 +1,2 @@
+virtual Microsoft.OData.Client.DataServiceClientRequestMessage.GetResponseAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.IODataResponseMessage>
+override Microsoft.OData.Client.HttpClientRequestMessage.GetResponseAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.IODataResponseMessage>

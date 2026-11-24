@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -194,6 +196,39 @@ namespace Microsoft.OData.Client
                 InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
 
                 throw exception;
+            }
+        }
+
+        /// <summary>Asynchronously sends a bulk update request.</summary>
+        /// <typeparam name="T">The top-level object type.</typeparam>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="objects">The top-level objects to update.</param>
+        /// <returns>A task representing the request.</returns>
+        internal async Task BulkUpdateRequestAsync<T>(CancellationToken cancellationToken, params T[] objects)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+            }
+
+            BuildDescriptorGraph(this.ChangedEntries, true, objects);
+            ODataRequestMessageWrapper request = this.GenerateBulkUpdateRequest();
+            if (request == null)
+            {
+                return;
+            }
+
+            request.SetRequestStream(request.CachedRequestStream);
+            try
+            {
+                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(request, false, cancellationToken).ConfigureAwait(false);
+                this.responseStream = this.batchResponseMessage.GetStream();
+                this.HandleBulkUpdateResponse(this.batchResponseMessage, this.responseStream);
+            }
+            catch (DataServiceTransportException ex)
+            {
+                throw WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
             }
         }
 

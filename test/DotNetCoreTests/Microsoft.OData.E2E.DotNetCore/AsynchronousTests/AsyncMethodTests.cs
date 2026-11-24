@@ -401,6 +401,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         public async Task GetParitalPagesAsyncTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var customerCount = ((await context.Customer.IncludeTotalCount().ExecuteAsync()) as QueryOperationResponse<Customer>).TotalCount;
 
             int count = 0;
             int sentRequestCount = 0;
@@ -410,9 +411,10 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             };
 
             context.SendingRequest2 += sendRequestEvent;
-            var customers = context.Customer.GetAllPagesAsync();
-            Assert.Equal(1, sentRequestCount);
-            foreach (var customer in await customers)
+            var customers = await context.Customer.GetAllPagesAsync();
+            int requestsAfterAwait = sentRequestCount;
+            Assert.True(requestsAfterAwait > 1);
+            foreach (var customer in customers)
             {
                 if (++count == 3)
                 {
@@ -420,8 +422,10 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
                 }
             }
 
-            //Only two Request sent
-            Assert.Equal(2, sentRequestCount);
+            Assert.Equal(3, count);
+            Assert.Equal(requestsAfterAwait, sentRequestCount);
+            Assert.Equal(customerCount, customers.LongCount());
+            Assert.Equal(requestsAfterAwait, sentRequestCount);
             this.EnqueueTestComplete();
         }
 

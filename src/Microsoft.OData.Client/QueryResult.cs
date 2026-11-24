@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -208,6 +210,70 @@ namespace Microsoft.OData.Client
             }
 
             Debug.Assert((!this.CompletedSynchronously && !pereq.RequestCompletedSynchronously) || this.IsCompleted, "if CompletedSynchronously then MUST IsCompleted");
+        }
+
+        /// <summary>Asynchronously executes and buffers the query response.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the request and response copy.</returns>
+        internal async Task ExecuteQueryAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (this.requestContentStream != null && this.requestContentStream.Stream != null)
+                {
+                    this.Request.SetRequestStream(this.requestContentStream);
+                }
+
+                IODataResponseMessage response = await this.RequestInfo.GetResponseAsync(this.Request, true, cancellationToken).ConfigureAwait(false);
+                this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
+                if (HttpStatusCode.NoContent != this.StatusCode)
+                {
+                    using (Stream stream = this.responseMessage.GetStream())
+                    {
+                        if (stream != null)
+                        {
+                            Stream copy = this.GetAsyncResponseStreamCopy();
+                            this.outputResponseStream = copy;
+                            byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
+                            try
+                            {
+                                long copied = await WebUtil.CopyStreamAsync(stream, copy, buffer, cancellationToken).ConfigureAwait(false);
+                                if (this.responseStreamOwner)
+                                {
+                                    if (copied == 0)
+                                    {
+                                        this.outputResponseStream = null;
+                                    }
+                                    else if (copy.Position < copy.Length)
+                                    {
+                                        ((MemoryStream)copy).SetLength(copy.Position);
+                                    }
+                                }
+                            }
+                            finally
+                            {
+                                this.PutAsyncResponseStreamCopyBuffer(buffer);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(e);
+                throw;
+            }
+            finally
+            {
+                this.SetCompleted();
+                this.CompletedRequest();
+            }
+
+            if (this.Failure != null)
+            {
+                throw this.Failure;
+            }
         }
 
         /// <summary>Synchronous web request</summary>
@@ -447,7 +513,7 @@ namespace Microsoft.OData.Client
         protected virtual byte[] GetAsyncResponseStreamCopyBuffer()
         {   // consider having a cache of these buffers since they will be pinned
             Debug.Assert(this.asyncStreamCopyBuffer == null, "non-null this.asyncStreamCopyBuffer");
-            return System.Threading.Interlocked.Exchange(ref reusableAsyncCopyBuffer, null) ?? new byte[8000];
+            return System.Threading.Interlocked.Exchange(ref reusableAsyncCopyBuffer, null) ?? new byte[WebUtil.DefaultBufferSizeForStreamCopy];
         }
 
         /// <summary>returning a buffer after being done with it</summary>

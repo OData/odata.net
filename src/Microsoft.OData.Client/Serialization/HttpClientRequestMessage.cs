@@ -430,7 +430,39 @@ namespace Microsoft.OData.Client
             });
         }
 
-        private Task<HttpResponseMessage> CreateSendTask()
+        /// <summary>Asynchronously returns the HTTP response without blocking on its content stream.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task containing the response message.</returns>
+        public override async Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
+        {
+            // Existing derived transports customize the legacy Begin/End response methods.
+            if (this.GetType() != typeof(HttpClientRequestMessage))
+            {
+                return await base.GetResponseAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            HttpResponseMessage response;
+            try
+            {
+                response = await this.CreateSendTask(cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException)
+            {
+                throw new DataServiceTransportException(null, ex);
+            }
+
+            this._httpResponseMessage = response;
+            Stream contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            IEnumerable<KeyValuePair<string, string>> headers = HttpHeadersToStringDictionary(response.Headers).Concat(HttpHeadersToStringDictionary(response.Content.Headers));
+            return new HttpWebResponseMessage(headers.ToDictionary(h => h.Key, h => h.Value), (int)response.StatusCode, () => contentStream);
+        }
+
+        private Task<HttpResponseMessage> CreateSendTask(CancellationToken cancellationToken = default(CancellationToken))
         {
             // Only set the message content if the stream has been written to, otherwise
             // HttpClient will complain if it's a GET request.
@@ -449,7 +481,8 @@ namespace Microsoft.OData.Client
             }
 
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
-            return _client.SendAsync(_requestMessage);
+            // Keep v7's per-message HttpClient timeout and CancelPendingRequests contracts.
+            return _client.SendAsync(_requestMessage, cancellationToken);
         }
 
         private static IDictionary<string, string> HttpHeadersToStringDictionary(HttpHeaders headers)
