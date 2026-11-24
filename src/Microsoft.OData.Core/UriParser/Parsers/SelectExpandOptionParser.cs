@@ -50,6 +50,11 @@ namespace Microsoft.OData.UriParser
         private readonly bool enableCaseInsensitiveBuiltinIdentifier;
 
         /// <summary>
+        /// The depth of the $expand term whose nested options are being parsed.
+        /// </summary>
+        private readonly int currentExpansionDepth;
+
+        /// <summary>
         /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="SelectExpandParser"/>
         /// to parse over the entirety of $select or $expand.
         /// </summary>
@@ -96,6 +101,22 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Creates an instance of this class to parse options at a known expansion depth.
+        /// </summary>
+        internal SelectExpandOptionParser(
+            IEdmModel model,
+            ODataUriResolver resolver,
+            IEdmStructuredType parentStructuredType,
+            int maxRecursionDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier,
+            bool enableNoDollarQueryOptions,
+            int currentExpansionDepth)
+            : this(model, resolver, parentStructuredType, maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
+        {
+            this.currentExpansionDepth = currentExpansionDepth;
+        }
+
+        /// <summary>
         /// The maximum depth for $filter nested in $expand.
         /// </summary>
         internal int MaxFilterDepth { get; set; }
@@ -119,6 +140,11 @@ namespace Microsoft.OData.UriParser
         /// The maximum allowed nesting depth for nested $expand and expand(...) within $apply clauses.
         /// </summary>
         internal int MaxSelectExpandDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth of the tree that results from parsing $expand.
+        /// </summary>
+        internal int MaxExpansionDepth { get; set; } = ODataUriParserSettings.DefaultMaximumExpansionDepth;
 
         /// <summary>
         /// Building off a PathSegmentToken, continue parsing any select options (nested $filter, $expand, etc)
@@ -588,18 +614,19 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            SelectExpandParser innerSelectParser = new SelectExpandParser(
+            SelectExpandParser innerSelectParser = SelectExpandParser.CreateNestedParser(
                 this.model,
                 this.resolver,
                 selectText,
                 targetStructuredType,
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
-                this.enableNoDollarQueryOptions)
-            {
-                MaxAggregateDepth = this.MaxAggregateDepth,
-                MaxSelectExpandDepth = this.MaxSelectExpandDepth
-            };
+                this.enableNoDollarQueryOptions,
+                this.currentExpansionDepth);
+
+            innerSelectParser.MaxSelectExpandDepth = this.MaxSelectExpandDepth;
+            innerSelectParser.MaxAggregateDepth = this.MaxAggregateDepth;
+            innerSelectParser.MaxExpansionDepth = this.MaxExpansionDepth;
 
             return innerSelectParser.ParseSelect();
         }
@@ -613,6 +640,13 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
+
+            int nestedExpansionDepth = this.currentExpansionDepth + 1;
+            if (nestedExpansionDepth > this.MaxExpansionDepth)
+            {
+                throw ExceptionUtil.CreateBadRequestError(
+                    Error.Format(SRResources.UriParser_ExpandDepthExceeded, nestedExpansionDepth, this.MaxExpansionDepth));
+            }
 
             ReadOnlyMemory<char> expandText = UriParserHelper.ReadQueryOption(this.lexer);
 
@@ -631,18 +665,19 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            SelectExpandParser innerExpandParser = new SelectExpandParser(
+            SelectExpandParser innerExpandParser = SelectExpandParser.CreateNestedParser(
                 this.model,
                 this.resolver,
                 expandText,
                 targetStructuredType,
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
-                this.enableNoDollarQueryOptions)
-            {
-                MaxAggregateDepth = this.MaxAggregateDepth,
-                MaxSelectExpandDepth = this.MaxSelectExpandDepth
-            };
+                this.enableNoDollarQueryOptions,
+                nestedExpansionDepth);
+
+            innerExpandParser.MaxSelectExpandDepth = this.MaxSelectExpandDepth;
+            innerExpandParser.MaxAggregateDepth = this.MaxAggregateDepth;
+            innerExpandParser.MaxExpansionDepth = this.MaxExpansionDepth;
 
             return innerExpandParser.ParseExpand();
         }
