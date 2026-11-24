@@ -428,7 +428,7 @@ namespace Microsoft.OData.UriParser
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier,
                 maxAggregateExpressionDepth: configuration.Settings.AggregateLimit)
             {
-                MaxSelectExpandDepth = configuration.Settings.SelectExpandLimit
+                MaxApplyExpandDepth = configuration.Settings.SelectExpandLimit
             };
             var applyTokens = expressionParser.ParseApply(apply.AsMemory());
 

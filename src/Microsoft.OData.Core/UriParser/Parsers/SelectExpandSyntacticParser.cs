@@ -40,7 +40,8 @@ namespace Microsoft.OData.UriParser
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxAggregateDepth = configuration.Settings.AggregateLimit,
-                MaxExpansionDepth = configuration.Settings.MaximumExpansionDepth
+                MaxExpansionDepth = configuration.Settings.MaximumExpansionDepth,
+                MaxSelectExpandDepth = configuration.Settings.MaximumSelectExpandDepth
             };
             selectTree = selectParser.ParseSelect();
 
@@ -57,9 +58,10 @@ namespace Microsoft.OData.UriParser
                 MaxFilterDepth = configuration.Settings.FilterLimit,
                 MaxOrderByDepth = configuration.Settings.OrderByLimit,
                 MaxSearchDepth = configuration.Settings.SearchLimit,
-                MaxSelectExpandDepth = configuration.Settings.SelectExpandLimit,
+                MaxApplyExpandDepth = configuration.Settings.SelectExpandLimit,
                 MaxAggregateDepth = configuration.Settings.AggregateLimit,
-                MaxExpansionDepth = configuration.Settings.MaximumExpansionDepth
+                MaxExpansionDepth = configuration.Settings.MaximumExpansionDepth,
+                MaxSelectExpandDepth = configuration.Settings.MaximumSelectExpandDepth
             };
             expandTree = expandParser.ParseExpand();
         }

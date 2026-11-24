@@ -1,0 +1,2 @@
+Microsoft.OData.UriParser.ODataUriParserSettings.MaximumSelectExpandDepth.get -> int
+Microsoft.OData.UriParser.ODataUriParserSettings.MaximumSelectExpandDepth.set -> void

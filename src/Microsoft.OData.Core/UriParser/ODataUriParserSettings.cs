@@ -29,9 +29,14 @@ namespace Microsoft.OData.UriParser
         internal const int DefaultSelectExpandLimit = 800;
 
         /// <summary>
+        /// Default maximum combined nesting depth for select and expand query options.
+        /// </summary>
+        internal const int DefaultMaximumSelectExpandDepth = 100;
+
+        /// <summary>
         /// Default maximum depth of the tree that results from parsing $expand.
         /// </summary>
-        internal const int DefaultMaximumExpansionDepth = 200;
+        internal const int DefaultMaximumExpansionDepth = 100;
 
         /// <summary>
         /// Default limit for the path parser.
@@ -74,6 +79,11 @@ namespace Microsoft.OData.UriParser
         private int maxExpandDepth;
 
         /// <summary>
+        /// The maximum combined nesting depth for select and expand query options.
+        /// </summary>
+        private int maxSelectExpandDepth;
+
+        /// <summary>
         /// The maximum number of <see cref="ExpandedNavigationSelectItem"/> instances that can appear in the tree that results from parsing $expand.
         /// </summary>
         private int maxExpandCount;
@@ -100,6 +110,7 @@ namespace Microsoft.OData.UriParser
             this.SearchLimit = DefaultSearchLimit;
             this.AggregateLimit = DefaultAggregateLimit;
 
+            this.MaximumSelectExpandDepth = DefaultMaximumSelectExpandDepth;
             this.MaximumExpansionDepth = DefaultMaximumExpansionDepth;
             this.MaximumExpansionCount = int.MaxValue;
             this.EnableParsingKeyAsSegment = true;
@@ -115,6 +126,7 @@ namespace Microsoft.OData.UriParser
                 SearchLimit = this.SearchLimit,
                 AggregateLimit = this.AggregateLimit,
                 SelectExpandLimit = this.SelectExpandLimit,
+                MaximumSelectExpandDepth = this.MaximumSelectExpandDepth,
                 MaximumExpansionDepth = this.MaximumExpansionDepth,
                 MaximumExpansionCount = this.MaximumExpansionCount,
                 EnableParsingKeyAsSegment = this.EnableParsingKeyAsSegment
@@ -122,10 +134,36 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Gets or sets the maximum combined nesting depth for nested $select and $expand query options.
+        /// </summary>
+        /// <remarks>
+        /// The default value is 100.
+        /// Each transition into a nested $select or $expand option contributes one level on the active parser path.
+        /// Sibling branches are counted independently. This limit is enforced before the nested option is parsed.
+        /// </remarks>
+        public int MaximumSelectExpandDepth
+        {
+            get
+            {
+                return this.maxSelectExpandDepth;
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
+                }
+
+                this.maxSelectExpandDepth = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the maximum depth of the tree that results from parsing $expand.
         /// </summary>
         /// <remarks>
-        /// The default value is 200.
+        /// The default value is 100.
         /// This is enforced while nested $expand options are parsed and validated again after redundant expansions are pruned.
         /// </remarks>
         public int MaximumExpansionDepth

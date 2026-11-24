@@ -2288,6 +2288,9 @@
   <data name="UriParser_ExpandDepthExceeded" xml:space="preserve">
     <value>The result of parsing $expand was at least {0} items deep, but the maximum allowed is {1}.</value>
   </data>
+  <data name="UriParser_SelectExpandDepthExceeded" xml:space="preserve">
+    <value>The query option nesting depth was at least {1} while parsing {0}, but the maximum allowed is {2}.</value>
+  </data>
   <data name="UriParser_TypeInvalidForSelectExpand" xml:space="preserve">
     <value>The type '{0}' is not valid for $select or $expand, only structured types are allowed.</value>
   </data>

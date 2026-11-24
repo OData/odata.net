@@ -820,7 +820,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 MaxFilterDepth = 9,
                 MaxSearchDepth = 9,
                 MaxOrderByDepth = 9,
-                MaxSelectExpandDepth = maxDepth
+                MaxApplyExpandDepth = maxDepth
             };
 
             return optionParser.BuildExpandTermToken(pathToken, optionsText).ElementAt(0);

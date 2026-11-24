@@ -55,6 +55,11 @@ namespace Microsoft.OData.UriParser
         private readonly int currentExpansionDepth;
 
         /// <summary>
+        /// The combined select and expand nesting depth of the term whose nested options are being parsed.
+        /// </summary>
+        private readonly int currentSelectExpandDepth;
+
+        /// <summary>
         /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="SelectExpandParser"/>
         /// to parse over the entirety of $select or $expand.
         /// </summary>
@@ -110,10 +115,12 @@ namespace Microsoft.OData.UriParser
             int maxRecursionDepth,
             bool enableCaseInsensitiveBuiltinIdentifier,
             bool enableNoDollarQueryOptions,
-            int currentExpansionDepth)
+            int currentExpansionDepth,
+            int currentSelectExpandDepth)
             : this(model, resolver, parentStructuredType, maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.currentExpansionDepth = currentExpansionDepth;
+            this.currentSelectExpandDepth = currentSelectExpandDepth;
         }
 
         /// <summary>
@@ -132,19 +139,24 @@ namespace Microsoft.OData.UriParser
         internal int MaxSearchDepth { get; set; }
 
         /// <summary>
+        /// The maximum allowed nesting depth for expand(...) transformations within $apply clauses.
+        /// </summary>
+        internal int MaxApplyExpandDepth { get; set; }
+
+        /// <summary>
         /// The maximum depth for aggregate expressions nested in $expand.
         /// </summary>
         internal int MaxAggregateDepth { get; set; }
 
         /// <summary>
-        /// The maximum allowed nesting depth for nested $expand and expand(...) within $apply clauses.
-        /// </summary>
-        internal int MaxSelectExpandDepth { get; set; }
-
-        /// <summary>
         /// The maximum depth of the tree that results from parsing $expand.
         /// </summary>
         internal int MaxExpansionDepth { get; set; } = ODataUriParserSettings.DefaultMaximumExpansionDepth;
+
+        /// <summary>
+        /// The maximum combined nesting depth for select and expand query options.
+        /// </summary>
+        internal int MaxSelectExpandDepth { get; set; } = ODataUriParserSettings.DefaultMaximumSelectExpandDepth;
 
         /// <summary>
         /// Building off a PathSegmentToken, continue parsing any select options (nested $filter, $expand, etc)
@@ -599,6 +611,15 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
+
+            int nestedSelectExpandDepth = this.currentSelectExpandDepth + 1;
+            if (nestedSelectExpandDepth > this.MaxSelectExpandDepth)
+            {
+                throw ExceptionUtil.CreateBadRequestError(
+                    Error.Format(
+                        SRResources.UriParser_SelectExpandDepthExceeded, "$select", nestedSelectExpandDepth, this.MaxSelectExpandDepth));
+            }
+
             ReadOnlyMemory<char> selectText = UriParserHelper.ReadQueryOption(this.lexer);
 
             IEdmStructuredType targetStructuredType = null;
@@ -622,11 +643,13 @@ namespace Microsoft.OData.UriParser
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
                 this.enableNoDollarQueryOptions,
-                this.currentExpansionDepth);
+                this.currentExpansionDepth,
+                nestedSelectExpandDepth);
 
-            innerSelectParser.MaxSelectExpandDepth = this.MaxSelectExpandDepth;
+            innerSelectParser.MaxApplyExpandDepth = this.MaxApplyExpandDepth;
             innerSelectParser.MaxAggregateDepth = this.MaxAggregateDepth;
             innerSelectParser.MaxExpansionDepth = this.MaxExpansionDepth;
+            innerSelectParser.MaxSelectExpandDepth = this.MaxSelectExpandDepth;
 
             return innerSelectParser.ParseSelect();
         }
@@ -640,6 +663,14 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
+
+            int nestedSelectExpandDepth = this.currentSelectExpandDepth + 1;
+            if (nestedSelectExpandDepth > this.MaxSelectExpandDepth)
+            {
+                throw ExceptionUtil.CreateBadRequestError(
+                    Error.Format(
+                        SRResources.UriParser_SelectExpandDepthExceeded, "$expand", nestedSelectExpandDepth, this.MaxSelectExpandDepth));
+            }
 
             int nestedExpansionDepth = this.currentExpansionDepth + 1;
             if (nestedExpansionDepth > this.MaxExpansionDepth)
@@ -673,11 +704,13 @@ namespace Microsoft.OData.UriParser
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
                 this.enableNoDollarQueryOptions,
-                nestedExpansionDepth);
+                nestedExpansionDepth,
+                nestedSelectExpandDepth);
 
-            innerExpandParser.MaxSelectExpandDepth = this.MaxSelectExpandDepth;
+            innerExpandParser.MaxApplyExpandDepth = this.MaxApplyExpandDepth;
             innerExpandParser.MaxAggregateDepth = this.MaxAggregateDepth;
             innerExpandParser.MaxExpansionDepth = this.MaxExpansionDepth;
+            innerExpandParser.MaxSelectExpandDepth = this.MaxSelectExpandDepth;
 
             return innerExpandParser.ParseExpand();
         }
@@ -736,7 +769,7 @@ namespace Microsoft.OData.UriParser
 
             UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.model, this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier, maxAggregateExpressionDepth: this.MaxAggregateDepth)
             {
-                MaxSelectExpandDepth = this.MaxSelectExpandDepth
+                MaxApplyExpandDepth = this.MaxApplyExpandDepth
             };
             return applyParser.ParseApply(applyText);
         }
