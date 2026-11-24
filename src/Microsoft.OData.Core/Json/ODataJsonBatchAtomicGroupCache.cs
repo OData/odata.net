@@ -27,6 +27,16 @@ namespace Microsoft.OData.Json
         private readonly Dictionary<string, IList<string>> groupToMessageIds = new Dictionary<string, IList<string>>();
 
         /// <summary>
+        /// First atomic group for each non-null message Id, allocated only when a member is added.
+        /// </summary>
+        private Dictionary<string, string> messageIdToGroupId = null;
+
+        /// <summary>
+        /// First atomic group containing a null message Id, which cannot be a dictionary key.
+        /// </summary>
+        private string groupIdForNullMessageId = null;
+
+        /// <summary>
         /// Group Id of the preceding message. Could be null.
         /// </summary>
         private string precedingMessageGroupId = null;
@@ -110,6 +120,17 @@ namespace Microsoft.OData.Json
                 throw new ODataException(Error.Format(SRResources.ODataBatchReader_MessageIdPositionedIncorrectly, messageId, groupId));
             }
 
+            if (messageId == null)
+            {
+                this.groupIdForNullMessageId ??= groupId;
+            }
+            else
+            {
+                this.messageIdToGroupId ??= new Dictionary<string, string>(StringComparer.Ordinal);
+                // Preserve the first group returned by the ordered member-list lookup.
+                this.messageIdToGroupId.TryAdd(messageId, groupId);
+            }
+
             return isChangesetStart;
         }
 
@@ -120,13 +141,14 @@ namespace Microsoft.OData.Json
         /// <returns>The group Id if found; null otherwise.</returns>
         internal string GetGroupId(string targetMessageId)
         {
-            foreach (KeyValuePair<string, IList<string>> pair in this.groupToMessageIds)
+            if (targetMessageId == null)
             {
-                IList<string> messageIds = pair.Value;
-                if (messageIds != null && messageIds.Contains(targetMessageId))
-                {
-                    return pair.Key;
-                }
+                return this.groupIdForNullMessageId;
+            }
+
+            if (this.messageIdToGroupId != null && this.messageIdToGroupId.TryGetValue(targetMessageId, out string groupId))
+            {
+                return groupId;
             }
 
             return null;
