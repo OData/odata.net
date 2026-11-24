@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
@@ -22,6 +23,44 @@ namespace Microsoft.OData.Tests.JsonLight
     /// </summary>
     public class ODataJsonLightValueSerializerTests
     {
+        [Theory]
+        [InlineData(false, false)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(true, true)]
+        public async Task WriteStreamValue_DisposesOnlyOwnedStreamsOnce(bool asynchronous, bool leaveOpen)
+        {
+            var writerStream = new DisposeTrackingMemoryStream();
+            var sourceStream = new DisposeTrackingMemoryStream();
+            sourceStream.WriteByte(1);
+            sourceStream.Position = 0;
+            var jsonWriter = new Microsoft.OData.Tests.Json.MockJsonWriter
+            {
+                StartStreamValueScopeFunc = () => writerStream,
+                EndStreamValueScopeAction = () => writerStream.Dispose(),
+                StartStreamValueScopeAsyncFunc = () => Task.FromResult<Stream>(writerStream),
+                EndStreamValueScopeAsyncFunc = () => { writerStream.Dispose(); return TaskUtils.CompletedTask; }
+            };
+            var builder = new TestContainerBuilder();
+            builder.AddDefaultODataServices();
+            builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new Microsoft.OData.Tests.Json.MockJsonWriterFactory(jsonWriter));
+            builder.AddService<IJsonWriterFactoryAsync>(ServiceLifetime.Singleton, sp => new Microsoft.OData.Tests.Json.MockJsonWriterFactoryAsync(jsonWriter));
+            var messageInfo = new ODataMessageInfo { MessageStream = stream, MediaType = new ODataMediaType("application", "json"), Encoding = Encoding.UTF8, IsResponse = true, IsAsync = asynchronous, Model = model, Container = builder.BuildContainer() };
+            var serializer = new ODataJsonLightValueSerializer(new ODataJsonLightOutputContext(messageInfo, settings));
+
+            if (asynchronous)
+            {
+                await serializer.WriteStreamValueAsync(new ODataBinaryStreamValue(sourceStream, leaveOpen));
+            }
+            else
+            {
+                serializer.WriteStreamValue(new ODataBinaryStreamValue(sourceStream, leaveOpen));
+            }
+
+            Assert.Equal(1, writerStream.DisposeCount);
+            Assert.Equal(leaveOpen ? 0 : 1, sourceStream.DisposeCount);
+        }
+
         private EdmModel model;
         private MemoryStream stream;
         private ODataMessageWriterSettings settings;
@@ -402,12 +441,14 @@ namespace Microsoft.OData.Tests.JsonLight
         private class DisposeTrackingMemoryStream : MemoryStream
         {
             public bool Disposed { get; private set; } = false;
+            public int DisposeCount { get; private set; }
 
             protected override void Dispose(bool disposing)
             {
                 if (disposing)
                 {
                     this.Disposed = true;
+                    this.DisposeCount++;
                 }
 
                 base.Dispose(disposing);
