@@ -3719,11 +3719,15 @@ namespace Microsoft.OData.Client
             if (continuation != null)
             {
                 IAsyncResult beginLoadPropertyResult = this.BeginLoadProperty(entity, propertyName, continuation, null, null);
-                cancellationToken.Register(() => this.CancelRequest(beginLoadPropertyResult));
+                var cancellationRegistration = cancellationToken.Register(() => this.CancelRequest(beginLoadPropertyResult));
                 var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(beginLoadPropertyResult, this.EndLoadProperty);
 
                 return currentTask.ContinueWith(
-                    t => this.ContinuePageAsync(t.Result, entity, propertyName, cancellationToken), cancellationToken).Unwrap();
+                    t =>
+                    {
+                        cancellationRegistration.Dispose();
+                        return this.ContinuePageAsync(t.Result, entity, propertyName, cancellationToken);
+                    }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default).Unwrap();
             }
 
             var taskSource = new TaskCompletionSource<QueryOperationResponse>();
