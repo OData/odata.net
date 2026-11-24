@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.IO;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -20,10 +21,23 @@ namespace Microsoft.OData.Tests.Json
     /// 
     /// So far only a a few things have been implemented.
     /// </summary>
-    internal class MockJsonWriter : IJsonWriter, IJsonWriterAsync
+    internal class MockJsonWriter : IJsonWriter, IJsonWriterAsync, IJsonStreamWriter, IJsonStreamWriterAsync
     {
         public Action<string> WriteNameVerifier;
         public Action<string> WriteValueVerifier;
+        public Func<Stream> StartStreamValueScopeFunc;
+        public Action EndStreamValueScopeAction;
+        public Func<Task<Stream>> StartStreamValueScopeAsyncFunc;
+        public Func<Task> EndStreamValueScopeAsyncFunc;
+
+        public Stream StartStreamValueScope() => this.StartStreamValueScopeFunc?.Invoke() ?? throw new NotImplementedException();
+        public void EndStreamValueScope() => (this.EndStreamValueScopeAction ?? throw new NotImplementedException()).Invoke();
+        public Task<Stream> StartStreamValueScopeAsync() => this.StartStreamValueScopeAsyncFunc?.Invoke() ?? throw new NotImplementedException();
+        public Task EndStreamValueScopeAsync() => this.EndStreamValueScopeAsyncFunc?.Invoke() ?? throw new NotImplementedException();
+        public TextWriter StartTextWriterValueScope(string contentType) => throw new NotImplementedException();
+        public void EndTextWriterValueScope() => throw new NotImplementedException();
+        public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType) => throw new NotImplementedException();
+        public Task EndTextWriterValueScopeAsync() => throw new NotImplementedException();
 
         public void StartPaddingFunctionScope() => throw new NotImplementedException();
 

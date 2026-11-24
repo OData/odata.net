@@ -386,24 +386,32 @@ namespace Microsoft.OData.JsonLight
 
         public virtual void WriteStreamValue(ODataBinaryStreamValue streamValue)
         {
-            IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
-            if (streamWriter == null)
+            try
             {
-                // write as a byte array
-                this.JsonWriter.WritePrimitiveValue(streamValue.Stream.ReadAllBytes());
+                IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
+                if (streamWriter == null)
+                {
+                    this.JsonWriter.WritePrimitiveValue(streamValue.Stream.ReadAllBytes());
+                }
+                else
+                {
+                    Stream stream = streamWriter.StartStreamValueScope();
+                    try
+                    {
+                        streamValue.Stream.CopyTo(stream);
+                    }
+                    finally
+                    {
+                        streamWriter.EndStreamValueScope();
+                    }
+                }
             }
-            else
+            finally
             {
-                Stream stream = streamWriter.StartStreamValueScope();
-                streamValue.Stream.CopyTo(stream);
-                stream.Flush();
-                stream.Dispose();
-                streamWriter.EndStreamValueScope();
-            }
-
-            if (!streamValue.LeaveOpen)
-            {
-                streamValue.Stream.Dispose();
+                if (!streamValue.LeaveOpen)
+                {
+                    streamValue.Stream.Dispose();
+                }
             }
         }
 
@@ -742,32 +750,37 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         public virtual async Task WriteStreamValueAsync(ODataBinaryStreamValue streamValue)
         {
-            IJsonStreamWriterAsync streamWriter = this.AsynchronousJsonWriter as IJsonStreamWriterAsync;
-            if (streamWriter == null)
+            try
             {
-                byte[] value = await streamValue.Stream.ReadAllBytesAsync().ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
+                IJsonStreamWriterAsync streamWriter = this.AsynchronousJsonWriter as IJsonStreamWriterAsync;
+                if (streamWriter == null)
+                {
+                    byte[] value = await streamValue.Stream.ReadAllBytesAsync().ConfigureAwait(false);
+                    await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
+                }
+                else
+                {
+                    Stream stream = await streamWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
+                    try
+                    {
+                        await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        await streamWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
+                    }
+                }
             }
-            else
+            finally
             {
-                Stream stream = await streamWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
-                await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
-                await stream.FlushAsync().ConfigureAwait(false);
+                if (!streamValue.LeaveOpen)
+                {
 #if NETCOREAPP3_1_OR_GREATER
-                await stream.DisposeAsync();
+                    await streamValue.Stream.DisposeAsync().ConfigureAwait(false);
 #else
-                stream.Dispose();
+                    streamValue.Stream.Dispose();
 #endif
-                await streamWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
-            }
-
-            if (!streamValue.LeaveOpen)
-            {
-#if NETCOREAPP3_1_OR_GREATER
-                await streamValue.Stream.DisposeAsync();
-#else
-                streamValue.Stream.Dispose();
-#endif
+                }
             }
         }
 
