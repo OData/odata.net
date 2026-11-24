@@ -337,7 +337,7 @@ namespace Microsoft.OData.JsonLight
                             bufferedProperty.PropertyNameNode = this.currentBufferedNode;
 
                             string propertyName, annotationName;
-                            Tuple<string, string> readPropertyNameResult = await this.ReadPropertyNameAsync()
+                            ReadResult<string, string> readPropertyNameResult = await this.ReadPropertyNameAsync()
                                 .ConfigureAwait(false);
                             propertyName = readPropertyNameResult.Item1;
                             annotationName = readPropertyNameResult.Item2;
@@ -422,7 +422,7 @@ namespace Microsoft.OData.JsonLight
         /// 1). The name of the regular property which the reader is positioned on or which a property annotation belongs to.
         /// 2). The name of the instance or property annotation, or null if the reader is on a regular property.
         /// </returns>
-        private async Task<Tuple<string, string>> ReadPropertyNameAsync()
+        private async Task<ReadResult<string, string>> ReadPropertyNameAsync()
         {
             string propertyName, annotationName;
             string jsonPropertyName = await this.GetPropertyNameAsync()
@@ -434,7 +434,7 @@ namespace Microsoft.OData.JsonLight
 
             ProcessProperty(jsonPropertyName, out propertyName, out annotationName);
 
-            return Tuple.Create(propertyName, annotationName);
+            return ReadResult.Create(propertyName, annotationName);
         }
 
         /// <summary>

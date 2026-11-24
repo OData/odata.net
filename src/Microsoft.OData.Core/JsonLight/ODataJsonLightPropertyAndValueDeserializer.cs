@@ -2237,7 +2237,7 @@ namespace Microsoft.OData.JsonLight
                     propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
                     // Read the payload type name
-                    Tuple<bool, string> readPayloadTypeFromObjectResult = await this.TryReadPayloadTypeFromObjectAsync(
+                    ReadResult<bool, string> readPayloadTypeFromObjectResult = await this.TryReadPayloadTypeFromObjectAsync(
                         propertyAndAnnotationCollector,
                         insideResourceValue).ConfigureAwait(false);
                     bool typeNameFoundInPayload = readPayloadTypeFromObjectResult.Item1;
@@ -2472,16 +2472,16 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
         /// </remarks>
-        protected async Task<Tuple<bool, string>> TryReadODataTypeAnnotationValueAsync(string annotationName)
+        protected async Task<ReadResult<bool, string>> TryReadODataTypeAnnotationValueAsync(string annotationName)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
             if (string.Equals(annotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
             {
-                return Tuple.Create(true, await this.ReadODataTypeAnnotationValueAsync().ConfigureAwait(false));
+                return ReadResult.Create(true, await this.ReadODataTypeAnnotationValueAsync().ConfigureAwait(false));
             }
 
-            return Tuple.Create(false, (string)null);
+            return ReadResult.Create(false, (string)null);
         }
 
         /// <summary>
@@ -2499,7 +2499,7 @@ namespace Microsoft.OData.JsonLight
                 propertyAnnotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal),
                 "The method should only be called with OData. annotations");
 
-            Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationValueAsync(propertyAnnotationName)
+            ReadResult<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationValueAsync(propertyAnnotationName)
                 .ConfigureAwait(false);
             if (readODataTypeAnnotationResult.Item1)
             {
@@ -2524,7 +2524,7 @@ namespace Microsoft.OData.JsonLight
         /// Post-Condition: JsonNodeType.Property       - the next property after the annotation or if the reader did not move
         ///                 JsonNodeType.EndObject      - end of the parent object
         /// </remarks>
-        private async Task<Tuple<bool, string>> TryReadODataTypeAnnotationAsync()
+        private async Task<ReadResult<bool, string>> TryReadODataTypeAnnotationAsync()
         {
             this.AssertJsonCondition(JsonNodeType.Property);
             string payloadTypeName = null;
@@ -2545,7 +2545,7 @@ namespace Microsoft.OData.JsonLight
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            return Tuple.Create(result, payloadTypeName);
+            return ReadResult.Create(result, payloadTypeName);
         }
 
         /// <summary>
@@ -2596,7 +2596,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 string payloadTypeName = null;
-                Tuple<bool, string> readingResourcePropertyResult = await this.ReadingResourcePropertyAsync(
+                ReadResult<bool, string> readingResourcePropertyResult = await this.ReadingResourcePropertyAsync(
                     propertyAndAnnotationCollector,
                     expectedPropertyTypeReference).ConfigureAwait(false);
                 bool isReadingResourceProperty = readingResourcePropertyResult.Item1;
@@ -3240,7 +3240,7 @@ namespace Microsoft.OData.JsonLight
                 // Read the payload type name
                 if (!insideResourceValue)
                 {
-                    Tuple<bool, string> readPayloadTypeFromObjectResult = await this.TryReadPayloadTypeFromObjectAsync(
+                    ReadResult<bool, string> readPayloadTypeFromObjectResult = await this.TryReadPayloadTypeFromObjectAsync(
                         propertyAndAnnotationCollector,
                         insideResourceValue).ConfigureAwait(false);
                     typeNameFoundInPayload = readPayloadTypeFromObjectResult.Item1;
@@ -3418,7 +3418,7 @@ namespace Microsoft.OData.JsonLight
         ///                                 or the first property after the 'odata.type' annotation.
         ///                 EndObject       for an empty JSON object or an object with only the 'odata.type' annotation
         /// </remarks>
-        private async Task<Tuple<bool, string>> TryReadPayloadTypeFromObjectAsync(
+        private async Task<ReadResult<bool, string>> TryReadPayloadTypeFromObjectAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool insideResourceValue)
         {
@@ -3439,7 +3439,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationAsync()
+                ReadResult<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationAsync()
                     .ConfigureAwait(false);
                 readTypeName = readODataTypeAnnotationResult.Item1;
                 if (readTypeName)
@@ -3452,7 +3452,7 @@ namespace Microsoft.OData.JsonLight
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            return Tuple.Create(readTypeName, payloadTypeName);
+            return ReadResult.Create(readTypeName, payloadTypeName);
         }
 
         /// <summary>
@@ -3471,7 +3471,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// This method does not move the reader.
         /// </remarks>
-        private async Task<Tuple<bool, string>> ReadingResourcePropertyAsync(
+        private async Task<ReadResult<bool, string>> ReadingResourcePropertyAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             IEdmTypeReference expectedPropertyTypeReference)
         {
@@ -3490,7 +3490,7 @@ namespace Microsoft.OData.JsonLight
             // properties).
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationAsync()
+                ReadResult<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationAsync()
                     .ConfigureAwait(false);
                 if (readODataTypeAnnotationResult.Item1)
                 {
@@ -3518,7 +3518,7 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            return Tuple.Create(readingResourceProperty, payloadTypeName);
+            return ReadResult.Create(readingResourceProperty, payloadTypeName);
         }
 
         /// <summary>

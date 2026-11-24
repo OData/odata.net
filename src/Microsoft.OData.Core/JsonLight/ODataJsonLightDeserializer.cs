@@ -714,7 +714,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(handlePropertyDelegate != null, $"{nameof(handlePropertyDelegate)} != null");
             this.AssertJsonCondition(JsonNodeType.Property);
 
-            Tuple<PropertyParsingResult, string> parsePropertyResult = await this.ParsePropertyAsync(
+            ReadResult<PropertyParsingResult, string> parsePropertyResult = await this.ParsePropertyAsync(
                 propertyAndAnnotationCollector,
                 readPropertyAnnotationValueDelegate).ConfigureAwait(false);
             PropertyParsingResult propertyParsingResult = parsePropertyResult.Item1;
@@ -1175,9 +1175,9 @@ namespace Microsoft.OData.JsonLight
         /// 2) The annotation value that was read.
         /// </returns>
 #if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
-        private async ValueTask<Tuple<bool, object>> SkipOverUnknownODataAnnotationAsync(
+        private async ValueTask<ReadResult<bool, object>> SkipOverUnknownODataAnnotationAsync(
 #else
-        private async Task<Tuple<bool, object>> SkipOverUnknownODataAnnotationAsync(
+        private async Task<ReadResult<bool, object>> SkipOverUnknownODataAnnotationAsync(
 #endif
             string annotationName)
         {
@@ -1194,7 +1194,7 @@ namespace Microsoft.OData.JsonLight
                 isUnknownODataAnnotationName = true;
             }
 
-            return Tuple.Create(isUnknownODataAnnotationName, annotationValue);
+            return ReadResult.Create(isUnknownODataAnnotationName, annotationValue);
         }
 
         /// <summary>
@@ -1250,7 +1250,7 @@ namespace Microsoft.OData.JsonLight
         /// 7). The first component contains EndOfObject if end of the object scope was reached and no properties are to be reported, while the second component contains null.
         ///                             This can only happen if there's a property annotation which is ignored (for example custom one) at the end of the object.
         /// </returns>
-        private async Task<Tuple<PropertyParsingResult, string>> ParsePropertyAsync(
+        private async Task<ReadResult<PropertyParsingResult, string>> ParsePropertyAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             Func<string, Task<object>> readPropertyAnnotationValueDelegate)
         {
@@ -1274,7 +1274,7 @@ namespace Microsoft.OData.JsonLight
                     await this.JsonReader.ReadAsync()
                         .ConfigureAwait(false);
                     parsedPropertyName = propertyNameFromReader;
-                    return Tuple.Create(PropertyParsingResult.NestedDeltaResourceSet, parsedPropertyName);
+                    return ReadResult.Create(PropertyParsingResult.NestedDeltaResourceSet, parsedPropertyName);
                 }
 
                 bool isInstanceAnnotation = false;
@@ -1298,7 +1298,7 @@ namespace Microsoft.OData.JsonLight
                             parsedPropertyName));
                     }
 
-                    return Tuple.Create(PropertyParsingResult.PropertyWithoutValue, parsedPropertyName);
+                    return ReadResult.Create(PropertyParsingResult.PropertyWithoutValue, parsedPropertyName);
                 }
 
                 object annotationValue = null;
@@ -1313,7 +1313,7 @@ namespace Microsoft.OData.JsonLight
                     // so ProcessPropertyAnnotationAsync() will test and fail for that case.
                     if (!ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader))
                     {
-                        Tuple<bool, object> skipOverUnknownODataAnnotationResult = await this.SkipOverUnknownODataAnnotationAsync(annotationNameFromReader)
+                        ReadResult<bool, object> skipOverUnknownODataAnnotationResult = await this.SkipOverUnknownODataAnnotationAsync(annotationNameFromReader)
                             .ConfigureAwait(false);
                         if (skipOverUnknownODataAnnotationResult.Item1)
                         {
@@ -1338,7 +1338,7 @@ namespace Microsoft.OData.JsonLight
                 // If this is a unknown odata annotation, skip over it. See remark on the method SkipOverUnknownODataAnnotationAsync() for detailed explanation.
                 if (isInstanceAnnotation)
                 {
-                    Tuple<bool, object> skipOverUnknownODataAnnotationResult = await this.SkipOverUnknownODataAnnotationAsync(propertyNameFromReader)
+                    ReadResult<bool, object> skipOverUnknownODataAnnotationResult = await this.SkipOverUnknownODataAnnotationAsync(propertyNameFromReader)
                         .ConfigureAwait(false);
                     if (skipOverUnknownODataAnnotationResult.Item1)
                     {
@@ -1359,13 +1359,13 @@ namespace Microsoft.OData.JsonLight
 
                 if (!isInstanceAnnotation && ODataJsonLightUtils.IsMetadataReferenceProperty(propertyNameFromReader))
                 {
-                    return Tuple.Create(PropertyParsingResult.MetadataReferenceProperty, parsedPropertyName);
+                    return ReadResult.Create(PropertyParsingResult.MetadataReferenceProperty, parsedPropertyName);
                 }
 
                 if (!isInstanceAnnotation && !ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader))
                 {
                     // Normal property
-                    return Tuple.Create(PropertyParsingResult.PropertyWithValue, parsedPropertyName);
+                    return ReadResult.Create(PropertyParsingResult.PropertyWithValue, parsedPropertyName);
                 }
 
                 // collect 'xxx.yyyy' annotation:
@@ -1375,11 +1375,11 @@ namespace Microsoft.OData.JsonLight
                 // Handle 'odata.XXXXX' annotations
                 if (isInstanceAnnotation && ODataJsonLightReaderUtils.IsODataAnnotationName(propertyNameFromReader))
                 {
-                    return Tuple.Create(PropertyParsingResult.ODataInstanceAnnotation, parsedPropertyName);
+                    return ReadResult.Create(PropertyParsingResult.ODataInstanceAnnotation, parsedPropertyName);
                 }
 
                 // Handle custom annotations
-                return Tuple.Create(PropertyParsingResult.CustomInstanceAnnotation, parsedPropertyName);
+                return ReadResult.Create(PropertyParsingResult.CustomInstanceAnnotation, parsedPropertyName);
             }
 
             this.AssertJsonCondition(JsonNodeType.EndObject);
@@ -1393,10 +1393,10 @@ namespace Microsoft.OData.JsonLight
                             parsedPropertyName));
                 }
 
-                return Tuple.Create(PropertyParsingResult.PropertyWithoutValue, parsedPropertyName);
+                return ReadResult.Create(PropertyParsingResult.PropertyWithoutValue, parsedPropertyName);
             }
 
-            return Tuple.Create(PropertyParsingResult.EndOfObject, parsedPropertyName);
+            return ReadResult.Create(PropertyParsingResult.EndOfObject, parsedPropertyName);
         }
 
         /// <summary>
