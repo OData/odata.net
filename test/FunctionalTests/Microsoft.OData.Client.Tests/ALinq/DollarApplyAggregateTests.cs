@@ -432,6 +432,75 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Assert.Throws<NotSupportedException>(() => queryable.Take(1).Min(d => d.Amount));
         }
 
+        [Theory]
+        [MemberData(nameof(AggregationTestData))]
+        public void Aggregation_EmptyResultMatchesLinqSemantics(string propertyName, string aggregationMethodName)
+        {
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            var propertyInfo = queryable.ElementType.GetProperty(propertyName);
+            var aggregationMethod = GetAggregationMethod(aggregationMethodName, propertyInfo.PropertyType);
+            var returnType = GetMethodReturnType(aggregationMethod, propertyInfo.PropertyType);
+            var expression = BuildMethodCallExpression(queryable, aggregationMethod, propertyInfo);
+            InterceptRequestAndMockResponse($"{{\"@odata.context\":\"{serviceUri}/$metadata#{numbersEntitySetName}({aggregationMethodName}{propertyName})\",\"value\":[]}}");
+            var execute = GetExecuteMethod().MakeGenericMethod(returnType);
+            var provider = new DataServiceQueryProvider(dsContext);
+            if (aggregationMethodName == "Sum")
+            {
+                var result = execute.Invoke(provider, new object[] { expression });
+                Assert.Equal(Convert.ChangeType(0, Nullable.GetUnderlyingType(returnType) ?? returnType, System.Globalization.CultureInfo.InvariantCulture), result);
+            }
+            else if (Nullable.GetUnderlyingType(returnType) != null)
+            {
+                Assert.Null(execute.Invoke(provider, new object[] { expression }));
+            }
+            else
+            {
+                var error = Assert.Throws<TargetInvocationException>(() => execute.Invoke(provider, new object[] { expression }));
+                var queryError = Assert.IsType<DataServiceQueryException>(error.InnerException);
+                var aggregateError = Assert.IsType<InvalidOperationException>(queryError.InnerException);
+                Assert.Equal(Strings.ALinq_AggregationOnEmptyCollectionNotSupported, aggregateError.Message);
+            }
+        }
+
+        [Fact]
+        public void CountDistinct_EmptyResultReturnsZero()
+        {
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            InterceptRequestAndMockResponse($"{{\"@odata.context\":\"{serviceUri}/$metadata#{numbersEntitySetName}(CountDistinctRowParity)\",\"value\":[]}}");
+            Assert.Equal(0, queryable.CountDistinct(number => number.RowParity));
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void MinMax_EmptyReferenceResultReturnsNull(bool maximum)
+        {
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            string alias = maximum ? "MaxRowParity" : "MinRowParity";
+            InterceptRequestAndMockResponse($"{{\"@odata.context\":\"{serviceUri}/$metadata#{numbersEntitySetName}({alias})\",\"value\":[]}}");
+            Assert.Null(maximum ? queryable.Max(number => number.RowParity) : queryable.Min(number => number.RowParity));
+        }
+
+        [Theory]
+        [InlineData("[{}]")]
+        [InlineData("[null]")]
+        [InlineData("null")]
+        [InlineData("[")]
+        public void Sum_MalformedOrNonemptyResultRemainsAnError(string value)
+        {
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            InterceptRequestAndMockResponse($"{{\"@odata.context\":\"{serviceUri}/$metadata#{numbersEntitySetName}(SumIntProp)\",\"value\":{value}}}");
+            Assert.Throws<DataServiceQueryException>(() => queryable.Sum(number => number.IntProp));
+        }
+
+        [Fact]
+        public void Sum_NonemptyInvalidScalarRemainsAConversionError()
+        {
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            InterceptRequestAndMockResponse($"{{\"@odata.context\":\"{serviceUri}/$metadata#{numbersEntitySetName}(SumIntProp)\",\"value\":[{{\"SumIntProp\":\"invalid\"}}]}}");
+            Assert.Throws<FormatException>(() => queryable.Sum(number => number.IntProp));
+        }
+
         #region Mock Aggregation Responses
 
         private void MockCountDistinct()

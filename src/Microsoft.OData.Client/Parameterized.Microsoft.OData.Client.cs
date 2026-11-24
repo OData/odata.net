@@ -1868,6 +1868,17 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The aggregation cannot be performed on an empty collection."
+        /// </summary>
+        internal static string ALinq_AggregationOnEmptyCollectionNotSupported
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_AggregationOnEmptyCollectionNotSupported);
+            }
+        }
+
+        /// <summary>
         /// A string like "The aggregation method '{0}' is not supported."
         /// </summary>
         internal static string ALinq_AggregationMethodNotSupported(object p0)

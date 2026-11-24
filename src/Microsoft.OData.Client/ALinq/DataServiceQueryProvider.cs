@@ -159,7 +159,9 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.MinSelector: // Mapped to a generic expression - Min(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
                     case SequenceMethod.MaxSelector: // Mapped to a generic expression - Max(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
                     case SequenceMethod.CountDistinctSelector: // Mapped to a generic expression - CountDistinct(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->Int32
-                        return ((DataServiceQuery<TElement>)query).GetValue(this.Context, this.ParseAggregateSingletonResult<TElement>);
+                        return ((DataServiceQuery<TElement>)query).GetValue(
+                            this.Context,
+                            queryResult => this.ParseAggregateSingletonResult<TElement>(queryResult, sequenceMethod));
                     default:
                         throw Error.MethodNotSupported(mce);
                 }
@@ -292,8 +294,9 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="TElement">The return type.</typeparam>
         /// <param name="queryResult">The query result.</param>
-        /// <returns></returns>
-        private TElement ParseAggregateSingletonResult<TElement>(QueryResult queryResult)
+        /// <param name="aggregationMethod">The aggregation sequence method that produced the request.</param>
+        /// <returns>The materialized scalar aggregate value.</returns>
+        private TElement ParseAggregateSingletonResult<TElement>(QueryResult queryResult, SequenceMethod aggregationMethod)
         {
             IDictionary<string, string> responseHeaders = new Dictionary<string, string>();
             responseHeaders.Add(ODataConstants.ContentTypeHeader, "application/json");
@@ -306,6 +309,7 @@ namespace Microsoft.OData.Client
             };
 
             ODataResource entry = default(ODataResource);
+            bool sawResourceEntry = false;
             using (ODataMessageReader messageReader = new ODataMessageReader(
                 httpWebResponseMessage, messageReaderSettings, this.Context.Format.ServiceModel))
             {
@@ -315,6 +319,8 @@ namespace Microsoft.OData.Client
                     switch (reader.State)
                     {
                         case ODataReaderState.ResourceEnd:
+                            // A null or unusable entry is not an empty result set.
+                            sawResourceEntry = true;
                             entry = reader.Item as ODataResource;
                             if (entry != null && entry.Properties.Any())
                             {
@@ -339,8 +345,60 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            // Failed to retrieve the aggregate result for whatever reason
+            if (!sawResourceEntry)
+            {
+                return GetEmptyAggregateResult<TElement>(aggregationMethod);
+            }
+
+            // Preserve errors for nonempty responses without a usable aggregate.
             throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetValue);
+        }
+
+        /// <summary>Gets the LINQ scalar aggregate result for an empty result set.</summary>
+        /// <typeparam name="TElement">The return type.</typeparam>
+        /// <param name="aggregationMethod">The aggregation sequence method that produced the request.</param>
+        /// <returns>Zero for Sum/CountDistinct or null for nullable/reference Average/Min/Max.</returns>
+        private static TElement GetEmptyAggregateResult<TElement>(SequenceMethod aggregationMethod)
+        {
+            switch (aggregationMethod)
+            {
+                // Nullable Sum also returns zero, not null, in LINQ-to-Objects.
+                case SequenceMethod.SumIntSelector:
+                case SequenceMethod.SumDoubleSelector:
+                case SequenceMethod.SumDecimalSelector:
+                case SequenceMethod.SumLongSelector:
+                case SequenceMethod.SumSingleSelector:
+                case SequenceMethod.SumNullableIntSelector:
+                case SequenceMethod.SumNullableDoubleSelector:
+                case SequenceMethod.SumNullableDecimalSelector:
+                case SequenceMethod.SumNullableLongSelector:
+                case SequenceMethod.SumNullableSingleSelector:
+                case SequenceMethod.CountDistinctSelector:
+                    Type zeroType = Nullable.GetUnderlyingType(typeof(TElement)) ?? typeof(TElement);
+                    return (TElement)Convert.ChangeType(0, zeroType, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+
+                case SequenceMethod.AverageIntSelector:
+                case SequenceMethod.AverageDoubleSelector:
+                case SequenceMethod.AverageDecimalSelector:
+                case SequenceMethod.AverageLongSelector:
+                case SequenceMethod.AverageSingleSelector:
+                case SequenceMethod.AverageNullableIntSelector:
+                case SequenceMethod.AverageNullableDoubleSelector:
+                case SequenceMethod.AverageNullableDecimalSelector:
+                case SequenceMethod.AverageNullableLongSelector:
+                case SequenceMethod.AverageNullableSingleSelector:
+                case SequenceMethod.MinSelector:
+                case SequenceMethod.MaxSelector:
+                    if (Nullable.GetUnderlyingType(typeof(TElement)) != null || !typeof(TElement).IsValueType)
+                    {
+                        return default(TElement);
+                    }
+
+                    throw new InvalidOperationException(Strings.ALinq_AggregationOnEmptyCollectionNotSupported);
+
+                default:
+                    throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetValue);
+            }
         }
     }
 }
