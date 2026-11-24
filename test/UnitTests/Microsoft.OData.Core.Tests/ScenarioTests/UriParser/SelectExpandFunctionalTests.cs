@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
@@ -805,6 +806,168 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parser.Settings.MaximumExpansionDepth = 1;
             Action parse = () => parser.ParseSelectAndExpand();
             parse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, 2, 1));
+        }
+
+        [Fact]
+        public void MaxExpandDepthSettingShouldBeEnforcedBeforeParsingNestedOptions()
+        {
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?$expand=MyDog($expand=MyPeople($filter=))"));
+            parser.Settings.MaximumExpansionDepth = 1;
+
+            Action parse = () => parser.ParseSelectAndExpand();
+
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, 2, 1));
+        }
+
+        [Fact]
+        public void DefaultMaxExpandDepthAllowsNestedExpand()
+        {
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?$expand=MyDog($expand=MyPeople($expand=MyDog))"));
+
+            SelectExpandClause result = parser.ParseSelectAndExpand();
+
+            Assert.Single(result.SelectedItems);
+        }
+
+        [Fact]
+        public void DefaultMaxExpandDepthRejectsExpansionBeyondDefaultLimit()
+        {
+            string query = BuildNestedExpandQuery(ODataUriParserSettings.DefaultMaximumExpansionDepth + 1);
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?" + query));
+
+            Action parse = () => parser.ParseSelectAndExpand();
+
+            parse.Throws<ODataException>(
+                Error.Format(
+                    SRResources.UriParser_ExpandDepthExceeded,
+                    ODataUriParserSettings.DefaultMaximumExpansionDepth + 1,
+                    ODataUriParserSettings.DefaultMaximumExpansionDepth));
+        }
+
+        [Fact]
+        public void RepeatedExpandTermsPreserveNormalizedDepthValidation()
+        {
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?$expand=MyDog,MyDog($expand=MyPeople)"));
+            parser.Settings.MaximumExpansionDepth = 2;
+            parser.Settings.MaximumExpansionCount = 2;
+
+            SelectExpandClause result = parser.ParseSelectAndExpand();
+
+            ExpandedNavigationSelectItem expandedDog = Assert.IsType<ExpandedNavigationSelectItem>(Assert.Single(result.SelectedItems));
+            Assert.Single(expandedDog.SelectAndExpand.SelectedItems);
+        }
+
+        [Fact]
+        public void MultipleExpandBranchesUseDepthLimitIndependently()
+        {
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?$expand=MyDog($expand=MyPeople),MyLions($expand=Friends)"));
+            parser.Settings.MaximumExpansionDepth = 2;
+
+            SelectExpandClause result = parser.ParseSelectAndExpand();
+
+            Assert.Equal(2, result.SelectedItems.Count());
+        }
+
+        [Fact]
+        public void MultipleExpandBranchesCanEachReachMaximumExpansionDepth()
+        {
+            int maximumExpansionDepth = ODataUriParserSettings.DefaultMaximumExpansionDepth;
+            string dogBranch = BuildNestedExpandPath(
+                maximumExpansionDepth,
+                level => level % 2 == 0 ? "MyDog" : "MyPeople");
+            string lionBranch = BuildNestedExpandPath(
+                maximumExpansionDepth,
+                level => level == 0 ? "MyLions" : "Friends");
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri($"http://host/People?$expand={dogBranch},{lionBranch}"));
+
+            SelectExpandClause result = parser.ParseSelectAndExpand();
+
+            Assert.Equal(2, result.SelectedItems.Count());
+        }
+
+        [Fact]
+        public void MultipleExpandBranchesCanEachReachMaximumExpansionDepthButThrowsWhenExceeded()
+        {
+            int maximumExpansionDepth = ODataUriParserSettings.DefaultMaximumExpansionDepth;
+            string dogBranch = BuildNestedExpandPath(
+                maximumExpansionDepth,
+                level => level % 2 == 0 ? "MyDog" : "MyPeople");
+            string lionBranchExceeded = BuildNestedExpandPath(
+                maximumExpansionDepth + 1,
+                level => level == 0 ? "MyLions" : "Friends");
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri($"http://host/People?$expand={dogBranch},{lionBranchExceeded}"));
+
+            Action limitedParse = () => parser.ParseSelectAndExpand();
+            limitedParse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, maximumExpansionDepth + 1, maximumExpansionDepth));
+        }
+
+        [Fact]
+        public void LowExpandDepthLimitStopsAtDepthExceededBeforeParsingRemainingLevels()
+        {
+            string query = BuildNestedExpandQuery(300);
+
+            ODataUriParser limitedParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?" + query));
+            limitedParser.Settings.MaximumExpansionDepth = 10;
+
+            Action limitedParse = () => limitedParser.ParseSelectAndExpand();
+            limitedParse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, 11, 10));
+
+            ODataUriParser completeParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?" + query));
+            completeParser.Settings.MaximumExpansionDepth = 300;
+
+            SelectExpandClause completeResult = completeParser.ParseSelectAndExpand();
+            Assert.Single(completeResult.SelectedItems);
+        }
+
+        [Fact]
+        public void IntermediateExpandDepthLimitStopsAtDepthExceededBeforeParsingRemainingLevels()
+        {
+            string query = BuildNestedExpandQuery(300);
+
+            ODataUriParser limitedParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?" + query));
+            limitedParser.Settings.MaximumExpansionDepth = 100;
+
+            Action limitedParse = () => limitedParser.ParseSelectAndExpand();
+            limitedParse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, 101, 100));
+
+            ODataUriParser completeParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                new Uri("http://host/"),
+                new Uri("http://host/People?" + query));
+            completeParser.Settings.MaximumExpansionDepth = 300;
+
+            SelectExpandClause completeResult = completeParser.ParseSelectAndExpand();
+            Assert.Single(completeResult.SelectedItems);
         }
 
         [Fact]
@@ -2566,6 +2729,32 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // todo: run this for each OData version
             selectExpandClause.GetSelectExpandPaths(ODataVersion.V4, out selectClause, out expandClause);
             return expandClause;
+        }
+
+        #endregion
+
+        #region Max Expansion Depth Helpers
+        private static string BuildNestedExpandQuery(int depth)
+        {
+            return "$expand=" + BuildNestedExpandPath(
+                depth,
+                level => level % 2 == 0 ? "MyDog" : "MyPeople");
+        }
+
+        private static string BuildNestedExpandPath(int depth, Func<int, string> navigationPropertyAtLevel)
+        {
+            StringBuilder query = new StringBuilder();
+            for (int level = 0; level < depth; level++)
+            {
+                query.Append(navigationPropertyAtLevel(level));
+                if (level < depth - 1)
+                {
+                    query.Append("($expand=");
+                }
+            }
+
+            query.Append(')', depth - 1);
+            return query.ToString();
         }
 
         #endregion
