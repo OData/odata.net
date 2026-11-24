@@ -483,6 +483,22 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("def", parser.ParseDeltaToken());
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ParseQueryOptionsShouldWorkForUnknownQueryOptions(bool enableNoDollarQueryOptions)
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel,
+                new Uri("People?$filter=Name eq 'Foo'&unknown&whatif&unknown=&$top=5", UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            Assert.NotNull(parser.ParseFilter());
+            Assert.Equal(3, parser.CustomQueryOptions.Count);
+            Assert.Equal(new KeyValuePair<string, string>(null, "unknown"), parser.CustomQueryOptions[0]);
+            Assert.Equal(new KeyValuePair<string, string>(null, "whatif"), parser.CustomQueryOptions[1]);
+            Assert.Equal(new KeyValuePair<string, string>("unknown", ""), parser.CustomQueryOptions[2]);
+            Assert.Equal(3, parser.ParseUri().CustomQueryOptions.Count());
+        }
+
         [Fact]
         public static void ParseCustomQueryOptionsShouldWork()
         {
