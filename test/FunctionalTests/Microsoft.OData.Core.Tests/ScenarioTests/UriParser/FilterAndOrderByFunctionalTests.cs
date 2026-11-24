@@ -760,6 +760,38 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             singleValueFunctionCallNode.Parameters.ElementAt(1).ShouldBeConstantQueryNode("Edm.String");
         }
 
+        [Theory]
+        [InlineData("isof(Fully.Qualified.Namespace.Employee)", "Fully.Qualified.Namespace.Employee")]
+        [InlineData("isof(MyAddress, Fully.Qualified.Namespace.HomeAddress)", "Fully.Qualified.Namespace.HomeAddress")]
+        [InlineData("isof(MyAddress, 'Fully.Qualified.Namespace.HomeAddress')", "Fully.Qualified.Namespace.HomeAddress")]
+        [InlineData("isof(ID, edm.int32)", "edm.int32")]
+        public void UnquotedIsOfTypeArguments(string expression, string expectedType)
+        {
+            var parser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string> { { "$filter", expression } });
+            parser.Resolver.EnableCaseInsensitive = true;
+            var function = Assert.IsType<SingleValueFunctionCallNode>(parser.ParseFilter().Expression);
+            QueryNode argument = function.Parameters.Last();
+            var cast = argument as SingleResourceCastNode;
+            Assert.Equal(expectedType, cast != null ? cast.TypeReference.FullName() : Assert.IsType<ConstantNode>(argument).Value);
+        }
+
+        [Theory]
+        [InlineData("cast(MyDog, Fully.Qualified.Namespace.Dog)/Color eq 'blue'")]
+        [InlineData("cast(MyDog, 'Fully.Qualified.Namespace.Dog')/Color eq 'blue'")]
+        [InlineData("cast(MyAddress, Fully.Qualified.Namespace.HomeAddress)/HomeNO eq 'H-1234'")]
+        [InlineData("cast(Fully.Qualified.Namespace.Employee)/WorkID eq 345")]
+        [InlineData("cast(Fully.Qualified.Namespace.ColorPattern'blue', edm.string) eq '2'")]
+        public void UnquotedCastTypeArguments(string expression)
+        {
+            var parser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string> { { "$filter", expression } });
+            parser.Resolver.EnableCaseInsensitive = true;
+            Assert.IsType<BinaryOperatorNode>(parser.ParseFilter().Expression);
+        }
+
         [Fact]
         public void CastFunctionWorksWithNoSingleQuotesOnType()
         {
