@@ -14,6 +14,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(ODataUriParserSettings.DefaultSelectExpandLimit, settings.SelectExpandLimit);
             Assert.Equal(ODataUriParserSettings.DefaultSearchLimit, settings.SearchLimit);
             Assert.Equal(ODataUriParserSettings.DefaultAggregateLimit, settings.AggregateLimit);
+            Assert.Equal(ODataUriParserSettings.DefaultMaximumSelectExpandDepth, settings.MaximumSelectExpandDepth);
             Assert.Equal(ODataUriParserSettings.DefaultMaximumExpansionDepth, settings.MaximumExpansionDepth);
             Assert.Equal(int.MaxValue, settings.MaximumExpansionCount);
             Assert.True(settings.EnableParsingKeyAsSegment);
@@ -32,6 +33,56 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var settings = new ODataUriParserSettings();
             Assert.Throws<ODataException>(() => settings.AggregateLimit = -1);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(100)]
+        [InlineData(int.MaxValue)]
+        public void MaximumSelectExpandDepthCanBeSet(int maximumSelectExpandDepth)
+        {
+            var settings = new ODataUriParserSettings();
+
+            settings.MaximumSelectExpandDepth = maximumSelectExpandDepth;
+
+            Assert.Equal(maximumSelectExpandDepth, settings.MaximumSelectExpandDepth);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(int.MinValue)]
+        public void MaximumSelectExpandDepthNegativeValueThrows(int maximumSelectExpandDepth)
+        {
+            var settings = new ODataUriParserSettings();
+
+            Assert.Throws<ODataException>(() => settings.MaximumSelectExpandDepth = maximumSelectExpandDepth);
+        }
+
+        [Fact]
+        public void MaximumSelectExpandDepthRemainsUnchangedWhenSettingNegativeValueThrows()
+        {
+            var settings = new ODataUriParserSettings
+            {
+                MaximumSelectExpandDepth = 50
+            };
+
+            Assert.Throws<ODataException>(() => settings.MaximumSelectExpandDepth = -1);
+
+            Assert.Equal(50, settings.MaximumSelectExpandDepth);
+        }
+
+        [Fact]
+        public void CloneCopiesMaximumSelectExpandDepth()
+        {
+            var settings = new ODataUriParserSettings
+            {
+                MaximumSelectExpandDepth = 50
+            };
+
+            ODataUriParserSettings clone = settings.Clone();
+
+            Assert.Equal(settings.MaximumSelectExpandDepth, clone.MaximumSelectExpandDepth);
         }
 
         [Theory]

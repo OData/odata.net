@@ -6795,6 +6795,15 @@ namespace Microsoft.OData.Core {
                 return ResourceManager.GetString("UriParser_TypeInvalidForSelectExpand", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The query option nesting depth was at least {1} while parsing {0}, but the maximum allowed is {2}..
+        /// </summary>
+        internal static string UriParser_SelectExpandDepthExceeded {
+            get {
+                return ResourceManager.GetString("UriParser_SelectExpandDepthExceeded", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to The URI &apos;{0}&apos; must be an absolute URI..

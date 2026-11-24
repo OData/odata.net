@@ -1528,9 +1528,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ParseApplyWithNestedExpandAtMaxDepthShouldParseSuccessfully()
         {
-            int maxSelectExpandDepth = 5;
-            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 800) { MaxSelectExpandDepth = maxSelectExpandDepth };
-            string apply = BuildNestedExpandApply(maxSelectExpandDepth);
+            int maxApplyExpandDepth = 5;
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 800) { MaxApplyExpandDepth = maxApplyExpandDepth };
+            string apply = BuildNestedExpandApply(maxApplyExpandDepth);
 
             IEnumerable<QueryToken> actual = parser.ParseApply(apply);
             Assert.NotNull(actual);
@@ -1538,10 +1538,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyExpandDepthExceedingMaxSelectExpandDepthShouldThrow()
+        public void ParseApplyExpandDepthExceedingMaxApplyExpandDepthShouldThrow()
         {
-            // MaxSelectExpandDepth is enforced independently of the filter expression limit.
-            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, maxDepth: 100) { MaxSelectExpandDepth = 5 };
+            // MaxApplyExpandDepth is enforced independently of the filter expression limit.
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, maxDepth: 100) { MaxApplyExpandDepth = 5 };
             string apply = BuildNestedExpandApply(6);
 
             Action parse = () => parser.ParseApply(apply);
@@ -1549,11 +1549,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyExpandDepthUsesMaxSelectExpandDepthNotFilterLimit()
+        public void ParseApplyExpandDepthUsesMaxApplyExpandDepthNotFilterLimit()
         {
-            // Expand depth is governed by MaxSelectExpandDepth independently from the filter expression
-            // limit (maxDepth). depth=12 exceeds maxDepth(10) but is within MaxSelectExpandDepth(15).
-            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, maxDepth: 10) { MaxSelectExpandDepth = 15 };
+            // Expand depth is governed by MaxApplyExpandDepth independently from the filter expression
+            // limit (maxDepth). depth=12 exceeds maxDepth(10) but is within MaxApplyExpandDepth(15).
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, maxDepth: 10) { MaxApplyExpandDepth = 15 };
             string apply = BuildNestedExpandApply(12);
 
             IEnumerable<QueryToken> actual = parser.ParseApply(apply);
