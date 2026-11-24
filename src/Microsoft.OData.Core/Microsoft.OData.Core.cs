@@ -672,6 +672,8 @@ namespace Microsoft.OData
         internal const string ApplyBinder_UnsupportedAggregateMethod = "ApplyBinder_UnsupportedAggregateMethod";
         internal const string ApplyBinder_UnsupportedAggregateKind = "ApplyBinder_UnsupportedAggregateKind";
         internal const string ApplyBinder_AggregateExpressionNotSingleValue = "ApplyBinder_AggregateExpressionNotSingleValue";
+        internal const string ApplyBinder_AggregateExpressionNodeNotSupported = "ApplyBinder_AggregateExpressionNodeNotSupported";
+        internal const string ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod = "ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod";
         internal const string ApplyBinder_GroupByPropertyNotPropertyAccessValue = "ApplyBinder_GroupByPropertyNotPropertyAccessValue";
         internal const string ApplyBinder_UnsupportedType = "ApplyBinder_UnsupportedType";
         internal const string ApplyBinder_UnsupportedGroupByChild = "ApplyBinder_UnsupportedGroupByChild";
