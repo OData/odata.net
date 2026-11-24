@@ -302,7 +302,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject:   when the collection wrapper object has no properties (other than the context URI).
         /// Post-Condition: JsonNodeType.StartArray:  the start of the array of the collection items.
         /// </remarks>
-        internal async Task<Tuple<ODataCollectionStart, IEdmTypeReference>> ReadCollectionStartAsync(
+        internal async Task<ReadResult<ODataCollectionStart, IEdmTypeReference>> ReadCollectionStartAsync(
             PropertyAndAnnotationCollector collectionStartPropertyAndAnnotationCollector,
             bool isReadingNestedPayload,
             IEdmTypeReference expectedItemTypeReference)
@@ -432,7 +432,7 @@ namespace Microsoft.OData.JsonLight
 
             this.JsonReader.AssertNotBuffering();
 
-            return Tuple.Create(collectionStart, actualItemTypeReference);
+            return ReadResult.Create(collectionStart, actualItemTypeReference);
         }
 
         /// <summary>
