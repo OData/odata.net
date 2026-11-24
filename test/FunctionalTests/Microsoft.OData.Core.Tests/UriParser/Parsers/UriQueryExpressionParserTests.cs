@@ -19,6 +19,24 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         private readonly UriQueryExpressionParser testSubject = new UriQueryExpressionParser(50);
 
         [Theory]
+        [InlineData(0)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void AggregateExpressionNestingIsBounded(int limit)
+        {
+            var parser = new UriQueryExpressionParser(50) { MaxAggregateDepth = limit };
+            string apply = "aggregate(Products(Items(Price with sum as Total)))";
+            if (limit == 3)
+            {
+                Assert.Single(parser.ParseApply(apply));
+            }
+            else
+            {
+                Assert.Equal(ErrorStrings.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded(limit), Assert.Throws<ODataException>(() => parser.ParseApply(apply)).Message);
+            }
+        }
+
+        [Theory]
         [InlineData(5)]
         [InlineData(6)]
         public void ApplyExpandEnforcesIndependentNestingLimit(int depth)

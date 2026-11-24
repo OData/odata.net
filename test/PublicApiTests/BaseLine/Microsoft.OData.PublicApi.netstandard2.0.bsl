@@ -7307,6 +7307,7 @@ public sealed class Microsoft.OData.UriParser.ODataUriParser {
 public sealed class Microsoft.OData.UriParser.ODataUriParserSettings {
     public ODataUriParserSettings ()
 
+    int AggregateLimit  { public get; public set; }
     int MaximumExpansionCount  { public get; public set; }
     int MaximumExpansionDepth  { public get; public set; }
 }

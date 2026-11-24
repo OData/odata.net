@@ -79,6 +79,7 @@ namespace Microsoft.OData.UriParser
             this.MaxOrderByDepth = maxRecursiveDepth;
             this.MaxSearchDepth = maxRecursiveDepth;
             this.MaxSelectExpandDepth = maxRecursiveDepth;
+            this.MaxAggregateDepth = ODataUriParserSettings.DefaultAggregateLimit;
 
             // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options,
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
@@ -130,7 +131,8 @@ namespace Microsoft.OData.UriParser
                         MaxFilterDepth = MaxFilterDepth,
                         MaxOrderByDepth = MaxOrderByDepth,
                         MaxSearchDepth = MaxSearchDepth,
-                        MaxSelectExpandDepth = MaxSelectExpandDepth
+                        MaxSelectExpandDepth = MaxSelectExpandDepth,
+                        MaxAggregateDepth = MaxAggregateDepth
                     };
                 }
 
@@ -162,6 +164,11 @@ namespace Microsoft.OData.UriParser
         /// The maximum allowed nesting depth for nested $expand and expand(...) within $apply clauses.
         /// </summary>
         internal int MaxSelectExpandDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth for aggregate expressions nested in $expand.
+        /// </summary>
+        internal int MaxAggregateDepth { get; set; }
 
         /// <summary>
         /// Parses a full $select expression.
