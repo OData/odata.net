@@ -7698,6 +7698,7 @@ public sealed class Microsoft.OData.UriParser.WildcardSelectItem : Microsoft.ODa
 }
 
 public enum Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind : int {
+    CollectionPropertyAggregate = 3
     EntitySetAggregate = 2
     None = 0
     PropertyAggregate = 1
@@ -7740,6 +7741,15 @@ public abstract class Microsoft.OData.UriParser.Aggregation.TransformationNode {
     protected TransformationNode ()
 
     Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public abstract get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression : Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase {
+    public AggregateCollectionExpression (Microsoft.OData.UriParser.CollectionNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+
+    Microsoft.OData.UriParser.CollectionNode Expression  { public get; }
+    Microsoft.OData.UriParser.Aggregation.AggregationMethod Method  { public get; }
+    Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition MethodDefinition  { public get; }
+    Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.AggregateExpression : Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase {

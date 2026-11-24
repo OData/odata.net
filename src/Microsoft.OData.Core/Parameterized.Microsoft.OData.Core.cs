@@ -5854,6 +5854,18 @@ namespace Microsoft.OData {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ApplyBinder_AggregateExpressionNotSingleValue, p0);
         }
 
+        /// <summary>A string like "$apply/aggregate expression node kind '{0}' is not supported."</summary>
+        internal static string ApplyBinder_AggregateExpressionNodeNotSupported(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ApplyBinder_AggregateExpressionNodeNotSupported, p0);
+        }
+
+        /// <summary>A string like "$apply/aggregate collection expression must apply to custom mothod."</summary>
+        internal static string ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod
+        {
+            get { return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod); }
+        }
+
         /// <summary>
         /// A string like "$apply/groupby grouping expression '{0}' must evaluate to a property access value."
         /// </summary>
