@@ -117,6 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                 closeParanthesis += "))";
             }
             var parser = this.CreateSelectAndExpandUriParser(customerBase, "", expqry + closeParanthesis);
+            parser.Settings.MaximumExpansionDepth = 800;
             Assert.IsNotNull(parser.ParseSelectAndExpand(), "Tree cannot be null");
         }
 
@@ -135,6 +136,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                 closeParanthesis += "))";
             }
             var parser = this.CreateSelectAndExpandUriParser(customerBase, "", expqry + closeParanthesis);
+            parser.Settings.MaximumExpansionDepth = 800;
             Assert.IsNotNull(parser.ParseSelectAndExpand(), "Tree cannot be null");
         }
 
