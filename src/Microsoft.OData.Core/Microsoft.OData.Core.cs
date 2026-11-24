@@ -735,6 +735,7 @@ namespace Microsoft.OData
         internal const string UriParser_NegativeLimit = "UriParser_NegativeLimit";
         internal const string UriParser_ExpandCountExceeded = "UriParser_ExpandCountExceeded";
         internal const string UriParser_ExpandDepthExceeded = "UriParser_ExpandDepthExceeded";
+        internal const string UriParser_SelectExpandDepthExceeded = "UriParser_SelectExpandDepthExceeded";
         internal const string UriParser_TypeInvalidForSelectExpand = "UriParser_TypeInvalidForSelectExpand";
         internal const string UriParser_ContextHandlerCanNotBeNull = "UriParser_ContextHandlerCanNotBeNull";
         internal const string UriParserMetadata_MultipleMatchingPropertiesFound = "UriParserMetadata_MultipleMatchingPropertiesFound";

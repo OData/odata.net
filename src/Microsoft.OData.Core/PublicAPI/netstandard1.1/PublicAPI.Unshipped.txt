@@ -15,3 +15,5 @@ Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.TypeReferenc
 Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind.CollectionPropertyAggregate = 3 -> Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind
 Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.get -> int
 Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.set -> void
+Microsoft.OData.UriParser.ODataUriParserSettings.MaximumSelectExpandDepth.get -> int
+Microsoft.OData.UriParser.ODataUriParserSettings.MaximumSelectExpandDepth.set -> void
