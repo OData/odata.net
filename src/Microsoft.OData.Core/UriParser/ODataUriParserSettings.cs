@@ -29,6 +29,11 @@ namespace Microsoft.OData.UriParser
         internal const int DefaultSelectExpandLimit = 800;
 
         /// <summary>
+        /// Default maximum expansion depth enforced during parsing.
+        /// </summary>
+        internal const int DefaultMaximumExpansionDepth = 200;
+
+        /// <summary>
         /// Default limit for the path parser.
         /// </summary>
         internal const int DefaultPathLimit = 100;
@@ -92,7 +97,7 @@ namespace Microsoft.OData.UriParser
             this.SearchLimit = DefaultSearchLimit;
             this.AggregateLimit = DefaultAggregateLimit;
 
-            this.MaximumExpansionDepth = int.MaxValue;
+            this.MaximumExpansionDepth = DefaultMaximumExpansionDepth;
             this.MaximumExpansionCount = int.MaxValue;
         }
 
@@ -100,8 +105,7 @@ namespace Microsoft.OData.UriParser
         /// Gets or sets the maximum depth of the tree that results from parsing $expand.
         /// </summary>
         /// <remarks>
-        /// This will be validated after parsing completes, and so should not be used to prevent the instantiation of large trees.
-        /// Further, redundant expansions will be pruned before validation and will not count towards the maximum.
+        /// The default value is 200. This is enforced during parsing and validated again after redundant expansions are pruned.
         /// </remarks>
         public int MaximumExpansionDepth
         {
