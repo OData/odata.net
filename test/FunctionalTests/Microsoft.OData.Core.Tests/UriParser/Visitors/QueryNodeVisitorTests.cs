@@ -155,5 +155,13 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             Action visitUnaryOperatorNode = () => visitor.Visit(new UnaryOperatorNode(UnaryOperatorKind.Not, new ConstantNode(1)));
             Assert.Throws<NotImplementedException>(visitUnaryOperatorNode);
         }
+
+        [Fact]
+        public void CustomQueryOptionNodeNotImplemented()
+        {
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitCustomQueryOptionNode = () => visitor.Visit(new CustomQueryOptionNode("customOption", "value"));
+            Assert.Throws<NotImplementedException>(visitCustomQueryOptionNode);
+        }
     }
 }
