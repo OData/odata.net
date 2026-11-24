@@ -4,14 +4,22 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Xunit;
 
 namespace Microsoft.OData.Tests
 {
+    [CollectionDefinition("MediaTypeUtils cache", DisableParallelization = true)]
+    public class MediaTypeUtilsCacheCollection
+    {
+    }
+
+    [Collection("MediaTypeUtils cache")]
     public class MediaTypeUtilsTests
     {
         [Fact]
@@ -436,14 +444,183 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void ClearingMatchInfoCacheShouldAllowAnEntryToBeAdded()
+        {
+            const string contentType = "application/json;cache-test=single";
+            MediaTypeUtils.ClearCache();
+
+            Assert.Empty(MediaTypeUtils.GetCacheKeys());
+
+            ODataFormat format = MediaTypeUtils.GetFormatFromContentType(
+                contentType,
+                new[] { ODataPayloadKind.Resource },
+                ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                out ODataMediaType mediaType,
+                out Encoding encoding,
+                out ODataPayloadKind payloadKind);
+
+            Assert.Same(ODataFormat.Json, format);
+            Assert.Equal(ODataPayloadKind.Resource, payloadKind);
+            Assert.Equal(contentType, Assert.Single(MediaTypeUtils.GetCacheKeys()));
+        }
+
+        [Fact]
+        public void RepeatedContentTypeShouldCreateOneCacheEntry()
+        {
+            const string contentType = "application/json;cache-test=repeated";
+            MediaTypeUtils.ClearCache();
+
+            ODataFormat format = MediaTypeUtils.GetFormatFromContentType(
+                contentType,
+                new[] { ODataPayloadKind.Resource },
+                ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                out ODataMediaType mediaType,
+                out Encoding encoding,
+                out ODataPayloadKind payloadKind);
+
+            ODataFormat repeatedFormat = MediaTypeUtils.GetFormatFromContentType(
+                contentType,
+                new[] { ODataPayloadKind.Resource },
+                ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                out mediaType,
+                out encoding,
+                out payloadKind);
+
+            Assert.Same(ODataFormat.Json, format);
+            Assert.Same(ODataFormat.Json, repeatedFormat);
+            Assert.Equal(ODataPayloadKind.Resource, payloadKind);
+            Assert.Equal(contentType, Assert.Single(MediaTypeUtils.GetCacheKeys()));
+        }
+
+        [Fact]
+        public void DistinctContentTypesBelowLimitShouldRemainCached()
+        {
+            const string firstContentType = "application/json;cache-test=first";
+            const string secondContentType = "application/json;cache-test=second";
+            MediaTypeUtils.ClearCache();
+
+            ODataFormat firstFormat = MediaTypeUtils.GetFormatFromContentType(
+                firstContentType,
+                new[] { ODataPayloadKind.Resource },
+                ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                out ODataMediaType mediaType,
+                out Encoding encoding,
+                out ODataPayloadKind payloadKind);
+
+            ODataFormat secondFormat = MediaTypeUtils.GetFormatFromContentType(
+                secondContentType,
+                new[] { ODataPayloadKind.Resource },
+                ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                out mediaType,
+                out encoding,
+                out payloadKind);
+
+            IEnumerable<string> cacheKeys = MediaTypeUtils.GetCacheKeys();
+
+            Assert.Same(ODataFormat.Json, firstFormat);
+            Assert.Same(ODataFormat.Json, secondFormat);
+            Assert.Equal(ODataPayloadKind.Resource, payloadKind);
+            Assert.Contains(firstContentType, cacheKeys);
+            Assert.Contains(secondContentType, cacheKeys);
+        }
+
+        [Fact]
+        public void UniqueContentTypesBeyondLimitShouldRollOverCache()
+        {
+            MediaTypeUtils.ClearCache();
+
+            // Fill the cache to its maximum size and ensure that the first content type is evicted from the cache.
+            for (int i = 0; i <= MediaTypeUtils.MatchInfoCacheMaxSize; i++)
+            {
+                ODataFormat format = MediaTypeUtils.GetFormatFromContentType(
+                    $"application/json;cache-test={i}",
+                    new[] { ODataPayloadKind.Resource },
+                    ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                    out ODataMediaType mediaType,
+                    out Encoding encoding,
+                    out ODataPayloadKind payloadKind);
+
+                Assert.Same(ODataFormat.Json, format);
+                Assert.Equal(ODataPayloadKind.Resource, payloadKind);
+            }
+
+            Assert.Equal($"application/json;cache-test={MediaTypeUtils.MatchInfoCacheMaxSize}", Assert.Single(MediaTypeUtils.GetCacheKeys()));
+        }
+
+        [Fact]
+        public void ContentTypeRemovedByRolloverShouldBeCachedWhenAddedAgain()
+        {
+            const string firstContentType = "application/json;cache-test=0";
+            MediaTypeUtils.ClearCache();
+
+            // Fill the cache to its maximum size and ensure that the first content type is evicted from the cache.
+            for (int i = 0; i <= MediaTypeUtils.MatchInfoCacheMaxSize; i++)
+            {
+                ODataFormat format = MediaTypeUtils.GetFormatFromContentType(
+                    $"application/json;cache-test={i}",
+                    new[] { ODataPayloadKind.Resource },
+                    ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                    out ODataMediaType mediaType,
+                    out Encoding encoding,
+                    out ODataPayloadKind payloadKind);
+
+                Assert.Same(ODataFormat.Json, format);
+                Assert.Equal(ODataPayloadKind.Resource, payloadKind);
+            }
+
+            Assert.DoesNotContain(firstContentType, MediaTypeUtils.GetCacheKeys());
+
+            ODataFormat readdedFormat = MediaTypeUtils.GetFormatFromContentType(
+                firstContentType,
+                new[] { ODataPayloadKind.Resource },
+                ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                out ODataMediaType readdedMediaType,
+                out Encoding readdedEncoding,
+                out ODataPayloadKind readdedPayloadKind);
+
+            Assert.Same(ODataFormat.Json, readdedFormat);
+            Assert.Equal(ODataPayloadKind.Resource, readdedPayloadKind);
+            Assert.Contains(firstContentType, MediaTypeUtils.GetCacheKeys());
+            Assert.Equal(2, MediaTypeUtils.GetCacheKeys().Count());
+        }
+
+        [Fact]
+        public void ConcurrentUniqueContentTypesShouldRemainWithinCacheLimit()
+        {
+            MediaTypeUtils.ClearCache();
+
+            Parallel.For(0, MediaTypeUtils.MatchInfoCacheMaxSize * 4, i =>
+            {
+                ODataFormat format = MediaTypeUtils.GetFormatFromContentType(
+                    $"application/json;cache-test=concurrent-{i}",
+                    new[] { ODataPayloadKind.Resource },
+                    ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                    out ODataMediaType mediaType,
+                    out Encoding encoding,
+                    out ODataPayloadKind payloadKind);
+
+                Assert.Same(ODataFormat.Json, format);
+                Assert.Equal(ODataPayloadKind.Resource, payloadKind);
+            });
+
+            Assert.InRange(MediaTypeUtils.GetCacheKeys().Count(), 1, MediaTypeUtils.MatchInfoCacheMaxSize);
+        }
+
+        [Fact]
         public void MultipartBoundariesShouldNotGrowCache()
         {
+            MediaTypeUtils.ClearCache();
+
             for (int i = 1; i < 100; i++)
             {
-                ODataMediaType mediaType;
-                Encoding encoding;
-                ODataPayloadKind payloadKind;
-                MediaTypeUtils.GetFormatFromContentType(string.Format("multipart/mixed;boundary={0}", Guid.NewGuid()), new ODataPayloadKind[] { ODataPayloadKind.Batch }, ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind);
+                MediaTypeUtils.GetFormatFromContentType(
+                    string.Format("multipart/mixed;boundary={0}",
+                    Guid.NewGuid()),
+                    new ODataPayloadKind[] { ODataPayloadKind.Batch },
+                    ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                    out ODataMediaType mediaType,
+                    out Encoding encoding,
+                    out ODataPayloadKind payloadKind);
             }
 
             Assert.True(MediaTypeUtils.GetCacheKeys().Count(k => k.StartsWith("multipart/mixed")) == 1, "Multiple multipart/mixed keys in cache");
