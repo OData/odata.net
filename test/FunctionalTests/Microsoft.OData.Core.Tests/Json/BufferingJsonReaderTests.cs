@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.OData.Json;
 using Xunit;
@@ -15,6 +16,26 @@ namespace Microsoft.OData.Tests.Json
 {
     public class BufferingJsonReaderTests
     {
+        [Fact]
+        public void ReturnedNodesAreBoundedAndClearValuesAndLinks()
+        {
+            var reader = new BufferingJsonReader(new JsonReader(new StringReader(
+                "[" + string.Join(",", Enumerable.Repeat("\"retained\"", 600)) + "]"), false), "error", 4);
+            Assert.True(reader.Read());
+            reader.StartBuffering();
+            while (reader.Read()) { }
+            reader.StopBuffering();
+            while (reader.Read()) { }
+            var pool = (Stack<BufferingJsonReader.BufferedNode>)typeof(BufferingJsonReader).GetTypeInfo().GetDeclaredField("bufferedNodePool").GetValue(null);
+            Assert.InRange(pool.Count, 1, 256);
+            foreach (var node in pool)
+            {
+                Assert.Null(node.Value);
+                Assert.Same(node, node.Next);
+                Assert.Same(node, node.Previous);
+            }
+        }
+
         private const string ErrorCode = "NRE";
         private const string ErrorMessage = "Object reference not set to an instance of an object";
         private const string ErrorTarget = "ConApp";
