@@ -1,4 +1,6 @@
 steps:
+- template: pipelines/templates/ensure-nuget-config.yml@self
+
 - task: NuGetAuthenticate@1
   displayName: 'Authenticate to the feed'
 
