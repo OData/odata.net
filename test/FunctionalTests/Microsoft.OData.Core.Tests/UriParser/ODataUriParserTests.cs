@@ -517,6 +517,28 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void ParseUriWithTimeOfDayKeyReturnsValidKeySegment(bool keyAsSegment)
+        {
+            var model = new EdmModel();
+            var appointment = new EdmEntityType("NS", "Appointment");
+            var keyProperty = appointment.AddStructuralProperty("Time", EdmCoreModel.Instance.GetTimeOfDay(false));
+            appointment.AddKeys(keyProperty);
+            model.AddElement(appointment);
+            var container = new EdmEntityContainer("NS", "Container");
+            container.AddEntitySet("Appointments", appointment);
+            model.AddElement(container);
+            string path = keyAsSegment ? "Appointments/13:20:00" : "Appointments(13:20:00)";
+            var parser = new ODataUriParser(model, new Uri("http://host/"), new Uri("http://host/" + path));
+            parser.UrlKeyDelimiter = keyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
+            var segment = Assert.IsType<KeySegment>(parser.ParsePath().LastSegment);
+            var key = Assert.Single(segment.Keys);
+            Assert.Equal("Time", key.Key);
+            Assert.Equal(new TimeOfDay(13, 20, 0, 0), key.Value);
+        }
+
+        [Theory]
         [InlineData("People(1)/RelatedIDs?index=42", true)]
         [InlineData("People(1)/RelatedIDs?$index=42", true)]
         [InlineData("People(1)/RelatedIDs?$index=42", false)]
