@@ -844,6 +844,7 @@ UriParser_UriMustBeAbsolute=The URI '{0}' must be an absolute URI.
 UriParser_NegativeLimit=The limit must be greater than or equal to zero
 UriParser_ExpandCountExceeded=The result of parsing $expand contained at least {0} items, but the maximum allowed is {1}.
 UriParser_ExpandDepthExceeded=The result of parsing $expand was at least {0} items deep, but the maximum allowed is {1}.
+UriParser_SelectExpandDepthExceeded=The query option nesting depth was at least {1} while parsing {0}, but the maximum allowed is {2}.
 UriParser_TypeInvalidForSelectExpand=The type '{0}' is not valid for $select or $expand, only structured types are allowed.
 UriParser_ContextHandlerCanNotBeNull=The handler property for context '{0}' should not return null.
 UriParserMetadata_MultipleMatchingPropertiesFound=More than one properties match the name '{0}' were found in type '{1}'.

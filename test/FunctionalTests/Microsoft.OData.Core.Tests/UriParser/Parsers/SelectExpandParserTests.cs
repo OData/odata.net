@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
@@ -22,6 +23,79 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class SelectExpandParserTests
     {
+        [Theory]
+        [InlineData("one($select=two($select=))", false, false, false, "$select")]
+        [InlineData("one($expand=two($select=))", true, false, false, "$select")]
+        [InlineData("one($expand=two($expand=))", true, false, false, "$expand")]
+        [InlineData("one(select=two(select=))", false, false, true, "$select")]
+        [InlineData("one($SELECT=two($SELECT=))", false, true, false, "$select")]
+        public void CombinedDepthIsCheckedBeforeParsingInvalidNestedOptions(string text, bool expand, bool caseInsensitive, bool noDollar, string option)
+        {
+            var parser = new SelectExpandParser(text, 800, enableCaseInsensitiveBuiltinIdentifier: caseInsensitive, enableNoDollarQueryOptions: noDollar) { MaxSelectExpandDepth = 1 };
+
+            Assert.Equal(ODataErrorStrings.UriParser_SelectExpandDepthExceeded(option, 2, 1), Assert.Throws<ODataException>(() => { if (expand) { parser.ParseExpand(); } else { parser.ParseSelect(); } }).Message);
+        }
+
+        [Fact]
+        public void MixedSelectAndExpandSiblingsUseTheCombinedDepthIndependently()
+        {
+            var parser = new SelectExpandParser("one($select=two($select=three);$expand=four($select=five))", 800) { MaxExpansionDepth = 2, MaxSelectExpandDepth = 2 };
+
+            ExpandTermToken outer = Assert.Single(parser.ParseExpand().ExpandTerms);
+
+            Assert.Single(Assert.Single(outer.SelectOption.SelectTerms).SelectOption.SelectTerms);
+            Assert.Single(Assert.Single(outer.ExpandOption.ExpandTerms).SelectOption.SelectTerms);
+        }
+
+        [Fact]
+        public void ZeroCombinedDepthAllowsPathsAndFiltersButRejectsNestedSelection()
+        {
+            var parser = new SelectExpandParser("one/two,three($filter=true)", 800) { MaxSelectExpandDepth = 0, MaxExpansionDepth = 0 };
+
+            Assert.Equal(2, parser.ParseSelect().SelectTerms.Count());
+
+            parser = new SelectExpandParser("one($select=)", 800) { MaxSelectExpandDepth = 0 };
+            Assert.Equal(ODataErrorStrings.UriParser_SelectExpandDepthExceeded("$select", 1, 0), Assert.Throws<ODataException>(() => parser.ParseSelect()).Message);
+        }
+
+        [Theory]
+        [InlineData("$select", "Name($select=)", 0, 1)]
+        [InlineData("$expand", "Friends($select=Name($select=))", 1, 2)]
+        public void QueryOptionParserHonorsTheConfiguredCombinedDepth(string option, string text, int maximumDepth, int rejectedDepth)
+        {
+            var model = new EdmModel();
+            var person = new EdmEntityType("NS", "Person");
+            person.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            person.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Friends", Target = person, TargetMultiplicity = EdmMultiplicity.Many });
+            model.AddElement(person);
+            var parser = new ODataQueryOptionParser(model, person, null, new Dictionary<string, string> { { option, text } });
+            parser.Settings.MaximumSelectExpandDepth = maximumDepth;
+
+            Assert.Equal(ODataErrorStrings.UriParser_SelectExpandDepthExceeded("$select", rejectedDepth, maximumDepth), Assert.Throws<ODataException>(() => parser.ParseSelectAndExpand()).Message);
+        }
+
+        [Fact]
+        public void DefaultCombinedDepthAccepts100LevelsAndRejects101()
+        {
+            string text = "leaf";
+            for (int i = 0; i < 100; i++)
+            {
+                text = "one($select=" + text + ")";
+            }
+
+            Assert.Single(new SelectExpandParser(text, 800).ParseSelect().SelectTerms);
+            Assert.Equal(ODataErrorStrings.UriParser_SelectExpandDepthExceeded("$select", 101, 100), Assert.Throws<ODataException>(() => new SelectExpandParser("one($select=" + text + ")", 800).ParseSelect()).Message);
+        }
+
+        [Fact]
+        public void NegativeCombinedDepthLeavesTheConfiguredLimitUnchanged()
+        {
+            var settings = new ODataUriParserSettings { MaximumSelectExpandDepth = 50 };
+
+            Assert.Equal(ODataErrorStrings.UriParser_NegativeLimit, Assert.Throws<ODataException>(() => settings.MaximumSelectExpandDepth = -1).Message);
+            Assert.Equal(50, settings.MaximumSelectExpandDepth);
+        }
+
         [Fact]
         public void ExpandDepthIsCheckedBeforeParsingInvalidNestedOptions()
         {

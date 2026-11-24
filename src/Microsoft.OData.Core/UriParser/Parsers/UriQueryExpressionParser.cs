@@ -49,8 +49,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The nesting depth and limit for expand transformations within $apply.
         /// </summary>
-        private int selectExpandDepth;
-        private int maxSelectExpandDepth;
+        private int applyExpandDepth;
+        private int maxApplyExpandDepth;
 
         private int maxAggregateDepth = ODataUriParserSettings.DefaultAggregateLimit;
 
@@ -109,7 +109,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
             this.maxDepth = maxDepth;
-            this.maxSelectExpandDepth = maxDepth;
+            this.maxApplyExpandDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
@@ -158,10 +158,10 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets or sets the nesting limit for expand transformations within $apply.
         /// </summary>
-        internal int MaxSelectExpandDepth
+        internal int MaxApplyExpandDepth
         {
-            get { return this.maxSelectExpandDepth; }
-            set { this.maxSelectExpandDepth = value; }
+            get { return this.maxApplyExpandDepth; }
+            set { this.maxApplyExpandDepth = value; }
         }
 
         /// <summary>
@@ -373,8 +373,8 @@ namespace Microsoft.OData.UriParser
 
         internal ExpandToken ParseExpand()
         {
-            this.selectExpandDepth++;
-            if (this.selectExpandDepth > this.maxSelectExpandDepth)
+            this.applyExpandDepth++;
+            if (this.applyExpandDepth > this.maxApplyExpandDepth)
             {
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
             }
@@ -441,7 +441,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
 
 
-            this.selectExpandDepth--;
+            this.applyExpandDepth--;
             return new ExpandToken(termTokens);
         }
 
@@ -457,7 +457,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
-            this.selectExpandDepth = 0;
+            this.applyExpandDepth = 0;
             this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply);
 
             while (true)

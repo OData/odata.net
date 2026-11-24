@@ -31,7 +31,12 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Default maximum expansion depth enforced during parsing.
         /// </summary>
-        internal const int DefaultMaximumExpansionDepth = 200;
+        internal const int DefaultMaximumExpansionDepth = 100;
+
+        /// <summary>
+        /// Default maximum combined nesting depth for select and expand query options.
+        /// </summary>
+        internal const int DefaultMaximumSelectExpandDepth = 100;
 
         /// <summary>
         /// Default limit for the path parser.
@@ -74,6 +79,11 @@ namespace Microsoft.OData.UriParser
         private int maxExpandDepth;
 
         /// <summary>
+        /// The maximum combined nesting depth for select and expand query options.
+        /// </summary>
+        private int maxSelectExpandDepth;
+
+        /// <summary>
         /// The maximum number of <see cref="ExpandedNavigationSelectItem"/> instances that can appear in the tree that results from parsing $expand.
         /// </summary>
         private int maxExpandCount;
@@ -97,6 +107,7 @@ namespace Microsoft.OData.UriParser
             this.SearchLimit = DefaultSearchLimit;
             this.AggregateLimit = DefaultAggregateLimit;
 
+            this.MaximumSelectExpandDepth = DefaultMaximumSelectExpandDepth;
             this.MaximumExpansionDepth = DefaultMaximumExpansionDepth;
             this.MaximumExpansionCount = int.MaxValue;
         }
@@ -105,7 +116,7 @@ namespace Microsoft.OData.UriParser
         /// Gets or sets the maximum depth of the tree that results from parsing $expand.
         /// </summary>
         /// <remarks>
-        /// The default value is 200. This is enforced during parsing and validated again after redundant expansions are pruned.
+        /// The default value is 100. This is enforced during parsing and validated again after redundant expansions are pruned.
         /// </remarks>
         public int MaximumExpansionDepth
         {
@@ -122,6 +133,27 @@ namespace Microsoft.OData.UriParser
                 }
 
                 this.maxExpandDepth = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum combined nesting depth for nested $select and $expand query options.
+        /// </summary>
+        /// <remarks>
+        /// The default value is 100. Each transition into a nested $select or $expand contributes one level on the active parser path.
+        /// Sibling branches are counted independently. The limit is enforced before parsing the nested option.
+        /// </remarks>
+        public int MaximumSelectExpandDepth
+        {
+            get { return this.maxSelectExpandDepth; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                }
+
+                this.maxSelectExpandDepth = value;
             }
         }
 
