@@ -47,6 +47,12 @@ namespace Microsoft.OData.UriParser
         private int recursionDepth;
 
         /// <summary>
+        /// The nesting depth and limit for expand transformations within $apply.
+        /// </summary>
+        private int selectExpandDepth;
+        private int maxSelectExpandDepth;
+
+        /// <summary>
         /// The lexer being used for the parsing.
         /// </summary>
         private ExpressionLexer lexer;
@@ -101,6 +107,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
             this.maxDepth = maxDepth;
+            this.maxSelectExpandDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
@@ -144,6 +151,15 @@ namespace Microsoft.OData.UriParser
         internal bool EnableNoDollarQueryOptions
         {
             get { return this.enableNoDollarQueryOptions; }
+        }
+
+        /// <summary>
+        /// Gets or sets the nesting limit for expand transformations within $apply.
+        /// </summary>
+        internal int MaxSelectExpandDepth
+        {
+            get { return this.maxSelectExpandDepth; }
+            set { this.maxSelectExpandDepth = value; }
         }
 
         /// <summary>
@@ -333,6 +349,12 @@ namespace Microsoft.OData.UriParser
 
         internal ExpandToken ParseExpand()
         {
+            this.selectExpandDepth++;
+            if (this.selectExpandDepth > this.maxSelectExpandDepth)
+            {
+                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            }
+
             Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordExpand), "token identifier is expand");
             lexer.NextToken();
 
@@ -395,6 +417,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
 
 
+            this.selectExpandDepth--;
             return new ExpandToken(termTokens);
         }
 
@@ -410,6 +433,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
+            this.selectExpandDepth = 0;
             this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply);
 
             while (true)

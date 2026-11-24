@@ -18,6 +18,42 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     {
         private readonly UriQueryExpressionParser testSubject = new UriQueryExpressionParser(50);
 
+        [Theory]
+        [InlineData(5)]
+        [InlineData(6)]
+        public void ApplyExpandEnforcesIndependentNestingLimit(int depth)
+        {
+            var parser = new UriQueryExpressionParser(50) { MaxSelectExpandDepth = 5 };
+            string apply = "expand(A,filter(true))";
+            for (int i = 1; i < depth; i++)
+            {
+                apply = "expand(A," + apply + ")";
+            }
+
+            if (depth == 5)
+            {
+                Assert.Single(parser.ParseApply(apply));
+            }
+            else
+            {
+                Assert.Equal(ErrorStrings.UriQueryExpressionParser_TooDeep, Assert.Throws<ODataException>(() => parser.ParseApply(apply)).Message);
+                Assert.Single(parser.ParseApply("expand(A,filter(true))"));
+            }
+        }
+
+        [Fact]
+        public void ApplyExpandLimitDoesNotUseFilterLimit()
+        {
+            var parser = new UriQueryExpressionParser(10) { MaxSelectExpandDepth = 15 };
+            string apply = "expand(A,filter(true))";
+            for (int i = 1; i < 12; i++)
+            {
+                apply = "expand(A," + apply + ")";
+            }
+
+            Assert.Single(parser.ParseApply(apply));
+        }
+
         [Fact]
         public void AnyAllSyntacticParsingShouldCheckSeperatorTokenIsColon()
         {
