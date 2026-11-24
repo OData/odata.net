@@ -554,7 +554,7 @@ namespace Microsoft.OData.UriParser
             {
                 try
                 {
-                    targetValue = Convert.FromBase64String(text);
+                    targetValue = Json.JsonSharedUtils.ConvertFromBase64String(text);
                 }
                 catch (FormatException)
                 {
