@@ -18,6 +18,26 @@ namespace Microsoft.OData.Tests.Json
 {
     public class JsonReaderTests
     {
+        [Theory]
+        [InlineData("-42", -42)]
+        [InlineData(".5", 0.5)]
+        [InlineData("-1.25e2", -125)]
+        public async Task AsyncNumbersAcrossBufferBoundary(string token, double expected)
+        {
+            var reader = new JsonReader(new StringReader(new string(' ', 2047) + token), false);
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(expected, Convert.ToDouble(await reader.GetValueAsync()));
+            Assert.False(await reader.ReadAsync());
+        }
+
+        [Fact]
+        public async Task AsyncMalformedLiteralFaultsWithoutConsumingFollowingValue()
+        {
+            var reader = new JsonReader(new StringReader("[truex,false]"), false);
+            Assert.True(await reader.ReadAsync());
+            await Assert.ThrowsAsync<ODataException>(() => reader.ReadAsync());
+        }
+
         [Fact]
         public void DottedNumberShouldBeReadAsDecimal()
         {
