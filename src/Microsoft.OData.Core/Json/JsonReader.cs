@@ -2742,7 +2742,7 @@ namespace Microsoft.OData.Json
             int characterValue = ParseFourHexDigits(hexChar1, hexChar2, hexChar3, hexChar4);
             if (characterValue < 0)
             {
-                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + new string(new char[] {hexChar1, hexChar2, hexChar3, hexChar4})));
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence(new string(this.characterBuffer, this.tokenStartIndex - 6, 6)));
             }
 
             return characterValue;

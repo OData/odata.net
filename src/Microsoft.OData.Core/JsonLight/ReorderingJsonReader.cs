@@ -449,12 +449,12 @@ namespace Microsoft.OData.JsonLight
 
             async Task AwaitBaseProcessObjectValueAsync(
                 ReorderingJsonReader thisParam,
-                BufferedObject bufferedObject,
+                BufferedObject objectToRestore,
                 Task pendingBaseProcessObjectTask)
             {
                 await pendingBaseProcessObjectTask.ConfigureAwait(false);
 
-                thisParam.currentBufferedNode = bufferedObject.ObjectStart;
+                thisParam.currentBufferedNode = objectToRestore.ObjectStart;
 
                 await thisParam.ReadInternalAsync()
                     .ConfigureAwait(false);
@@ -735,18 +735,18 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            async Task AwaitReadInputAsync(ReorderingJsonReader thisParam, int depth, Task<bool> pendingReadInternalTask)
+            async Task AwaitReadInputAsync(ReorderingJsonReader thisParam, int bufferedDepth, Task<bool> pendingReadInternalTask)
             {
                 while (true)
                 {
                     await pendingReadInternalTask.ConfigureAwait(false);
 
-                    if (depth == 0)
+                    if (bufferedDepth == 0)
                     {
                         return;
                     }
 
-                    depth = AdjustDepth(depth, thisParam.NodeType);
+                    bufferedDepth = AdjustDepth(bufferedDepth, thisParam.NodeType);
                     pendingReadInternalTask = thisParam.ReadInternalAsync();
                 }
             }

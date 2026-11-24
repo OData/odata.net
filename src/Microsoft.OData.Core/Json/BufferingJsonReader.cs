@@ -1509,6 +1509,11 @@ namespace Microsoft.OData.Json
             }
             catch (Exception ex)
             {
+                if (!ExceptionUtils.IsCatchableExceptionType(ex))
+                {
+                    throw;
+                }
+
                 this.parsingInStreamError = false;
                 return TaskUtils.GetFaultedTask<bool>(ex);
             }
@@ -1532,6 +1537,11 @@ namespace Microsoft.OData.Json
                 }
                 catch (Exception ex)
                 {
+                    if (!ExceptionUtils.IsCatchableExceptionType(ex))
+                    {
+                        throw;
+                    }
+
                     thisParam.parsingInStreamError = false;
                     return TaskUtils.GetFaultedTask<bool>(ex);
                 }
@@ -2142,11 +2152,11 @@ namespace Microsoft.OData.Json
             // We were already buffering. Only restore position on success; on fault keep the advanced position - preserve semantics before refactor
             async Task AwaitProcessObjectValueAsync(
                 BufferingJsonReader thisParam,
-                BufferedNode storedPosition,
+                BufferedNode positionToRestore,
                 Task pendingProcessObjectTask)
             {
                 await pendingProcessObjectTask.ConfigureAwait(false);
-                thisParam.currentBufferedNode = storedPosition;
+                thisParam.currentBufferedNode = positionToRestore;
             }
 
             // If start buffering faults, we propagate and leave buffering turned on - preserve semantics before refactor
