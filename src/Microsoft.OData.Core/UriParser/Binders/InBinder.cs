@@ -50,21 +50,22 @@ namespace Microsoft.OData.UriParser
             if (left.TypeReference != null)
             {
                 right = this.GetCollectionOperandFromToken(
-                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(left.TypeReference)), state.Model);
+                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(left.TypeReference)), state.Model, state.Configuration.Resolver.EnableCaseInsensitive);
             }
             else 
             {
                 right = this.GetCollectionOperandFromToken(
-                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())), state.Model);
+                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())), state.Model, state.Configuration.Resolver.EnableCaseInsensitive);
             }
 
             // If the left operand is either an integral or a string type and the right operand is a collection of enums,
             // Calls the MetadataBindingUtils.ConvertToTypeIfNeeded() method to convert the left operand to the same enum type as the right operand.
-            if ((right is CollectionPropertyAccessNode && right.ItemType.IsEnum()) && (left.TypeReference != null && (left.TypeReference.IsString() || left.TypeReference.IsIntegral())))
+            if (!(right is CollectionConstantNode) && right.ItemType.IsEnum() && (left.TypeReference != null && (left.TypeReference.IsString() || left.TypeReference.IsIntegral())))
             {
-                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType);
+                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType, state.Configuration.Resolver.EnableCaseInsensitive);
             }
 
+            MetadataBindingUtils.VerifyCollectionNode(right, state.Configuration.Resolver.EnableCaseInsensitive);
             return new InNode(left, right);
         }
 
@@ -90,8 +91,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="queryToken">The query token</param>
         /// <param name="expectedType">The expected type that this collection holds</param>
         /// <param name="model">The Edm model</param>
+        /// <param name="enableCaseInsensitive">Whether enum type matching ignores case.</param>
         /// <returns>The corresponding CollectionNode</returns>
-        private CollectionNode GetCollectionOperandFromToken(QueryToken queryToken, IEdmTypeReference expectedType, IEdmModel model)
+        private CollectionNode GetCollectionOperandFromToken(QueryToken queryToken, IEdmTypeReference expectedType, IEdmModel model, bool enableCaseInsensitive)
         {
             CollectionNode operand = null;
             LiteralToken literalToken = queryToken as LiteralToken;
@@ -143,6 +145,10 @@ namespace Microsoft.OData.UriParser
                         //    ==>  ['1970-01-01T00:00:00Z', '1980-01-01T01:01:01+01:00']
                         bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText);
                     }
+                    else if (expectedType.Definition.AsElementType().TypeKind == EdmTypeKind.Enum)
+                    {
+                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText, enableCaseInsensitive, expectedTypeFullName);
+                    }
                 }
 
                 object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
@@ -160,6 +166,64 @@ namespace Microsoft.OData.UriParser
             }
 
             return operand;
+        }
+
+        private static string NormalizeEnumCollectionItems(string literalText, bool enableCaseInsensitive, string typeName)
+        {
+            string content = literalText.Substring(1, literalText.Length - 2).Trim();
+            var result = new StringBuilder(content.Length + 2);
+            result.Append('[');
+            int index = 0;
+            while (index < content.Length)
+            {
+                char current = content[index];
+                if (char.IsWhiteSpace(current))
+                {
+                    index++;
+                    continue;
+                }
+
+                if (current == ',')
+                {
+                    result.Append(current);
+                    index++;
+                    continue;
+                }
+
+                if (!string.IsNullOrEmpty(typeName) &&
+                    content.Length - index > typeName.Length &&
+                    string.Compare(content, index, typeName, 0, typeName.Length,
+                        enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0 &&
+                    (content[index + typeName.Length] == '\'' || content[index + typeName.Length] == '"'))
+                {
+                    index += typeName.Length;
+                    current = content[index];
+                }
+
+                int start = index;
+                if (current == '\'' || current == '"')
+                {
+                    int end = content.IndexOf(current, index + 1);
+                    if (end < 0)
+                    {
+                        throw new ODataException(ODataErrorStrings.ExpressionLexer_UnterminatedStringLiteral(index, literalText));
+                    }
+
+                    result.Append(content, start, end - start + 1);
+                    index = end + 1;
+                }
+                else
+                {
+                    while (index < content.Length && content[index] != ',' && !char.IsWhiteSpace(content[index]))
+                    {
+                        index++;
+                    }
+
+                    result.Append('\'').Append(content, start, index - start).Append('\'');
+                }
+            }
+
+            return result.Append(']').ToString();
         }
 
         private static string NormalizeStringCollectionItems(string literalText)

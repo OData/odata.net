@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 
@@ -163,6 +164,74 @@ namespace Microsoft.OData
             }
 
             return false;
+        }
+
+        internal static IEdmEnumMember FindMember(this IEdmEnumType enumType, string name, StringComparison comparison)
+        {
+            return enumType.Members.FirstOrDefault(member => string.Equals(member.Name, name, comparison));
+        }
+
+        internal static string ParseFlagsFromIntegralValue(this IEdmEnumType enumType, long value)
+        {
+            if (value == 0)
+            {
+                return enumType.Members.FirstOrDefault(member => member.Value.Value == 0)?.Name;
+            }
+
+            // Sort a stable local copy, preserving the model's declaration order and aliases.
+            var members = enumType.Members.OrderBy(member => member.Value.Value).ToList();
+            var result = new List<string>();
+            long remaining = value;
+            for (int index = members.Count - 1; index >= 0; index--)
+            {
+                long flag = members[index].Value.Value;
+                if (flag != 0 && (remaining & flag) == flag)
+                {
+                    result.Add(members[index].Name);
+                    remaining &= ~flag;
+                }
+            }
+
+            result.Reverse();
+            return result.Count > 0 && remaining == 0 ? string.Join(",", result) : null;
+        }
+
+        internal static string ParseFlagsFromStringValue(this IEdmEnumType enumType, string value, StringComparison comparison)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
+            var names = value.Split(',');
+            for (int index = 0; index < names.Length; index++)
+            {
+                var member = enumType.FindMember(names[index].Trim(), comparison);
+                if (member == null)
+                {
+                    return null;
+                }
+
+                names[index] = member.Name;
+            }
+
+            return string.Join(",", names);
+        }
+
+        internal static bool IsValidFlagsEnumValue(this IEdmEnumType enumType, long value)
+        {
+            if (enumType == null || !enumType.IsFlags)
+            {
+                return false;
+            }
+
+            long mask = 0;
+            foreach (var member in enumType.Members)
+            {
+                mask |= member.Value.Value;
+            }
+
+            return (value & ~mask) == 0;
         }
     }
 }
