@@ -6126,6 +6126,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
     Constant = 1
     Convert = 2
     Count = 28
+    CustomQueryOption = 35
     EntitySet = 22
     In = 32
     KeyLookup = 23
@@ -6370,6 +6371,7 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
     public virtual T Visit (Microsoft.OData.UriParser.ConstantNode nodeIn)
     public virtual T Visit (Microsoft.OData.UriParser.ConvertNode nodeIn)
     public virtual T Visit (Microsoft.OData.UriParser.CountNode nodeIn)
+    public virtual T Visit (Microsoft.OData.UriParser.CustomQueryOptionNode nodeIn)
     public virtual T Visit (Microsoft.OData.UriParser.InNode nodeIn)
     public virtual T Visit (Microsoft.OData.UriParser.NamedFunctionParameterNode nodeIn)
     public virtual T Visit (Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode nodeIn)
@@ -6532,6 +6534,16 @@ public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.U
     Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
     Microsoft.OData.Edm.IEdmProperty Property  { public get; }
     Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
+
+    public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public class Microsoft.OData.UriParser.CustomQueryOptionNode : Microsoft.OData.UriParser.QueryNode {
+    public CustomQueryOptionNode (string name, string value)
+
+    Microsoft.OData.UriParser.QueryNodeKind Kind  { public virtual get; }
+    string Name  { public get; }
+    string Value  { public get; }
 
     public virtual T Accept (QueryNodeVisitor`1 visitor)
 }

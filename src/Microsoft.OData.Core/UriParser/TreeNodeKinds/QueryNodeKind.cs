@@ -183,6 +183,11 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a collection of constants.
         /// </summary>
         CollectionConstant = InternalQueryNodeKind.CollectionConstant,
+
+        /// <summary>
+        /// Node that represents a custom query option.
+        /// </summary>
+        CustomQueryOption = InternalQueryNodeKind.CustomQueryOption,
     }
 
     /// <summary>
@@ -359,5 +364,10 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a collection of constants.
         /// </summary>
         CollectionConstant = 33,
+
+        /// <summary>
+        /// Node that represents a custom query option. Value 34 is reserved for $root.
+        /// </summary>
+        CustomQueryOption = 35,
     }
 }
