@@ -152,6 +152,57 @@ namespace Microsoft.OData.Client.Tests
             }
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task LoadPropertyAllPagesAsync_CompletesPagingBeforeLaterCancellation(bool fail)
+        {
+            var model = new Microsoft.OData.Edm.EdmModel();
+            var customerType = new Microsoft.OData.Edm.EdmEntityType("NS", "TwoLevelCustomer2");
+            customerType.AddKeys(customerType.AddStructuralProperty("CustomerID", Microsoft.OData.Edm.EdmPrimitiveTypeKind.String));
+            var orderType = new Microsoft.OData.Edm.EdmEntityType("NS", "Order");
+            orderType.AddKeys(orderType.AddStructuralProperty("OrderID", Microsoft.OData.Edm.EdmPrimitiveTypeKind.Int32));
+            var ordersProperty = customerType.AddUnidirectionalNavigation(new Microsoft.OData.Edm.EdmNavigationPropertyInfo { Name = "Orders", Target = orderType, TargetMultiplicity = Microsoft.OData.Edm.EdmMultiplicity.Many });
+            model.AddElement(customerType);
+            model.AddElement(orderType);
+            var container = new Microsoft.OData.Edm.EdmEntityContainer("NS", "Container");
+            var customers = container.AddEntitySet("Customers", customerType);
+            customers.AddNavigationTarget(ordersProperty, container.AddEntitySet("Orders", orderType));
+            model.AddElement(container);
+            int requests = 0;
+            using (var handler = new MockHttpClientHandler(request =>
+            {
+                int page = ++requests;
+                string payload = page == 1
+                    ? "{\"@odata.context\":\"http://service.org/$metadata#Orders\",\"value\":[{\"OrderID\":1}],\"@odata.nextLink\":\"http://service.org/Customers('1')/Orders?$skip=1\"}"
+                    : "{\"@odata.context\":\"http://service.org/$metadata#Orders\",\"value\":[{\"OrderID\":2}]}";
+                return new HttpResponseMessage(fail && page == 2 ? HttpStatusCode.NotFound : HttpStatusCode.OK) { Content = new StringContent(payload, Encoding.UTF8, "application/json") };
+            }))
+            using (var cancellation = new CancellationTokenSource())
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.ResolveName = type => "NS." + type.Name;
+                context.Format.UseJson(model);
+                var customer = new ALinq.PreserveTypesAndAttributesTests.TwoLevelCustomer2 { Id = "1", OrdersList = new List<ALinq.PreserveTypesAndAttributesTests.Order>() };
+                context.AttachTo("Customers", customer);
+                if (fail)
+                {
+                    var error = await Assert.ThrowsAsync<AggregateException>(() => context.LoadPropertyAllPagesAsync(customer, "Orders", cancellation.Token));
+                    Assert.IsAssignableFrom<InvalidOperationException>(error.InnerException);
+                }
+                else
+                {
+                    var response = await context.LoadPropertyAllPagesAsync(customer, "Orders", cancellation.Token);
+                    Assert.Equal(200, response.StatusCode);
+                    Assert.Equal(new[] { 1, 2 }, customer.OrdersList.Select(order => order.OrderID));
+                }
+
+                cancellation.Cancel();
+                Assert.True(cancellation.IsCancellationRequested);
+                Assert.Equal(2, requests);
+            }
+        }
+
         [Fact]
         public async Task ExecuteBatchAsync_ReturnsQueryResponse()
         {
