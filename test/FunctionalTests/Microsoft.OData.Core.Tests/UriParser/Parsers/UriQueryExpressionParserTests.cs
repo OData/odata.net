@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData(6)]
         public void ApplyExpandEnforcesIndependentNestingLimit(int depth)
         {
-            var parser = new UriQueryExpressionParser(50) { MaxSelectExpandDepth = 5 };
+            var parser = new UriQueryExpressionParser(50) { MaxApplyExpandDepth = 5 };
             string apply = "expand(A,filter(true))";
             for (int i = 1; i < depth; i++)
             {
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ApplyExpandLimitDoesNotUseFilterLimit()
         {
-            var parser = new UriQueryExpressionParser(10) { MaxSelectExpandDepth = 15 };
+            var parser = new UriQueryExpressionParser(10) { MaxApplyExpandDepth = 15 };
             string apply = "expand(A,filter(true))";
             for (int i = 1; i < 12; i++)
             {

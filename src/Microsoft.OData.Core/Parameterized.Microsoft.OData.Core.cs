@@ -6412,6 +6412,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The query option nesting depth was at least {1} while parsing {0}, but the maximum allowed is {2}."
+        /// </summary>
+        internal static string UriParser_SelectExpandDepthExceeded(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_SelectExpandDepthExceeded, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The type '{0}' is not valid for $select or $expand, only structured types are allowed."
         /// </summary>
         internal static string UriParser_TypeInvalidForSelectExpand(object p0)

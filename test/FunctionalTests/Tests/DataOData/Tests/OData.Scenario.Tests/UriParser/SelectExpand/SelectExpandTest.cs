@@ -118,6 +118,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             }
             var parser = this.CreateSelectAndExpandUriParser(customerBase, "", expqry + closeParanthesis);
             parser.Settings.MaximumExpansionDepth = 800;
+            parser.Settings.MaximumSelectExpandDepth = 800;
             Assert.IsNotNull(parser.ParseSelectAndExpand(), "Tree cannot be null");
         }
 
@@ -137,7 +138,23 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             }
             var parser = this.CreateSelectAndExpandUriParser(customerBase, "", expqry + closeParanthesis);
             parser.Settings.MaximumExpansionDepth = 800;
+            parser.Settings.MaximumSelectExpandDepth = 800;
             Assert.IsNotNull(parser.ParseSelectAndExpand(), "Tree cannot be null");
+        }
+
+        [TestMethod]
+        public void DeepExpansionExceedsDefaultDepthLimit()
+        {
+            string expand = "Orders($expand=CustomerForOrder";
+            string closingParentheses = ")";
+            for (int i = 0; i < 50; i++)
+            {
+                expand += "($expand=Orders($expand=CustomerForOrder";
+                closingParentheses += "))";
+            }
+
+            var parser = this.CreateSelectAndExpandUriParser(customerBase, "", expand + closingParentheses);
+            Assert.ThrowsException<ODataException>(() => parser.ParseSelectAndExpand());
         }
 
         [TestMethod]
