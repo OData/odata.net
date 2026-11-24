@@ -233,7 +233,7 @@ namespace Microsoft.OData.JsonLight
                             }
                             else
                             {
-                                Tuple<bool, ODataError> readInStreamErrorPropertyResult = await this.JsonReader.StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
+                                ReadResult<bool, ODataError> readInStreamErrorPropertyResult = await this.JsonReader.StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
                                     .ConfigureAwait(false);
                                 bool readInStreamError = readInStreamErrorPropertyResult.Item1;
                                 if (!readInStreamError)

@@ -3030,7 +3030,7 @@ namespace Microsoft.OData.JsonLight
                 "The method should only be called with OData. annotations");
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
-            Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationValueAsync(propertyAnnotationName)
+            ReadResult<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationValueAsync(propertyAnnotationName)
                 .ConfigureAwait(false);
             if (readODataTypeAnnotationResult.Item1)
             {

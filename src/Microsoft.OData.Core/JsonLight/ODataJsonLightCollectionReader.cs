@@ -338,7 +338,7 @@ namespace Microsoft.OData.JsonLight
                 this.ExpectedItemTypeReference);
 
             // Read the start of the collection until we find the content array for top-level collections
-            Tuple<ODataCollectionStart, IEdmTypeReference> readCollectionStartResult = await this.jsonLightCollectionDeserializer.ReadCollectionStartAsync(
+            ReadResult<ODataCollectionStart, IEdmTypeReference> readCollectionStartResult = await this.jsonLightCollectionDeserializer.ReadCollectionStartAsync(
                 propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
                 this.ExpectedItemTypeReference).ConfigureAwait(false);
