@@ -509,7 +509,7 @@ namespace Microsoft.OData.Client
                 {
                     if (this.buildBatchBuffer == null)
                     {
-                        this.buildBatchBuffer = new byte[8000];
+                        this.buildBatchBuffer = new byte[WebUtil.DefaultBufferSizeForStreamCopy];
                     }
 
                     do

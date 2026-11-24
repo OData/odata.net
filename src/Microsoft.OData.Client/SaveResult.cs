@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     #region Namespaces
 
     using System;
@@ -256,6 +258,51 @@ namespace Microsoft.OData.Client
             while (this.entryIndex < this.ChangedEntries.Count && !this.IsCompletedInternally);
 
             Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
+        }
+
+        /// <summary>Asynchronously sends each pending change and processes its response.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the pending changes.</returns>
+        internal async Task CreateNextChangeAsync(CancellationToken cancellationToken)
+        {
+            do
+            {
+                IODataResponseMessage response = null;
+                try
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    ODataRequestMessageWrapper request = this.CreateNextRequest();
+                    if (request != null || this.entryIndex < this.ChangedEntries.Count)
+                    {
+                        if (this.ChangedEntries[this.entryIndex].ContentGeneratedForSave)
+                        {
+                            continue;
+                        }
+
+                        ContentStream content = this.CreateNonBatchChangeData(this.entryIndex, request);
+                        if (content != null && content.Stream != null)
+                        {
+                            request.SetRequestStream(content);
+                        }
+
+                        response = await this.RequestInfo.GetResponseAsync(request, false, cancellationToken).ConfigureAwait(false);
+                        this.HandleOperationResponse(response);
+                        this.HandleOperationResponseHeaders((HttpStatusCode)response.StatusCode, new HeaderCollection(response));
+                        this.HandleOperationResponseData(response);
+                        this.perRequest = null;
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                    e = WebUtil.GetHttpWebResponse(e, ref response);
+                    this.HandleOperationException(e, response);
+                }
+                finally
+                {
+                    WebUtil.DisposeMessage(response);
+                }
+            }
+            while (this.entryIndex < this.ChangedEntries.Count && !this.IsCompletedInternally);
         }
 
         /// <summary>Read and store response data for the current change, and try to start the next one</summary>

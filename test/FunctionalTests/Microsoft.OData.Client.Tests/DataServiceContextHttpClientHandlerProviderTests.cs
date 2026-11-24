@@ -14,12 +14,197 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Xml;
+using Microsoft.OData.Edm.Csdl;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests
 {
     public class DataServiceContextHttpClientHandlerProviderTests
     {
+        [Fact]
+        public async Task GetAllPagesAsync_FetchesContinuationsBeforeReturning()
+        {
+            int requests = 0;
+            using (var handler = new MockHttpClientHandler(request =>
+            {
+                requests++;
+                string payload = requests == 1
+                    ? "{\"@odata.context\":\"http://service.org/$metadata#People\",\"value\":[{\"Id\":1,\"Name\":\"First\"}],\"@odata.nextLink\":\"http://service.org/People?$skip=1\"}"
+                    : "{\"@odata.context\":\"http://service.org/$metadata#People\",\"value\":[{\"Id\":2,\"Name\":\"Second\"}]}";
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(payload, Encoding.UTF8, "application/json") };
+            }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                int responses = 0;
+                context.ReceivingResponse += (sender, args) => responses++;
+                var people = await context.CreateQuery<TestPerson>("People").GetAllPagesAsync();
+                Assert.Equal(2, requests);
+                Assert.Equal(2, responses);
+                Assert.Equal(new[] { "First", "Second" }, people.Select(p => p.Name));
+                Assert.Equal(2, requests);
+            }
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_NonGenericAndContinuationPreserveResponses()
+        {
+            using (var handler = new MockHttpClientHandler(request => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{\"@odata.context\":\"http://service.org/$metadata#People\",\"value\":[{\"Id\":1,\"Name\":\"First\"}],\"@odata.nextLink\":\"http://service.org/People?$skip=1\"}", Encoding.UTF8, "application/json") }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                DataServiceQuery query = context.CreateQuery<TestPerson>("People");
+                var response = Assert.IsType<QueryOperationResponse<TestPerson>>(await query.ExecuteAsync());
+                Assert.Single(response);
+                var next = Assert.IsType<QueryOperationResponse<TestPerson>>(await context.ExecuteAsync(response.GetContinuation(), CancellationToken.None));
+                Assert.Single(next);
+                Assert.Equal(200, next.StatusCode);
+                Assert.Equal(2, handler.Requests.Count);
+            }
+        }
+
+        [Fact]
+        public async Task LoadPropertyAsync_UsesNativeTransportAndUpdatesEntity()
+        {
+            using (var handler = new MockHttpClientHandler(request => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{\"@odata.context\":\"http://service.org/$metadata#Edm.String\",\"value\":\"Updated\"}", Encoding.UTF8, "application/json") }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                var person = new TestPerson { Id = 1, Name = "Original" };
+                context.AttachTo("People", person);
+                var response = await context.LoadPropertyAsync(person, "Name", CancellationToken.None);
+                Assert.Equal(200, response.StatusCode);
+                Assert.Equal("Updated", person.Name);
+                Assert.Single(handler.Requests);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task GetReadStreamAsync_ReadsDefaultAndNamedStreams(bool named)
+        {
+            using (var handler = new MockHttpClientHandler("stream content"))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                var person = new TestPerson { Id = 1 };
+                context.AttachTo("People", person);
+                EntityDescriptor descriptor = context.GetEntityDescriptor(person);
+                descriptor.ReadStreamUri = new Uri(BaseUri + "/People(1)/$value");
+                descriptor.AddStreamInfoIfNotPresent("Photo").SelfLink = new Uri(BaseUri + "/People(1)/Photo");
+                using (var response = named
+                    ? await context.GetReadStreamAsync(person, "Photo", new DataServiceRequestArgs(), CancellationToken.None)
+                    : await context.GetReadStreamAsync(person, new DataServiceRequestArgs(), CancellationToken.None))
+                using (var reader = new StreamReader(response.Stream))
+                {
+                    Assert.Equal("stream content", await reader.ReadToEndAsync());
+                }
+
+                Assert.Single(handler.Requests);
+            }
+        }
+
+        [Fact]
+        public async Task SaveChangesAsync_UpdatesEntityAndFiresChangesSaved()
+        {
+            using (var handler = new MockHttpClientHandler(request => new HttpResponseMessage(HttpStatusCode.NoContent) { Content = new StringContent("") }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                var person = new TestPerson { Id = 1, Name = "Updated" };
+                context.AttachTo("People", person);
+                context.UpdateObject(person);
+                int saved = 0;
+                context.ChangesSaved += (sender, args) => saved++;
+                var response = await context.SaveChangesAsync(CancellationToken.None);
+                Assert.Equal(204, Assert.Single(response).StatusCode);
+                Assert.Equal(EntityStates.Unchanged, context.GetEntityDescriptor(person).State);
+                Assert.Equal(1, saved);
+                Assert.Single(handler.Requests);
+            }
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_VoidResponsePreservesStatusAndMethod()
+        {
+            using (var handler = new MockHttpClientHandler(request => new HttpResponseMessage(HttpStatusCode.NoContent) { Content = new StringContent("") }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                var response = await context.ExecuteAsync(new Uri(BaseUri + "/Operation"), "POST", CancellationToken.None);
+                Assert.Equal(204, response.StatusCode);
+                Assert.Equal("POST " + BaseUri + "/Operation", Assert.Single(handler.Requests));
+            }
+        }
+
+        [Fact]
+        public async Task ExecuteBatchAsync_ReturnsQueryResponse()
+        {
+            string payload = "--batchresponse\r\nContent-Type: application/http\r\nContent-Transfer-Encoding: binary\r\n\r\nHTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n{\"@odata.context\":\"http://service.org/$metadata#People\",\"value\":[{\"Id\":1,\"Name\":\"First\"}]}\r\n--batchresponse--\r\n";
+            using (var handler = new MockHttpClientHandler(request =>
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(payload) };
+                response.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("multipart/mixed; boundary=batchresponse");
+                return response;
+            }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                var response = await context.ExecuteBatchAsync(CancellationToken.None, context.CreateQuery<TestPerson>("People"));
+                var queryResponse = Assert.IsType<QueryOperationResponse<TestPerson>>(Assert.Single(response));
+                Assert.Equal("First", Assert.Single(queryResponse).Name);
+                Assert.Equal(200, queryResponse.StatusCode);
+                Assert.Equal("POST " + BaseUri + "/$batch", Assert.Single(handler.Requests));
+            }
+        }
+
+        [Fact]
+        public async Task ActionGetValueAsync_ReturnsScalarResponse()
+        {
+            using (var handler = new MockHttpClientHandler(request => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("{\"@odata.context\":\"http://service.org/$metadata#Edm.String\",\"value\":\"result\"}", Encoding.UTF8, "application/json") }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                var action = new DataServiceActionQuerySingle<string>(context, BaseUri + "/Operation", new BodyOperationParameter("input", "value"));
+                Assert.Equal("result", await action.GetValueAsync(CancellationToken.None));
+                Assert.Equal("POST " + BaseUri + "/Operation", Assert.Single(handler.Requests));
+            }
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_NotFoundHonorsIgnoreResourceNotFound()
+        {
+            using (var handler = new MockHttpClientHandler(request => new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("", Encoding.UTF8, "application/json") }))
+            using (var text = new StringReader(Edmx))
+            using (var xml = XmlReader.Create(text))
+            {
+                var context = new DataServiceContext(new Uri(BaseUri)) { HttpClientHandlerProvider = new MockHttpClientHandlerProvider(handler), HttpRequestTransportMode = HttpRequestTransportMode.HttpClient };
+                context.Format.UseJson(CsdlReader.Parse(xml));
+                await Assert.ThrowsAsync<DataServiceQueryException>(() => context.ExecuteAsync<TestPerson>(new Uri(BaseUri + "/People")));
+                context.IgnoreResourceNotFoundException = true;
+                Assert.Empty(await context.ExecuteAsync<TestPerson>(new Uri(BaseUri + "/People")));
+            }
+        }
+
         private const string BaseUri = "http://service.org";
         private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>

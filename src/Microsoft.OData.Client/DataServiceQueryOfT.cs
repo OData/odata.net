@@ -225,9 +225,14 @@ namespace Microsoft.OData.Client
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
         /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" />  that contains the results of the query operation.</returns>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task<IEnumerable<TElement>> ExecuteAsync(CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TElement>> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
+            if (this.IsFunction)
+            {
+                return await this.Context.ExecuteAsync<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, false, cancellationToken).ConfigureAwait(false);
+            }
+
+            return await this.ExecuteAsync<TElement>(this.Context, this.Translate(), cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>Ends an asynchronous query request to a data service.</summary>
@@ -261,12 +266,26 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
-        public virtual Task<IEnumerable<TElement>> GetAllPagesAsync(CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TElement>> GetAllPagesAsync(CancellationToken cancellationToken)
         {
-            var currentTask = this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
-            var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result, cancellationToken), cancellationToken);
-            return nextTask;
+            List<TElement> elements = new List<TElement>();
+            QueryOperationResponse<TElement> response = (QueryOperationResponse<TElement>)await this.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+            while (true)
+            {
+                foreach (TElement element in response)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    elements.Add(element);
+                }
+
+                DataServiceQueryContinuation<TElement> continuation = response.GetContinuation();
+                if (continuation == null)
+                {
+                    return elements;
+                }
+
+                response = await this.Context.ExecuteAsyncInternal<TElement>(continuation, cancellationToken).ConfigureAwait(false);
+            }
         }
 
         /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.</summary>
@@ -431,6 +450,14 @@ namespace Microsoft.OData.Client
             return this.Execute();
         }
 
+        /// <summary>Asynchronously executes the query through the non-generic surface.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task containing the query results.</returns>
+        internal override async Task<IEnumerable> ExecuteAsyncInternal(CancellationToken cancellationToken)
+        {
+            return await this.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Begins an asynchronous request to an Internet resource.
         /// </summary>
@@ -464,34 +491,6 @@ namespace Microsoft.OData.Client
             }
 
             return this.queryComponents;
-        }
-
-        /// <summary>
-        /// Continues to asynchronously send a request to get items of the next page
-        /// </summary>
-        /// <param name="response">The response of the previous page</param>
-        /// <returns>The items retrieved</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
-        private IEnumerable<TElement> ContinuePage(IEnumerable<TElement> response, CancellationToken cancellationToken)
-        {
-            foreach (var element in response)
-            {
-                yield return element;
-            }
-
-            var continuation = (response as QueryOperationResponse).GetContinuation() as DataServiceQueryContinuation<TElement>;
-            if (continuation != null)
-            {
-                var asyncResult = this.Context.BeginExecute(continuation, null, null);
-                cancellationToken.Register(() => this.Context.CancelRequest(asyncResult));
-                var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(asyncResult, this.Context.EndExecute<TElement>);
-                var nextTask = currentTask.ContinueWith(t => ContinuePage(t.Result, cancellationToken), cancellationToken);
-                nextTask.Wait(cancellationToken);
-                foreach (var element in nextTask.Result)
-                {
-                    yield return element;
-                }
-            }
         }
 
         /// Synchronous methods not available

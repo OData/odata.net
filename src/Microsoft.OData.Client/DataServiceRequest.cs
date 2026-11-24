@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -174,6 +176,44 @@ namespace Microsoft.OData.Client
                                 // don't throw
                                 return (QueryOperationResponse<TElement>)operationResponse;
                             }
+                        }
+
+                        operationResponse.Error = ex;
+                        throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
+                    }
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>Asynchronously executes the request and materializes its response.</summary>
+        /// <typeparam name="TElement">The result element type.</typeparam>
+        /// <param name="context">The service context.</param>
+        /// <param name="queryComponents">The query to execute.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task containing the query response.</returns>
+        internal async Task<QueryOperationResponse<TElement>> ExecuteAsync<TElement>(DataServiceContext context, QueryComponents queryComponents, CancellationToken cancellationToken)
+        {
+            QueryResult result = null;
+            try
+            {
+                DataServiceRequest<TElement> request = new DataServiceRequest<TElement>(queryComponents.Uri, queryComponents, this.Plan);
+                result = request.CreateExecuteResult(this, context, null, null, Util.ExecuteMethodName);
+                await result.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
+                return result.ProcessResult<TElement>(this.Plan);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (result != null)
+                {
+                    QueryOperationResponse operationResponse = result.GetResponse<TElement>(MaterializeAtom.EmptyResults);
+                    if (operationResponse != null)
+                    {
+                        DataServiceClientException clientException = ex as DataServiceClientException;
+                        if (context.IgnoreResourceNotFoundException && clientException != null && clientException.StatusCode == (int)HttpStatusCode.NotFound)
+                        {
+                            return (QueryOperationResponse<TElement>)operationResponse;
                         }
 
                         operationResponse.Error = ex;

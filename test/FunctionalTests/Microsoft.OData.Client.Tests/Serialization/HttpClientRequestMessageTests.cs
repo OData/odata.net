@@ -19,6 +19,108 @@ namespace Microsoft.OData.Client.Tests.Serialization
     public class HttpClientRequestMessageTests
     {
         [Fact]
+        public async Task GetResponseAsync_ReturnsContentAndHeaders()
+        {
+            using (var handler = new MockHttpClientHandler("native async"))
+            using (var request = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>(), new MockHttpClientHandlerProvider(handler))))
+            {
+                IODataResponseMessage response = await request.GetResponseAsync(CancellationToken.None);
+                using (var reader = new StreamReader(response.GetStream()))
+                {
+                    Assert.Equal("native async", await reader.ReadToEndAsync());
+                }
+
+                Assert.Equal(200, response.StatusCode);
+                Assert.Contains("text/plain", response.GetHeader("Content-Type"));
+                Assert.Single(handler.Requests);
+            }
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_PreCanceledTokenDoesNotSend()
+        {
+            using (var handler = new MockHttpClientHandler("unused"))
+            using (var request = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>(), new MockHttpClientHandlerProvider(handler))))
+            using (var cancellation = new CancellationTokenSource())
+            {
+                cancellation.Cancel();
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => request.GetResponseAsync(cancellation.Token));
+                Assert.Empty(handler.Requests);
+            }
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_CancelsInFlightRequest()
+        {
+            using (var handler = new MockUnresponsiveHttpClientHandler())
+            using (var request = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>(), new MockHttpClientHandlerProvider(handler))))
+            using (var cancellation = new CancellationTokenSource())
+            {
+                handler.OnRequestStarted = cancellation.Cancel;
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => request.GetResponseAsync(cancellation.Token));
+            }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task GetResponseAsync_PreservesAbortAndTimeout(bool abort)
+        {
+            using (var handler = new MockUnresponsiveHttpClientHandler())
+            using (var request = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>(), new MockHttpClientHandlerProvider(handler))))
+            {
+                request.Timeout = 1;
+                if (abort)
+                {
+                    handler.OnRequestStarted = request.Abort;
+                }
+
+                var error = await Assert.ThrowsAsync<DataServiceTransportException>(() => request.GetResponseAsync(CancellationToken.None));
+                Assert.IsAssignableFrom<OperationCanceledException>(error.InnerException);
+            }
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_CustomTransportKeepsApmFallback()
+        {
+            var args = new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>());
+            var request = new TestHttpWebRequestMessage(args, new Dictionary<string, string>(), () => new MemoryStream(new byte[] { 1, 2, 3 }));
+            IODataResponseMessage response = await request.GetResponseAsync(CancellationToken.None);
+            using (Stream stream = response.GetStream())
+            {
+                Assert.Equal(3, stream.Length);
+            }
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_DerivedHttpClientTransportKeepsApmFallback()
+        {
+            var args = new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>());
+            using (var request = new Tracking.CustomizedRequestMessage(args, "legacy response", new Dictionary<string, string> { { "X-Transport", "custom" } }))
+            {
+                IODataResponseMessage response = await request.GetResponseAsync(CancellationToken.None);
+                Assert.Equal("custom", response.GetHeader("X-Transport"));
+                using (var reader = new StreamReader(response.GetStream()))
+                {
+                    Assert.Equal("legacy response", await reader.ReadToEndAsync());
+                }
+            }
+        }
+
+        [Fact]
+        public void GetHttpWebResponse_PreservesNativeTransportErrorAndResponse()
+        {
+            var innerException = new HttpRequestException("native transport failure");
+            var expectedResponse = new HttpWebResponseMessage(new Dictionary<string, string>(), 503, () => Stream.Null);
+            var exception = new DataServiceTransportException(expectedResponse, innerException);
+            IODataResponseMessage response = null;
+
+            Assert.Same(exception, WebUtil.GetHttpWebResponse(exception, ref response));
+            Assert.Same(expectedResponse, response);
+            Assert.Same(innerException, exception.InnerException);
+        }
+
+        [Fact]
         public void UnwrapAggregateException()
         {
             var msg = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>()));

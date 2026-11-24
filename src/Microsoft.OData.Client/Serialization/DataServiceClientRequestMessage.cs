@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -151,5 +153,19 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is intentionally a method.")]
         public abstract IODataResponseMessage GetResponse();
+
+        /// <summary>Asynchronously returns a response from a network resource.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task containing the response message.</returns>
+        public virtual async Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (cancellationToken.Register(this.Abort))
+            {
+                IODataResponseMessage response = await Task<IODataResponseMessage>.Factory.FromAsync(this.BeginGetResponse, this.EndGetResponse, null).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                return response;
+            }
+        }
     }
 }

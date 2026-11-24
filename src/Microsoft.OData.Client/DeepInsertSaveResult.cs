@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -117,6 +119,38 @@ namespace Microsoft.OData.Client
                 InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
 
                 throw exception;
+            }
+        }
+
+        /// <summary>Asynchronously sends a deep insert request.</summary>
+        /// <typeparam name="T">The top-level object type.</typeparam>
+        /// <param name="resource">The object to insert.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the request.</returns>
+        internal async Task DeepInsertRequestAsync<T>(T resource, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            BuildDescriptorGraph(this.ChangedEntries, true, resource);
+            ODataRequestMessageWrapper request = this.GenerateDeepInsertRequest();
+            if (request == null)
+            {
+                return;
+            }
+
+            request.SetRequestStream(request.CachedRequestStream);
+            try
+            {
+                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(request, false, cancellationToken).ConfigureAwait(false);
+                this.responseStream = this.batchResponseMessage.GetStream();
+            }
+            catch (DataServiceTransportException ex)
+            {
+                throw WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
             }
         }
 
