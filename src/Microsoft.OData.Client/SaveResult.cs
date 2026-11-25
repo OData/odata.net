@@ -609,7 +609,7 @@ namespace Microsoft.OData.Client
                 mediaRequest = this.CreateMediaResourceRequest(
                     entityDescriptor.GetResourceUri(this.RequestInfo.BaseUriResolver, false /*queryLink*/),
                     XmlConstants.HttpMethodPost,
-                    Util.ODataVersion4,
+                    this.RequestInfo.MaxProtocolVersionAsVersion,
                     type.MediaDataMember == null, // sendChunked
                     true, // applyResponsePreference
                     headers,
@@ -623,7 +623,7 @@ namespace Microsoft.OData.Client
                 mediaRequest = this.CreateMediaResourceRequest(
                     entityDescriptor.GetResourceUri(this.RequestInfo.BaseUriResolver, false /*queryLink*/),
                     XmlConstants.HttpMethodPost,
-                    Util.ODataVersion4,
+                    this.RequestInfo.MaxProtocolVersionAsVersion,
                     type.MediaDataMember == null, // sendChunked
                     true, // applyResponsePreference
                     headers,
@@ -667,7 +667,7 @@ namespace Microsoft.OData.Client
             return this.CreateMediaResourceRequest(
                 requestUri,
                 XmlConstants.HttpMethodPut,
-                Util.ODataVersion4,
+                this.RequestInfo.MaxProtocolVersionAsVersion,
                 true, // sendChunked
                 false, // applyResponsePreference
                 headers,
@@ -926,7 +926,7 @@ namespace Microsoft.OData.Client
             ODataRequestMessageWrapper mediaRequestMessage = this.CreateMediaResourceRequest(
                 requestUri,
                 XmlConstants.HttpMethodPut,
-                Util.ODataVersion4,
+                this.RequestInfo.MaxProtocolVersionAsVersion,
                 true, // sendChunked
                 false, // applyResponsePreference
                 headers,

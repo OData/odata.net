@@ -329,6 +329,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("options", ComparisonMode.Substring);
         }
 #endif
+        [Fact]
+        public void DataServiceContextCanInitializev401WithoutException()
+        {
+            DataServiceContext dsContext = null;
+            Action test = () => dsContext = new DataServiceContext(new Uri("http://base.org/"), ODataProtocolVersion.V401);
+            test.ShouldNotThrow();
+            dsContext.MaxProtocolVersion.ShouldBeEquivalentTo(ODataProtocolVersion.V401);
+        }
 
         [Fact]
         public void DataServiceContextDoesNotRestrictBaseUriScheme()

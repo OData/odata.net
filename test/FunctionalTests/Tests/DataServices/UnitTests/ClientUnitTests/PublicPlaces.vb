@@ -321,7 +321,7 @@ Partial Public Class ClientModule
                 New MaxProtocolVersionTestCase() {
                     New MaxProtocolVersionTestCase() With {.MaxProtocolVersion = ODataProtocolVersion.V4},
                     New MaxProtocolVersionTestCase() With {.MaxProtocolVersion = CType(-1, ODataProtocolVersion), .ExpectedExceptionMessage = "Specified argument was out of the range of valid values." & vbCrLf & "Parameter name: maxProtocolVersion"},
-                    New MaxProtocolVersionTestCase() With {.MaxProtocolVersion = CType(ODataProtocolVersion.V4 + 1, ODataProtocolVersion), .ExpectedExceptionMessage = "Specified argument was out of the range of valid values." & vbCrLf & "Parameter name: maxProtocolVersion"}
+                    New MaxProtocolVersionTestCase() With {.MaxProtocolVersion = CType(ODataProtocolVersion.V4 + 1, ODataProtocolVersion)}
                 },
                 Sub(testCase)
                     Dim context = New DataServiceContext(New Uri("http://host/service"))
