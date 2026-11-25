@@ -21,6 +21,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class FunctionParameterParserTests
     {
+        [Theory]
+        [InlineData("1", "1", null)]
+        [InlineData(")(1", "", "1")]
+        [InlineData("person=People(1)", "person=People(1)", null)]
+        [InlineData("person=People(1))('bca(aa('", "person=People(1)", "'bca(aa('")]
+        [InlineData("degree=1)('fawn'", "degree=1", "'fawn'")]
+        public void SplitOperationParametersAndParenthesisKey_WorksForInputExpression(string expression, string parameters, string keys)
+        {
+            FunctionParameterParser.SplitOperationParametersAndParenthesisKey(expression, out string acutalParams, out string actualKeys);
+            Assert.Equal(parameters, acutalParams);
+            Assert.Equal(keys, actualKeys);
+        }
+
         [Fact]
         public void FunctionParameterParserShouldSupportUnresolvedAliasesInPath()
         {

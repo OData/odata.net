@@ -1053,6 +1053,11 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
         private bool TryCreateSegmentForOperationImport(string identifier, string parenthesisExpression)
         {
+            FunctionParameterParser.SplitOperationParametersAndParenthesisKey(parenthesisExpression,
+                out string newParenthesisParameters,
+                out string parenthesisKey);
+            parenthesisExpression = newParenthesisParameters;
+
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperationImport singleImport;
             if (!TryBindingParametersAndMatchingOperationImport(identifier, parenthesisExpression, this.configuration, out resolvedParameters, out singleImport))
@@ -1072,7 +1077,14 @@ namespace Microsoft.OData.UriParser
 
             this.parsedSegments.Add(segment);
 
-            this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
+            // Be noted, it's back-compatibile since the function can be called without parameters but with keys
+            // for example: "~/GetCoolPeople(1)", where '1' is the key, not the parameters.
+            if (parenthesisKey == null && resolvedParameters == null)
+            {
+                parenthesisKey = parenthesisExpression;
+            }
+
+            this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisKey, returnType, segment);
 
             return true;
         }
@@ -1082,12 +1094,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="parenthesisExpression">The parenthesis expression.</param>
         /// <param name="returnType">Type of the return.</param>
-        /// <param name="resolvedParameters">The resolved parameters.</param>
         /// <param name="segment">The segment.</param>
-        private void TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(string parenthesisExpression, IEdmTypeReference returnType, ICollection<OperationSegmentParameter> resolvedParameters, ODataPathSegment segment)
+        private void TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(string parenthesisExpression, IEdmTypeReference returnType, ODataPathSegment segment)
         {
             IEdmCollectionTypeReference collectionTypeReference = returnType as IEdmCollectionTypeReference;
-            if (collectionTypeReference != null && collectionTypeReference.ElementType().IsEntity() && resolvedParameters == null && parenthesisExpression != null)
+            if (collectionTypeReference != null && collectionTypeReference.ElementType().IsEntity() && parenthesisExpression != null)
             {
                 // The parameters in the parenthesis is a key segment.
                 if (this.TryBindKeyFromParentheses(parenthesisExpression))
@@ -1115,6 +1126,11 @@ namespace Microsoft.OData.UriParser
                 bindingType = (previousSegment is EachSegment) ? previousSegment.TargetEdmType : previousSegment.EdmType;
             }
 
+            FunctionParameterParser.SplitOperationParametersAndParenthesisKey(parenthesisExpression,
+                out string newParenthesisParameters,
+                out string parenthesisKey);
+            parenthesisExpression = newParenthesisParameters;
+
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperation singleOperation;
             if (!TryBindingParametersAndMatchingOperation(identifier, parenthesisExpression, bindingType, this.configuration, out resolvedParameters, out singleOperation))
@@ -1132,12 +1148,14 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
             }
 
-            CreateOperationSegment(previousSegment, singleOperation, resolvedParameters, identifier, parenthesisExpression);
+            CreateOperationSegment(previousSegment, singleOperation, resolvedParameters, identifier, parenthesisExpression, parenthesisKey);
 
             return true;
         }
 
-        private void CreateOperationSegment(ODataPathSegment previousSegment, IEdmOperation singleOperation, ICollection<OperationSegmentParameter> resolvedParameters, string identifier, string parenthesisExpression)
+        private void CreateOperationSegment(ODataPathSegment previousSegment, IEdmOperation singleOperation,
+            ICollection<OperationSegmentParameter> resolvedParameters,
+            string identifier, string parenthesisExpression, string parenthesisKey)
         {
             IEdmTypeReference returnType = singleOperation.ReturnType;
             IEdmEntitySetBase targetset = null;
@@ -1162,7 +1180,15 @@ namespace Microsoft.OData.UriParser
             };
 
             this.parsedSegments.Add(segment);
-            this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisExpression, returnType, resolvedParameters, segment);
+
+            // Be noted, it's back-compatibile since the function can be called without parameters but with keys
+            // for example: "~/GetCoolPeople(1)", where '1' is the key, not the parameters.
+            if (parenthesisKey == null && resolvedParameters == null)
+            {
+                parenthesisKey = parenthesisExpression;
+            }
+
+            this.TryBindKeySegmentIfNoResolvedParametersAndParenthesisValueExists(parenthesisKey, returnType, segment);
 
             return;
         }
@@ -1342,10 +1368,14 @@ namespace Microsoft.OData.UriParser
             IEdmFunction escapeFunction;
             if (this.TryResolveEscapeFunction(previous, out newIdentifier, out newParenthesisExpression, out anotherEscapeFunctionStarts, out escapeFunction))
             {
+                FunctionParameterParser.SplitOperationParametersAndParenthesisKey(newParenthesisExpression,
+                    out string newParenthesisParameters, out string parenthesisKey);
+                newParenthesisExpression = newParenthesisParameters;
+
                 ICollection<FunctionParameterToken> splitParameters;
                 FunctionParameterParser.TrySplitOperationParameters(newParenthesisExpression, configuration, out splitParameters);
                 ICollection<OperationSegmentParameter> resolvedParameters = FunctionCallBinder.BindSegmentParameters(configuration, escapeFunction, splitParameters);
-                CreateOperationSegment(previous, escapeFunction, resolvedParameters, newIdentifier, newParenthesisExpression);
+                CreateOperationSegment(previous, escapeFunction, resolvedParameters, newIdentifier, newParenthesisExpression, parenthesisKey);
                 if (anotherEscapeFunctionStarts)
                 {
                     // When we encounter an invalid escape function as a parameter, we should throw.

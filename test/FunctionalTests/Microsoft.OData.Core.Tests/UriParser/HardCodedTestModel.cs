@@ -2232,9 +2232,9 @@ namespace Microsoft.OData.Tests.UriParser
             return TestModel.EntityContainer.FindOperationImports("IsAddressGood").Single() as IEdmFunctionImport;
         }
 
-        public static IEdmFunction GetFunctionForAllMyFriendsDogs()
+        public static IEdmFunction GetFunctionForAllMyFriendsDogs(int parameterCount = 1)
         {
-            return TestModel.FindOperations("Fully.Qualified.Namespace.AllMyFriendsDogs").Single(f => f.Parameters.Count() == 1) as IEdmFunction;
+            return TestModel.FindOperations("Fully.Qualified.Namespace.AllMyFriendsDogs").Single(f => f.Parameters.Count() == parameterCount) as IEdmFunction;
         }
 
         public static IEdmOperationImport[] GetAllFunctionImportsForGetMostImportantPerson()
