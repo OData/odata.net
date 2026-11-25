@@ -55,5 +55,11 @@ namespace Microsoft.OData
         /// The payload kind for the message, currently used by <see cref="ODataRawInputContext"/> only.
         /// </summary>
         internal ODataPayloadKind PayloadKind { get; set; }
+
+        /// <summary>
+        /// The optional message wrapper that provides access to headers.
+        /// Used by output contexts to write OData-specific headers (OData-Version, Content-Type) when created directly.
+        /// </summary>
+        internal ODataMessage Message { get; set; }
     }
 }
