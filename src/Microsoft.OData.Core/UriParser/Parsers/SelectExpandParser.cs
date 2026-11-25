@@ -81,7 +81,7 @@ namespace Microsoft.OData.UriParser
 
             // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options,
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
-            this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/) : null;
+            this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false, false, false, false) : null;
 
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
 
