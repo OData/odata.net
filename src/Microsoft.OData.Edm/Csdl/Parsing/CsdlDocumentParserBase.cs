@@ -230,6 +230,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <NavigationPropertyPath/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_NavigationPropertyPath, OnNavigationPropertyPathExpression);
 
+            var annotationPathExpressionParser =
+                //// <AnnotationPath/>
+                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_AnnotationPath, OnAnnotationPathExpression);
+
             var enumMemberExpressionParser =
                 //// <EnumMember/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EnumMember, this.OnEnumMemberExpression);
@@ -305,6 +309,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 propertyPathExpressionParser,
                 //// <NavigationPropertyPath/>
                 navigationPropertyPathExpressionParser,
+                //// <AnnotationPath/>
+                annotationPathExpressionParser,
                 //// <If/>
                 ifExpressionParser,
                 //// <IsOf/>
@@ -510,6 +516,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             XmlTextValue text = childValues.FirstText;
             return new CsdlNavigationPropertyPathExpression(text != null ? text.TextValue : string.Empty, element.Location);
+        }
+
+        private static CsdlAnnotationPathExpression OnAnnotationPathExpression(XmlElementInfo element, XmlElementValueCollection childValues)
+        {
+            XmlTextValue text = childValues.FirstText;
+            return new CsdlAnnotationPathExpression(text != null ? text.TextValue : string.Empty, element.Location);
         }
 
         private CsdlLabeledExpressionReferenceExpression OnLabeledElementReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)
