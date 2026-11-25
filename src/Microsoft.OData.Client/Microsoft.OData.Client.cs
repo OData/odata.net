@@ -85,7 +85,6 @@ namespace Microsoft.OData.Client
         internal const string Context_DuplicateUriOperationParameterName = "Context_DuplicateUriOperationParameterName";
         internal const string Context_DuplicateBodyOperationParameterName = "Context_DuplicateBodyOperationParameterName";
         internal const string Context_NullKeysAreNotSupported = "Context_NullKeysAreNotSupported";
-        internal const string Context_ExecuteExpectsGetOrPostOrDelete = "Context_ExecuteExpectsGetOrPostOrDelete";
         internal const string Context_EndExecuteExpectedVoidResponse = "Context_EndExecuteExpectedVoidResponse";
         internal const string Context_NullElementInOperationParameterArray = "Context_NullElementInOperationParameterArray";
         internal const string Context_EntityMetadataBuilderIsRequired = "Context_EntityMetadataBuilderIsRequired";
