@@ -19,6 +19,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm.Csdl;
 using Xunit;
 using Microsoft.OData.Core;
+using System.Reflection.Metadata;
 
 namespace Microsoft.OData.Tests
 {
@@ -307,6 +308,113 @@ namespace Microsoft.OData.Tests
                 });
 
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
+        }
+
+        [Theory]
+        [InlineData("true", "Edm.Boolean")]
+        [InlineData("false", "Edm.Boolean")]
+        [InlineData("123", "Edm.Double")]
+        [InlineData("\"This is a string\"", "Edm.String")]
+        public async Task SupportsTopLevelPropertyWithPrimitiveJsonElementValueAsync(string rawValue, string expectedType)
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            JsonElement jsonElement = JsonDocument.Parse(rawValue).RootElement;
+
+            // Act
+            string output = await WriteAndGetPayloadAsync(
+                model,
+                "application/json",
+                (writer) => writer.WritePropertyAsync(new ODataProperty()
+                {
+                    Name = "Name",
+                    Value = new ODataJsonElementValue(jsonElement)
+                }),
+                configureServices: (containerBuilder) =>
+                {
+                    containerBuilder.AddSingleton<IJsonWriterFactory>(sp => ODataUtf8JsonWriterFactory.Default);
+                });
+
+            // Assert
+            Assert.Equal($"{{\"@odata.context\":\"http://www.example.com/$metadata#{expectedType}\",\"value\":{rawValue}}}", output);
+        }
+
+        [Theory]
+        [InlineData("[1,2,3]")]
+        [InlineData("{\"foo\":\"bar\"}")]
+        public async Task WritesUntypedContextJsonElementTopLevelPropertyWithArrayOrObject(string rawValue)
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            JsonElement jsonElement = JsonDocument.Parse(rawValue).RootElement;
+
+            // Act
+            string output = await WriteAndGetPayloadAsync(
+                model,
+                "application/json",
+                (writer) => writer.WritePropertyAsync(new ODataProperty()
+                {
+                    Name = "Name",
+                    Value = new ODataJsonElementValue(jsonElement)
+                }),
+                configureServices: (containerBuilder) =>
+                {
+                    containerBuilder.AddSingleton<IJsonWriterFactory>(sp => ODataUtf8JsonWriterFactory.Default);
+                });
+
+            // Assert
+            Assert.Equal($"{{\"@odata.context\":\"http://www.example.com/$metadata#Edm.Untyped\",\"value\":{rawValue}}}", output);
+        }
+
+        [Theory]
+        [InlineData(true, "Edm.Boolean")]
+        [InlineData(false, "Edm.Boolean")]
+        [InlineData(123, "Edm.Int32")]
+        [InlineData(123.0, "Edm.Double")]
+        [InlineData("\"This is a string\"", "Edm.String")]
+        public async Task SupportsTopLevelPropertyWithPrimitiveValueAsync(object value, string expectedType)
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+
+            // Act
+            string output = await WriteAndGetPayloadAsync(
+                model,
+                "application/json",
+                (writer) => writer.WritePropertyAsync(new ODataProperty()
+                {
+                    Name = "Name",
+                    Value = value
+                }),
+                configureServices: (containerBuilder) =>
+                {
+                    containerBuilder.AddSingleton<IJsonWriterFactory>(sp => ODataUtf8JsonWriterFactory.Default);
+                });
+
+            // Assert
+            Assert.Equal($"{{\"@odata.context\":\"http://www.example.com/$metadata#{expectedType}\",\"value\":{value}}}", output);
+        }
+
+        [Fact]
+        public async Task ThrowsExceptionIfJsonElementValueContainsNullInTopLevelPropertyAsync()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            JsonElement jsonElement = JsonDocument.Parse("null").RootElement;
+
+            // Act
+            var testCode = async () => await WriteAndGetPayloadAsync(
+                model,
+                "application/json",
+                (writer) => writer.WritePropertyAsync(new ODataProperty()
+                {
+                    Name = "Name",
+                    Value = new ODataJsonElementValue(jsonElement)
+                }));
+
+            // Assert
+            var exception = await Assert.ThrowsAsync<ODataException>(testCode);
+            Assert.Equal("Cannot write the value 'null' in top level property; return 204 instead.", exception.Message);
         }
 
         [Theory]
