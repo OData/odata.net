@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests
@@ -773,6 +774,9 @@ namespace Microsoft.Spatial.Tests
                                                                   w.EndFigure();
                                                                   w.EndGeography();
 
+                                                                //  w.Reset();
+                                                                //  w.SetCoordinateSystem(new CoordinateSystem(8, "my", CoordinateSystem.Topology.Geography));
+
                                                                   w.BeginGeography(SpatialType.MultiPoint);
                                                                   w.BeginGeography(SpatialType.Point);
                                                                   w.BeginFigure(new GeographyPosition(20, 30, null, null));
@@ -790,6 +794,228 @@ namespace Microsoft.Spatial.Tests
             GeographyToWktTest(this.d4Formatter, pointMultiPointCalls, "SRID=4326;GEOMETRYCOLLECTION (POINT (20 10), MULTIPOINT ((30 20), (40 30)))");
         }
 
+        [Fact]
+        public void WriteCollection2()
+        {
+            WellKnownBinaryFormatter d2Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings { HandleZ = false, HandleM = false});
+            WellKnownBinaryFormatter d4Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings());
+
+            //Action<GeographyPipeline> emptyCalls = (w) =>
+            //{
+            //    w.BeginGeography(SpatialType.Collection);
+            //    w.EndGeography();
+            //};
+            //GeographyToWkbTest(d2Formatter, emptyCalls, "SRID=4326;GEOMETRYCOLLECTION EMPTY");
+            //GeographyToWkbTest(d4Formatter, emptyCalls, "SRID=4326;GEOMETRYCOLLECTION EMPTY");
+
+            Action<GeographyPipeline> emptyCalls2 = (w) =>
+            {
+                w.BeginGeography(SpatialType.Collection);
+                w.BeginGeography(SpatialType.Point);
+                w.EndGeography();
+                w.BeginGeography(SpatialType.LineString);
+                w.EndGeography();
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, emptyCalls2, "SRID=4326;GEOMETRYCOLLECTION (POINT EMPTY, LINESTRING EMPTY)");
+            GeographyToWkbTest(d4Formatter, emptyCalls2, "SRID=4326;GEOMETRYCOLLECTION (POINT EMPTY, LINESTRING EMPTY)");
+
+            Action<GeographyPipeline> nestedEmptyCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.Collection);
+                w.BeginGeography(SpatialType.Collection);
+                w.EndGeography();
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, nestedEmptyCalls, "SRID=4326;GEOMETRYCOLLECTION (GEOMETRYCOLLECTION EMPTY)");
+            GeographyToWkbTest(d4Formatter, nestedEmptyCalls, "SRID=4326;GEOMETRYCOLLECTION (GEOMETRYCOLLECTION EMPTY)");
+
+            Action<GeographyPipeline> singlePointCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.Collection);
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(10, 20, 30, 40));
+                w.EndFigure();
+                
+
+                w.EndGeography();
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, singlePointCalls, "SRID=4326;GEOMETRYCOLLECTION (POINT (20 10))");
+            GeographyToWkbTest(d4Formatter, singlePointCalls, "SRID=4326;GEOMETRYCOLLECTION (POINT (20 10 30 40))");
+
+            Action<GeographyPipeline> pointMultiPointCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.Collection);
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(10, 20, null, null));
+                w.EndFigure();
+                w.EndGeography();
+
+                w.BeginGeography(SpatialType.MultiPoint);
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(20, 30, null, null));
+                w.EndFigure();
+                w.EndGeography();
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(30, 40, null, null));
+                w.EndFigure();
+                w.EndGeography();
+                w.EndGeography();
+
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, pointMultiPointCalls, "SRID=4326;GEOMETRYCOLLECTION (POINT (20 10), MULTIPOINT ((30 20), (40 30)))");
+            GeographyToWkbTest(d4Formatter, pointMultiPointCalls, "SRID=4326;GEOMETRYCOLLECTION (POINT (20 10), MULTIPOINT ((30 20), (40 30)))");
+        }
+
+        [Fact]
+        public void WriteCollection3()
+        {
+            WellKnownBinaryFormatter d2Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings { HandleZ = false, HandleM = false });
+            WellKnownBinaryFormatter d4Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings());
+
+            Action<GeographyPipeline> pointMultiPointCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.Collection);
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(10, 20, null, null));
+                w.EndFigure();
+                w.EndGeography();
+
+                w.BeginGeography(SpatialType.MultiPoint);
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(20, 30, null, null));
+                w.EndFigure();
+                w.EndGeography();
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(30, 40, null, null));
+                w.EndFigure();
+                w.EndGeography();
+                w.EndGeography();
+
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, pointMultiPointCalls, "SRID=4326;GEOMETRYCOLLECTION (POINT (20 10), MULTIPOINT ((30 20), (40 30)))");
+            GeographyToWkbTest(d4Formatter, pointMultiPointCalls, "SRID=4326;GEOMETRYCOLLECTION (POINT (20 10), MULTIPOINT ((30 20), (40 30)))");
+        }
+
+        [Fact]
+        public void WriteMultiPoint2()
+        {
+            WellKnownBinaryFormatter d2Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings { HandleZ = false, HandleM = false });
+            WellKnownBinaryFormatter d4Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings());
+            /*
+            Action<GeographyPipeline> twoEmptyPointsCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.MultiPoint);
+                w.BeginGeography(SpatialType.Point);
+                w.EndGeography();
+                w.BeginGeography(SpatialType.Point);
+                w.EndGeography();
+                w.EndGeography();
+            };
+            GeographyToWktTest(this.d2Formatter, twoEmptyPointsCalls, "SRID=4326;MULTIPOINT (EMPTY, EMPTY)");
+            GeographyToWktTest(this.d4Formatter, twoEmptyPointsCalls, "SRID=4326;MULTIPOINT (EMPTY, EMPTY)");
+
+            Action<GeographyPipeline> noPointsCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.MultiPoint);
+                w.EndGeography();
+            };
+            GeographyToWktTest(this.d2Formatter, noPointsCalls, "SRID=4326;MULTIPOINT EMPTY");
+            GeographyToWktTest(this.d4Formatter, noPointsCalls, "SRID=4326;MULTIPOINT EMPTY");
+*/
+            Action<GeographyPipeline> twoD2PointsCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.MultiPoint);
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(10, 20, null, null));
+                w.EndFigure();
+                w.EndGeography();
+
+                w.BeginGeography(SpatialType.Point);
+                w.EndGeography();
+
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(30, 40, null, null));
+                w.EndFigure();
+                w.EndGeography();
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, twoD2PointsCalls, "SRID=4326;MULTIPOINT ((20 10), EMPTY, (40 30))");
+            GeographyToWkbTest(d4Formatter, twoD2PointsCalls, "SRID=4326;MULTIPOINT ((20 10), EMPTY, (40 30))");
+            
+            /*
+            Action<GeographyPipeline> singleD3PointCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.MultiPoint);
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(10, 20, 30, 40));
+                w.EndFigure();
+                w.EndGeography();
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, singleD3PointCalls, "SRID=4326;MULTIPOINT ((20 10))");
+            GeographyToWkbTest(d4Formatter, singleD3PointCalls, "SRID=4326;MULTIPOINT ((20 10 30 40))");*/
+        }
+
+        [Fact]
+        public void WritePoint1()
+        {
+            WellKnownBinaryFormatter d2Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings { HandleZ = false, HandleM = false });
+            WellKnownBinaryFormatter d4Formatter = new WellKnownBinaryFormatterImplementation(new DataServicesSpatialImplementation(), new WellKnownBinaryWriterSettings());
+
+            //Action<GeographyPipeline> emptyCalls = (w) =>
+            //{
+            //    w.BeginGeography(SpatialType.Point);
+            //    w.EndGeography();
+            //};
+            //GeographyToWktTest(this.d2Formatter, emptyCalls, "SRID=4326;POINT EMPTY");
+            //GeographyToWktTest(this.d4Formatter, emptyCalls, "SRID=4326;POINT EMPTY");
+
+            Action<GeographyPipeline> d4PointCalls = (w) =>
+            {
+                w.BeginGeography(SpatialType.Point);
+                w.BeginFigure(new GeographyPosition(8.0, 7.0, null, null)); // lat, long
+                w.EndFigure();
+                w.EndGeography();
+            };
+            GeographyToWkbTest(d2Formatter, d4PointCalls, "0101000020E61000000000000000001C400000000000002040");
+            GeographyToWkbTest(d4Formatter, d4PointCalls, "01B90B0020E61000000000000000001C400000000000002040000000000000F8FF000000000000F8FF");
+
+            //Action<GeographyPipeline> d3PointCalls = (w) =>
+            //{
+            //    w.BeginGeography(SpatialType.Point);
+            //    w.BeginFigure(new GeographyPosition(10, 20, 30, null));
+            //    w.EndFigure();
+            //    w.EndGeography();
+            //};
+            //GeographyToWktTest(this.d2Formatter, d3PointCalls, "SRID=4326;POINT (20 10)");
+            //GeographyToWktTest(this.d4Formatter, d3PointCalls, "SRID=4326;POINT (20 10 30)");
+
+            //Action<GeographyPipeline> d2PointCalls = (w) =>
+            //{
+            //    w.BeginGeography(SpatialType.Point);
+            //    w.BeginFigure(new GeographyPosition(10, 20, null, null));
+            //    w.EndFigure();
+            //    w.EndGeography();
+            //};
+            //GeographyToWktTest(this.d2Formatter, d2PointCalls, "SRID=4326;POINT (20 10)");
+            //GeographyToWktTest(this.d4Formatter, d2PointCalls, "SRID=4326;POINT (20 10)");
+
+            //Action<GeographyPipeline> skipPointCalls =
+            //(w) =>
+            //{
+            //    w.BeginGeography(SpatialType.Point);
+            //    w.BeginFigure(new GeographyPosition(10, 20, null, 40));
+            //    w.EndFigure();
+            //    w.EndGeography();
+            //};
+            //GeographyToWktTest(this.d2Formatter, skipPointCalls, "SRID=4326;POINT (20 10)");
+            //GeographyToWktTest(this.d4Formatter, skipPointCalls, "SRID=4326;POINT (20 10 NULL 40)");
+        }
+
         private static void GeographyToWktTest(WellKnownTextSqlFormatter formatter, Action<GeographyPipeline> pipelineAction, string expectedWkt)
         {
             var stringWriter = new StringWriter();
@@ -799,6 +1025,50 @@ namespace Microsoft.Spatial.Tests
             pipelineAction(w);
 
             Assert.Equal(expectedWkt, stringWriter.GetStringBuilder().ToString());
+        }
+
+        private static void GeographyToWkbTest(WellKnownBinaryFormatter formatter, Action<GeographyPipeline> pipelineAction, string expectedWkt)
+        {
+            var stream = new MemoryStream();
+            var w = formatter.CreateWriter(stream);
+
+            w.GeographyPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeography);
+            pipelineAction(w);
+
+            stream.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+            byte[] bytes = new byte[1024];
+            int count = stream.Read(bytes, 0, bytes.Length);
+
+            byte[] result = new byte[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = bytes[i];
+            }
+            string actual = ToHex(result);
+
+             Assert.Equal(expectedWkt, actual);
+        }
+
+        public static string ToHex(byte[] bytes)
+        {
+            var buf = new StringBuilder(bytes.Length * 2);
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                byte b = bytes[i];
+                buf.Append(ToHexDigit((b >> 4) & 0x0F));
+                buf.Append(ToHexDigit(b & 0x0F));
+            }
+            return buf.ToString();
+        }
+
+        private static char ToHexDigit(int n)
+        {
+            if (n < 0 || n > 15)
+                throw new ArgumentException("Nibble value out of range: " + n);
+            if (n <= 9)
+                return (char)('0' + n);
+            return (char)('A' + (n - 10));
         }
     }
 }

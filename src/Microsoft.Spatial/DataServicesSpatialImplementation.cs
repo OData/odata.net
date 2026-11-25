@@ -82,5 +82,13 @@ namespace Microsoft.Spatial
         {
             return new ForwardingSegment(new SpatialValidatorImplementation());
         }
+
+        /// <summary> Creates a WellKnownBinaryFormatter for this implementation.</summary>
+        /// <returns>The WellKnownBinaryFormatter created.</returns>
+        /// <param name="settings">Controls the writing settings.</param>
+        public override WellKnownBinaryFormatter CreateWellKnownBinaryFormatter(WellKnownBinaryWriterSettings settings)
+        {
+            return new WellKnownBinaryFormatterImplementation(this, settings);
+        }
     }
 }

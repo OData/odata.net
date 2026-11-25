@@ -1,1 +1,19 @@
-﻿
+﻿abstract Microsoft.Spatial.SpatialImplementation.CreateWellKnownBinaryFormatter(Microsoft.Spatial.WellKnownBinaryWriterSettings settings) -> Microsoft.Spatial.WellKnownBinaryFormatter
+Microsoft.Spatial.ByteOrder
+Microsoft.Spatial.ByteOrder.BigEndian = 0 -> Microsoft.Spatial.ByteOrder
+Microsoft.Spatial.ByteOrder.LittleEndian = 1 -> Microsoft.Spatial.ByteOrder
+Microsoft.Spatial.WellKnownBinaryFormatter
+Microsoft.Spatial.WellKnownBinaryFormatter.WellKnownBinaryFormatter(Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.WellKnownBinaryWriterSettings
+Microsoft.Spatial.WellKnownBinaryWriterSettings.HandleM.get -> bool
+Microsoft.Spatial.WellKnownBinaryWriterSettings.HandleM.set -> void
+Microsoft.Spatial.WellKnownBinaryWriterSettings.HandleSRID.get -> bool
+Microsoft.Spatial.WellKnownBinaryWriterSettings.HandleSRID.set -> void
+Microsoft.Spatial.WellKnownBinaryWriterSettings.HandleZ.get -> bool
+Microsoft.Spatial.WellKnownBinaryWriterSettings.HandleZ.set -> void
+Microsoft.Spatial.WellKnownBinaryWriterSettings.IsoWKB.get -> bool
+Microsoft.Spatial.WellKnownBinaryWriterSettings.IsoWKB.set -> void
+Microsoft.Spatial.WellKnownBinaryWriterSettings.Order.get -> Microsoft.Spatial.ByteOrder
+Microsoft.Spatial.WellKnownBinaryWriterSettings.Order.set -> void
+Microsoft.Spatial.WellKnownBinaryWriterSettings.WellKnownBinaryWriterSettings() -> void
+static Microsoft.Spatial.WellKnownBinaryFormatter.Create(Microsoft.Spatial.WellKnownBinaryWriterSettings settings) -> Microsoft.Spatial.WellKnownBinaryFormatter
