@@ -1107,9 +1107,20 @@ namespace Microsoft.OData.JsonLight
                         nestedResourceInfo.TypeAnnotation = new ODataTypeAnnotation((string)propertyAnnotation.Value);
                         break;
 
+                    case ODataAnnotationNames.ODataCount:
+                        Debug.Assert(propertyAnnotation.Value is long, "The odata.count annotation should have been parsed as a 64 bit integer.");
+                        nestedResourceInfo.Count = (long?)propertyAnnotation.Value;
+                        break;
+
                     default:
+                        // TODO: Update Error message
                         throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
+            }
+
+            foreach (var instanceAnnotation in resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(nestedResourceInfo.Name))
+            {
+                nestedResourceInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(instanceAnnotation.Key, instanceAnnotation.Value.ToODataValue(), /*isCustomAnnotation*/ true));
             }
 
             return ODataJsonLightReaderNestedResourceInfo.CreateDeferredLinkInfo(nestedResourceInfo, navigationProperty);

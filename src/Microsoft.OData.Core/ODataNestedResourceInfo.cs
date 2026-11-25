@@ -8,7 +8,9 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Evaluation;
     #endregion Namespaces
 
@@ -32,6 +34,9 @@ namespace Microsoft.OData
 
         /// <summary>true if the association link has been set by the user or seen on the wire or computed by the metadata builder, false otherwise.</summary>
         private bool hasAssociationUrl;
+
+        /// <summary>The number of items in the resource set.</summary>
+        private long? count;
 
         /// <summary>Gets or sets a value that indicates whether the nested resource info represents a collection or a resource.</summary>
         /// <returns>true if the nested resource info represents a collection; false if the navigation represents a resource.</returns>
@@ -90,6 +95,36 @@ namespace Microsoft.OData
                 this.associationLinkUrl = value;
                 this.hasAssociationUrl = true;
             }
+        }
+
+        /// <summary>Gets or sets the number of items in the resource set.</summary>
+        /// <returns>The number of items in the resource set.</returns>
+        public long? Count
+        {
+            get
+            {
+                return this.count;
+            }
+
+            set
+            {
+                if (IsCollection != null && (bool)IsCollection == false)
+                {
+                    throw new ODataException(Strings.ODataWriterCore_QueryCountInODataNestedResourceInfo);
+                }
+
+                this.count = value;
+            }
+        }
+
+        /// <summary>
+        /// Collection of custom instance annotations.
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
+        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
+        {
+            get { return this.GetInstanceAnnotations(); }
+            set { this.SetInstanceAnnotations(value); }
         }
 
         /// <summary>Gets or sets the context url for this nested resource info.</summary>
