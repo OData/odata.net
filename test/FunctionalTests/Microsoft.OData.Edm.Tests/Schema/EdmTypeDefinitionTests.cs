@@ -4,6 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+#if NETCOREAPP2_1 || NETCOREAPP3_1
+using System.Text.Encodings.Web;
+using System.Text.Json;
+#endif
+using System.Xml;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -144,5 +156,249 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.Equal(EdmSchemaElementKind.TypeDefinition, booleanAlias.SchemaElementKind);
             Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), booleanAlias.UnderlyingType);
         }
+
+        [Fact]
+        public void TestEdmTypeDefinitionFacetsDeserialization()
+        {
+            // Arrange
+            var csdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""NS.TypeDefinitions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <TypeDefinition Name=""Money"" UnderlyingType=""Edm.Decimal"" Precision=""16"" Scale=""2"" />
+      <TypeDefinition Name=""Password"" UnderlyingType=""Edm.String"" MaxLength=""128"" Unicode=""false"" />
+      <TypeDefinition Name=""LocationMarker"" UnderlyingType=""Edm.GeographyPoint"" SRID=""3246"" />
+      <TypeDefinition Name=""PlaceMarker"" UnderlyingType=""Edm.GeometryPoint"" SRID=""2463"" />
+    </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>";
+
+            IEdmModel model;
+
+            // Act
+            using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(csdl)))
+            using (var reader = XmlReader.Create(memoryStream))
+            {
+                if (!CsdlReader.TryParse(reader, out model, out IEnumerable<EdmError> errors))
+                {
+                    Assert.True(false, string.Join("\r\n", errors.Select(d => d.ToString())));
+                }
+            }
+
+            // Assert
+            var moneyTypeDefinition = model.FindType("NS.TypeDefinitions.Money");
+            Assert.NotNull(moneyTypeDefinition);
+            var moneyFacetedTypeDefinition = Assert.IsAssignableFrom<IEdmFacetedTypeDefinition>(moneyTypeDefinition);
+            Assert.Equal(moneyFacetedTypeDefinition.UnderlyingType, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal));
+            Assert.Equal(16, moneyFacetedTypeDefinition.Precision);
+            Assert.Equal(2, moneyFacetedTypeDefinition.Scale);
+
+            var passwordTypeDefinition = model.FindType("NS.TypeDefinitions.Password");
+            Assert.NotNull(passwordTypeDefinition);
+            var passwordFacetedTypeDefinition = Assert.IsAssignableFrom<IEdmFacetedTypeDefinition>(passwordTypeDefinition);
+            Assert.Equal(passwordFacetedTypeDefinition.UnderlyingType, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String));
+            Assert.Equal(128, passwordFacetedTypeDefinition.MaxLength);
+            Assert.Equal(false, passwordFacetedTypeDefinition.IsUnicode);
+
+            var locationMarkerTypeDefinition = model.FindType("NS.TypeDefinitions.LocationMarker");
+            Assert.NotNull(locationMarkerTypeDefinition);
+            var locationMarkerFacetedTypeDefinition = Assert.IsAssignableFrom<IEdmFacetedTypeDefinition>(locationMarkerTypeDefinition);
+            Assert.Equal(locationMarkerFacetedTypeDefinition.UnderlyingType, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint));
+            Assert.Equal(3246, locationMarkerFacetedTypeDefinition.Srid);
+
+            var placeMarkerTypeDefinition = model.FindType("NS.TypeDefinitions.PlaceMarker");
+            Assert.NotNull(placeMarkerTypeDefinition);
+            var placeMarkerFacetedTypeDefinition = Assert.IsAssignableFrom<IEdmFacetedTypeDefinition>(placeMarkerTypeDefinition);
+            Assert.Equal(placeMarkerFacetedTypeDefinition.UnderlyingType, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint));
+            Assert.Equal(2463, placeMarkerFacetedTypeDefinition.Srid);
+        }
+
+        [Fact]
+        public void TestEdmTypeDefinitionFacetsSerialization()
+        {
+            // Arrange
+            var model = new EdmModel();
+
+            var moneyTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "Money",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal),
+                maxLength: null,
+                isUnicode: null,
+                precision: 16,
+                scale: 2,
+                srid: null);
+            model.AddElement(moneyTypeDefinition);
+
+            var passwordTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "Password",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String),
+                maxLength: 128,
+                isUnicode: false,
+                precision: null,
+                scale: null,
+                srid: null);
+            model.AddElement(passwordTypeDefinition);
+
+            var locationMarkerTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "LocationMarker",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint),
+                maxLength: null,
+                isUnicode: null,
+                precision: null,
+                scale: null,
+                srid: 3246);
+            model.AddElement(locationMarkerTypeDefinition);
+
+            var placeMarkerTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "PlaceMarker",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint),
+                maxLength: null,
+                isUnicode: null,
+                precision: null,
+                scale: null,
+                srid: 2463);
+            model.AddElement(placeMarkerTypeDefinition);
+
+            string csdl;
+            // Act
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var writer = XmlWriter.Create(memoryStream))
+                {
+                    if (!CsdlWriter.TryWriteCsdl(model, writer, CsdlTarget.OData, out IEnumerable<EdmError> errors))
+                    {
+                        Assert.True(false, string.Join("\r\n", errors.Select(d => d.ToString())));
+                    }
+                }
+
+                memoryStream.Position = 0;
+                csdl = new StreamReader(memoryStream).ReadToEnd();
+            }
+
+            // Assert
+            var expected = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+<edmx:DataServices><Schema Namespace=""NS.TypeDefinitions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+<TypeDefinition Name=""Money"" UnderlyingType=""Edm.Decimal"" Precision=""16"" Scale=""2"" />
+<TypeDefinition Name=""Password"" UnderlyingType=""Edm.String"" MaxLength=""128"" Unicode=""false"" />
+<TypeDefinition Name=""LocationMarker"" UnderlyingType=""Edm.GeographyPoint"" SRID=""3246"" />
+<TypeDefinition Name=""PlaceMarker"" UnderlyingType=""Edm.GeometryPoint"" SRID=""2463"" />
+</Schema>
+</edmx:DataServices>
+</edmx:Edmx>";
+            Assert.NotNull(csdl);
+            Assert.Equal(expected.Replace("\r\n", ""), csdl);
+        }
+
+#if NETCOREAPP2_1 || NETCOREAPP3_1
+        [Fact]
+        public void TestEdmTypeDefinitionFacetsJsonSerialization()
+        {
+            // Arrange
+            var model = new EdmModel();
+
+            var moneyTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "Money",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal),
+                maxLength: null,
+                isUnicode: null,
+                precision: 16,
+                scale: 2,
+                srid: null);
+            model.AddElement(moneyTypeDefinition);
+
+            var passwordTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "Password",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String),
+                maxLength: 128,
+                isUnicode: true,
+                precision: null,
+                scale: null,
+                srid: null);
+            model.AddElement(passwordTypeDefinition);
+
+            var locationMarkerTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "LocationMarker",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint),
+                maxLength: null,
+                isUnicode: null,
+                precision: null,
+                scale: null,
+                srid: 3246);
+            model.AddElement(locationMarkerTypeDefinition);
+
+            var placeMarkerTypeDefinition = new EdmTypeDefinition(
+                namespaceName: "NS.TypeDefinitions",
+                name: "PlaceMarker",
+                underlyingType: EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint),
+                maxLength: null,
+                isUnicode: null,
+                precision: null,
+                scale: null,
+                srid: 2463);
+            model.AddElement(placeMarkerTypeDefinition);
+
+            string csdlJson;
+            // Act
+            using (var memoryStream = new MemoryStream())
+            {
+                JsonWriterOptions options = new JsonWriterOptions
+                {
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    Indented = true,
+                    SkipValidation = false
+                };
+
+                using (Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, options))
+                {
+                    if (!CsdlWriter.TryWriteCsdl(model, writer, out IEnumerable<EdmError> errors))
+                    {
+                        Assert.True(false, string.Join("\r\n", errors.Select(d => d.ToString())));
+                    }
+                }
+
+                memoryStream.Position = 0;
+                csdlJson = new StreamReader(memoryStream).ReadToEnd();
+            }
+
+            // Assert
+            var expected = @"{
+  ""$Version"": ""4.0"",
+  ""NS.TypeDefinitions"": {
+    ""Money"": {
+      ""$Kind"": ""TypeDefinition"",
+      ""$UnderlyingType"": ""Edm.Decimal"",
+      ""$Precision"": 16,
+      ""$Scale"": 2
+    },
+    ""Password"": {
+      ""$Kind"": ""TypeDefinition"",
+      ""$UnderlyingType"": ""Edm.String"",
+      ""$MaxLength"": 128,
+      ""$Unicode"": true
+    },
+    ""LocationMarker"": {
+      ""$Kind"": ""TypeDefinition"",
+      ""$UnderlyingType"": ""Edm.GeographyPoint"",
+      ""$SRID"": 3246
+    },
+    ""PlaceMarker"": {
+      ""$Kind"": ""TypeDefinition"",
+      ""$UnderlyingType"": ""Edm.GeometryPoint"",
+      ""$SRID"": 2463
+    }
+  }
+}";
+            Assert.NotNull(csdlJson);
+            Assert.Equal(expected, csdlJson);
+        }
+#endif
     }
 }

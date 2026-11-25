@@ -754,6 +754,18 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_TypeDefinition);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, typeDefinition.Name, EdmValueWriter.StringAsXml);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_UnderlyingType, typeDefinition.UnderlyingType, this.TypeDefinitionAsXml);
+
+            if (typeDefinition is IEdmFacetedTypeDefinition facetedTypeDefinition)
+            {
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, facetedTypeDefinition.MaxLength, EdmValueWriter.IntAsXml);
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Unicode, facetedTypeDefinition.IsUnicode, EdmValueWriter.BooleanAsXml);
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, facetedTypeDefinition.Precision, EdmValueWriter.IntAsXml);
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Scale, facetedTypeDefinition.Scale, EdmValueWriter.IntAsXml);
+                if (facetedTypeDefinition.UnderlyingType.IsSpatial())
+                {
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, facetedTypeDefinition.Srid, CsdlConstants.Default_UnspecifiedSrid, SridAsXml);
+                }
+            }
         }
 
         internal override void WriteEndElement()
