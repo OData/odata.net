@@ -338,6 +338,12 @@
   <data name="ClientType_MissingProperty" xml:space="preserve">
     <value>The closed type {0} does not have a corresponding {1} settable property.</value>
   </data>
+  <data name="ClientType_PropertyNameResolverCollision" xml:space="preserve">
+    <value>The property name resolver maps properties '{0}' and '{1}' on type '{2}' to the same server-defined name '{3}'.</value>
+  </data>
+  <data name="ClientType_PropertyNameResolverReturnedInvalidName" xml:space="preserve">
+    <value>The property name resolver returned a null, empty, or whitespace name for property '{0}' on type '{1}'.</value>
+  </data>
   <data name="ClientType_KeysMustBeSimpleTypes" xml:space="preserve">
     <value>The key property '{0}' on for type '{1}' is of type '{2}', which is not a simple type. Only properties of simple type can be key properties.</value>
   </data>
@@ -885,4 +891,3 @@
     <value>The header '{0}' has a different value. Old Value: '{1}', Current Value: '{2}' Please make sure to set the header before SendingRequest event is fired</value>
   </data>
 </root>
-

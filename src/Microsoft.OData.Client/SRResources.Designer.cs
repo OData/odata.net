@@ -751,6 +751,24 @@ namespace Microsoft.OData.Client {
                 return ResourceManager.GetString("ClientType_MissingProperty", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The property name resolver maps properties '{0}' and '{1}' on type '{2}' to the same server-defined name '{3}'.
+        /// </summary>
+        internal static string ClientType_PropertyNameResolverCollision {
+            get {
+                return ResourceManager.GetString("ClientType_PropertyNameResolverCollision", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The property name resolver returned a null, empty, or whitespace name for property '{0}' on type '{1}'.
+        /// </summary>
+        internal static string ClientType_PropertyNameResolverReturnedInvalidName {
+            get {
+                return ResourceManager.GetString("ClientType_PropertyNameResolverReturnedInvalidName", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Multiple implementations of ICollection&lt;T&gt; is not supported..
