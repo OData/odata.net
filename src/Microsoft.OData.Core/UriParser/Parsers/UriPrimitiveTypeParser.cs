@@ -186,76 +186,63 @@ namespace Microsoft.OData.UriParser
                     return false;
                 }
 
-                try
+                switch (targetTypeKind)
                 {
-                    switch (targetTypeKind)
-                    {
-                        case EdmPrimitiveTypeKind.Boolean:
-                            targetValue = text.ToBoolean();
-                            break;
-                        case EdmPrimitiveTypeKind.Byte:
-                            targetValue = text.ToByte();
-                            break;
-                        case EdmPrimitiveTypeKind.SByte:
-                            targetValue = text.ToSByte();
-                            break;
-                        case EdmPrimitiveTypeKind.Int16:
-                            targetValue = text.ToInt16();
-                            break;
-                        case EdmPrimitiveTypeKind.Int32:
-                            targetValue = text.ToInt32();
+                    case EdmPrimitiveTypeKind.Boolean:
+                        targetValue = text.ToBoolean();
+                        break;
+                    case EdmPrimitiveTypeKind.Byte:
+                        targetValue = text.ToByte();
+                        break;
+                    case EdmPrimitiveTypeKind.SByte:
+                        targetValue = text.ToSByte();
+                        break;
+                    case EdmPrimitiveTypeKind.Int16:
+                        targetValue = text.ToInt16();
+                        break;
+                    case EdmPrimitiveTypeKind.Int32:
+                        targetValue = text.ToInt32();
 
-                            break;
-                        case EdmPrimitiveTypeKind.Int64:
-                            UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixInt64, ref text);
-                            targetValue = text.ToInt64();
-                            break;
-                        case EdmPrimitiveTypeKind.Single:
-                            UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixSingle, ref text);
-                            targetValue = text.ToSingle();
-                            break;
-                        case EdmPrimitiveTypeKind.Double:
-                            UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDouble, ref text);
-                            targetValue = text.ToDouble();
-                            break;
-                        case EdmPrimitiveTypeKind.Decimal:
-                            UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDecimal, ref text);
-                            try
+                        break;
+                    case EdmPrimitiveTypeKind.Int64:
+                        UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixInt64, ref text);
+                        targetValue = text.ToInt64();
+                        break;
+                    case EdmPrimitiveTypeKind.Single:
+                        UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixSingle, ref text);
+                        targetValue = text.ToSingle();
+                        break;
+                    case EdmPrimitiveTypeKind.Double:
+                        UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDouble, ref text);
+                        targetValue = text.ToDouble();
+                        break;
+                    case EdmPrimitiveTypeKind.Decimal:
+                        UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDecimal, ref text);
+                        try
+                        {
+                            targetValue = text.ToDecimal();
+                        }
+                        catch (FormatException)
+                        {
+                            // we need to support exponential format for decimals since we used to support them in V1
+                            decimal result;
+                            if (decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
                             {
-                                targetValue = text.ToDecimal();
+                                targetValue = result;
                             }
-                            catch (FormatException)
+                            else
                             {
-                                // we need to support exponential format for decimals since we used to support them in V1
-                                decimal result;
-                                if (decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
-                                {
-                                    targetValue = result;
-                                }
-                                else
-                                {
-                                    targetValue = default(decimal);
-                                    return false;
-                                }
+                                targetValue = default(decimal);
+                                return false;
                             }
+                        }
 
-                            break;
-                        default:
-                            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.UriPrimitiveTypeParser_TryUriStringToPrimitive));
-                    }
+                        break;
+                    default:
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.UriPrimitiveTypeParser_TryUriStringToPrimitive));
+                }
 
-                    return true;
-                }
-                catch (FormatException)
-                {
-                    targetValue = null;
-                    return false;
-                }
-                catch (OverflowException)
-                {
-                    targetValue = null;
-                    return false;
-                }
+                return true;
             }
 
             catch (FormatException primitiveParserException)
