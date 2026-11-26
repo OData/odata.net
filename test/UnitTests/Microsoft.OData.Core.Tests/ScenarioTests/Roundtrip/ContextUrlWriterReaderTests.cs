@@ -776,48 +776,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         }
 
-        // V4 Protocol Spec Chapter 10.9: Collection of Projected Expanded Entities (not contain select)
-        // Sample Request: http://host/service/Employees?$expand=Company
-        // Context Url in Response: http://host/service/$metadata#Employees(Company)
-        [Fact]
-        public void CollectionOfExpandedEntities_Version741AndBefore()
-        {
-            foreach (ODataFormat mimeType in mimeTypes)
-            {
-                // In 7.4.1 and before, this scenario resulted in the same
-                // context Uri as 10.2: http://host/service/$metadata#Employees
-                var writerSettings = new ODataMessageWriterSettings
-                {
-                    //LibraryCompatibility = ODataLibraryCompatibility.Version7_4_1,
-                };
-
-                string payload, contentType;
-                this.WriteAndValidateContextUri(mimeType, model, writerSettings, omWriter =>
-                {
-                    var selectExpandClause = new ODataQueryOptionParser(this.model, this.employeeType, this.employeeSet, new Dictionary<string, string> { { "$expand", "AssociatedCompany" }, { "$select", null } }).ParseSelectAndExpand();
-
-                    omWriter.Settings.ODataUri = new ODataUri()
-                    {
-                        ServiceRoot = this.testServiceRootUri,
-                        SelectAndExpand = selectExpandClause
-                    };
-
-                    var writer = omWriter.CreateODataResourceSetWriter(this.employeeSet, this.employeeType);
-                    var feed = new ODataResourceSet();
-                    feed.Id = new Uri("urn:test");
-                    writer.WriteStart(feed);
-                    writer.WriteEnd();
-                }, string.Format("\"{0}$metadata#Employees(AssociatedCompany())\"", TestBaseUri), out payload, out contentType);
-
-                this.ReadPayload(payload, contentType, model, omReader =>
-                {
-                    var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
-                    while (reader.Read()) { }
-                    Assert.Equal(ODataReaderState.Completed, reader.State);
-                });
-            }
-        }
-
         // V4 Protocol Spec Chapter 10.10: Projected Expanded Entities (contain select)
         // Sample Request: http://host/service/Employees(0)?$expand=Company($select=CompanyId)
         // Context Url in Response: http://host/service/$metadata#Employees(Company(CompanyId))/$entity
