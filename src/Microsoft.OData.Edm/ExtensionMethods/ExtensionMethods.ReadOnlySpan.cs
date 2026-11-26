@@ -446,7 +446,7 @@ namespace Microsoft.OData.Edm
             ReadOnlySpan<char> firstElementName = path[segmentRanges.Current];
             if (firstElementName.Contains(".".AsSpan(), StringComparison.Ordinal))
             {
-                if (firstElementName.Equals(container.FullName(), StringComparison.OrdinalIgnoreCase))
+                if (container.FullNameEquals(firstElementName, StringComparison.OrdinalIgnoreCase))
                 {
                     if (segmentRanges.MoveNext())
                     {

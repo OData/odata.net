@@ -1,0 +1,2 @@
+static Microsoft.OData.Edm.ExtensionMethods.FullNameEquals(this Microsoft.OData.Edm.IEdmSchemaElement element, System.ReadOnlySpan<char> qualifiedName) -> bool
+static Microsoft.OData.Edm.ExtensionMethods.FullNameEquals(this Microsoft.OData.Edm.IEdmSchemaElement element, System.ReadOnlySpan<char> qualifiedName, System.StringComparison comparisonType) -> bool
