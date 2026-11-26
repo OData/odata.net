@@ -21,8 +21,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
 {
     /// <summary>
     /// Tests for the async-native WASM compatibility path that eliminates Task.Wait() blocking.
-    /// These tests verify that GetResponseAsync, ExecuteAsync, GetAllPagesAsync, and
-    /// EnumerateAllPagesAsync work correctly through the new async pipeline.
+    /// These tests verify that query, paging, stream, and save operations use the native async pipeline.
     /// </summary>
     public class AsyncWasmCompatibilityTests
     {
@@ -37,11 +36,29 @@ namespace Microsoft.OData.Client.Tests.Serialization
         </Key>
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
+        <Property Name=""Photo"" Type=""Edm.Stream"" />
+        <NavigationProperty Name=""Category"" Type=""Test.Category"" />
+        <NavigationProperty Name=""Categories"" Type=""Collection(Test.Category)"" />
+      </EntityType>
+      <EntityType Name=""Category"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+      </EntityType>
+      <EntityType Name=""Document"" HasStream=""true"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
       </EntityType>
     </Schema>
     <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Default"">
       <EntityContainer Name=""Container"">
         <EntitySet Name=""Products"" EntityType=""Test.Product"" />
+        <EntitySet Name=""Categories"" EntityType=""Test.Category"" />
+        <EntitySet Name=""Documents"" EntityType=""Test.Document"" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
@@ -371,6 +388,225 @@ namespace Microsoft.OData.Client.Tests.Serialization
 
         #endregion
 
+        #region Remaining Async API Tests
+
+        [Fact]
+        public async Task SaveChangesAsync_UpdatesEntity_WithoutUsingApm()
+        {
+            var context = CreateContext();
+            SetupRequestPipeline(context, string.Empty, 204, null);
+            var product = new Product { Id = 1, Name = "Updated" };
+            context.AttachTo("Products", product);
+            context.UpdateObject(product);
+            bool changesSaved = false;
+            context.ChangesSaved += (_, _) => changesSaved = true;
+
+            DataServiceResponse response = await context.SaveChangesAsync();
+
+            ChangeOperationResponse operationResponse = Assert.IsType<ChangeOperationResponse>(Assert.Single(response));
+            Assert.Equal(204, operationResponse.StatusCode);
+            Assert.True(changesSaved);
+        }
+
+        [Fact]
+        public async Task SaveChangesAsync_BatchWithPreCanceledToken_DoesNotUseApm()
+        {
+            var context = CreateContext();
+            SetupRequestPipeline(context, string.Empty);
+            context.AddObject("Products", new Product { Id = 3, Name = "New" });
+            using var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.Cancel();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset, cancellationTokenSource.Token));
+        }
+
+        [Fact]
+        public async Task ExecuteBatchAsync_WithPreCanceledToken_DoesNotUseApm()
+        {
+            var context = CreateContext();
+            SetupRequestPipeline(context, string.Empty);
+            using var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.Cancel();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => context.ExecuteBatchAsync(cancellationTokenSource.Token, context.Products));
+        }
+
+        [Fact]
+        public async Task ExecuteBatchAsync_WithEmptyQueries_Throws()
+        {
+            var context = CreateContext();
+
+            await Assert.ThrowsAsync<ArgumentException>(
+                () => context.ExecuteBatchAsync(Array.Empty<DataServiceRequest>()));
+        }
+
+        [Fact]
+        public async Task LoadPropertyAsync_LoadsNavigationProperty_WithoutUsingApm()
+        {
+            const string categoryResponse = @"{
+    ""@odata.context"": ""http://localhost:9090/$metadata#Categories/$entity"",
+    ""Id"": 7,
+    ""Name"": ""Hardware""
+}";
+            var context = CreateContext();
+            SetupRequestPipeline(context, categoryResponse);
+            var product = new Product { Id = 1, Name = "Widget" };
+            context.AttachTo("Products", product);
+
+            QueryOperationResponse response = await context.LoadPropertyAsync(product, nameof(Product.Category));
+
+            Assert.NotNull(response);
+            Assert.NotNull(product.Category);
+            Assert.Equal(7, product.Category.Id);
+        }
+
+        [Fact]
+        public async Task LoadPropertyAsync_WithNextLink_LoadsCollection_WithoutUsingApm()
+        {
+            const string categoriesResponse = @"{
+    ""@odata.context"": ""http://localhost:9090/$metadata#Categories"",
+    ""value"": [
+        { ""Id"": 7, ""Name"": ""Hardware"" }
+    ]
+}";
+            var context = CreateContext();
+            SetupRequestPipeline(context, categoriesResponse);
+            var product = new Product { Id = 1, Name = "Widget", Categories = new List<Category>() };
+            context.AttachTo("Products", product);
+
+            QueryOperationResponse response = await context.LoadPropertyAsync(
+                product,
+                nameof(Product.Categories),
+                new Uri($"{ServiceRoot}/Products(1)/Categories?$skip=1"));
+
+            Assert.NotNull(response);
+            Assert.Single(product.Categories);
+        }
+
+        [Fact]
+        public async Task LoadPropertyAllPagesAsync_LoadsContinuations_WithoutUsingApm()
+        {
+            const string firstPageResponse = @"{
+    ""@odata.context"": ""http://localhost:9090/$metadata#Categories"",
+    ""value"": [
+        { ""Id"": 7, ""Name"": ""Hardware"" }
+    ],
+    ""@odata.nextLink"": ""http://localhost:9090/Products(1)/Categories?$skip=1""
+}";
+            const string secondPageResponse = @"{
+    ""@odata.context"": ""http://localhost:9090/$metadata#Categories"",
+    ""value"": [
+        { ""Id"": 8, ""Name"": ""Software"" }
+    ]
+}";
+            int requestCount = 0;
+            var context = CreateContext();
+            context.Configurations.RequestPipeline.OnMessageCreating = args =>
+                new AsyncTestRequestMessage(args, ++requestCount == 1 ? firstPageResponse : secondPageResponse);
+            var product = new Product { Id = 1, Name = "Widget", Categories = new List<Category>() };
+            context.AttachTo("Products", product);
+
+            QueryOperationResponse response = await context.LoadPropertyAllPagesAsync(
+                product,
+                nameof(Product.Categories),
+                CancellationToken.None);
+
+            Assert.NotNull(response);
+            Assert.Equal(2, product.Categories.Count);
+            Assert.Equal(2, requestCount);
+        }
+
+        [Fact]
+        public async Task LoadPropertyAsync_WithNullContinuation_Throws()
+        {
+            var context = CreateContext();
+            var product = new Product { Id = 1, Name = "Widget", Categories = new List<Category>() };
+            context.AttachTo("Products", product);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                () => context.LoadPropertyAsync(
+                    product,
+                    nameof(Product.Categories),
+                    continuation: null,
+                    CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task GetReadStreamAsync_ReturnsStream_WithoutUsingApm()
+        {
+            byte[] payload = Encoding.UTF8.GetBytes("stream content");
+            var context = CreateContext();
+            context.Configurations.RequestPipeline.OnMessageCreating = args =>
+                new AsyncTestRequestMessage(args, payload, 200, "application/octet-stream");
+            var document = new Document { Id = 1 };
+            context.AttachTo("Documents", document);
+            context.GetEntityDescriptor(document).ReadStreamUri = new Uri($"{ServiceRoot}/Documents(1)/$value");
+
+            using DataServiceStreamResponse response = await context.GetReadStreamAsync(
+                document,
+                new DataServiceRequestArgs());
+            using var reader = new StreamReader(response.Stream);
+
+            Assert.Equal("application/octet-stream", response.ContentType);
+            Assert.Equal("stream content", await reader.ReadToEndAsync());
+        }
+
+        [Fact]
+        public async Task GetReadStreamAsync_WithNamedStream_ReturnsStream_WithoutUsingApm()
+        {
+            byte[] payload = Encoding.UTF8.GetBytes("photo content");
+            var context = CreateContext();
+            context.Configurations.RequestPipeline.OnMessageCreating = args =>
+                new AsyncTestRequestMessage(args, payload, 200, "image/png");
+            var product = new Product { Id = 1, Name = "Widget" };
+            context.AttachTo("Products", product);
+            context.GetEntityDescriptor(product).AddStreamInfoIfNotPresent(nameof(Product.Photo)).SelfLink =
+                new Uri($"{ServiceRoot}/Products(1)/Photo");
+
+            using DataServiceStreamResponse response = await context.GetReadStreamAsync(
+                product,
+                nameof(Product.Photo),
+                new DataServiceRequestArgs(),
+                CancellationToken.None);
+            using var reader = new StreamReader(response.Stream);
+
+            Assert.Equal("image/png", response.ContentType);
+            Assert.Equal("photo content", await reader.ReadToEndAsync());
+        }
+
+        [Fact]
+        public async Task BulkUpdateAsync_WithPreCanceledToken_DoesNotUseApm()
+        {
+            var context = CreateContext();
+            SetupRequestPipeline(context, string.Empty);
+            var product = new Product { Id = 1, Name = "Updated" };
+            context.AttachTo("Products", product);
+            context.UpdateObject(product);
+            using var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.Cancel();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => context.BulkUpdateAsync(cancellationTokenSource.Token, product));
+        }
+
+        [Fact]
+        public async Task DeepInsertAsync_WithPreCanceledToken_DoesNotUseApm()
+        {
+            var context = CreateContext();
+            SetupRequestPipeline(context, string.Empty);
+            var product = new Product { Id = 3, Name = "New" };
+            context.AddObject("Products", product);
+            using var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.Cancel();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => context.DeepInsertAsync(product, cancellationTokenSource.Token));
+        }
+
+        #endregion
+
         #region Helper Methods
 
         private TestContainer CreateContext()
@@ -384,6 +620,12 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 new AsyncTestRequestMessage(args, response);
         }
 
+        private void SetupRequestPipeline(DataServiceContext context, string response, int statusCode, string contentType)
+        {
+            context.Configurations.RequestPipeline.OnMessageCreating = (args) =>
+                new AsyncTestRequestMessage(args, response, statusCode, contentType);
+        }
+
         #endregion
 
         #region Test Types
@@ -393,6 +635,23 @@ namespace Microsoft.OData.Client.Tests.Serialization
         {
             public int Id { get; set; }
             public string Name { get; set; }
+            public DataServiceStreamLink Photo { get; set; }
+            public Category Category { get; set; }
+            public List<Category> Categories { get; set; }
+        }
+
+        [Key("Id")]
+        public class Category
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        [Key("Id")]
+        [HasStream]
+        public class Document
+        {
+            public int Id { get; set; }
         }
 
         private class TestContainer : DataServiceContext
@@ -425,44 +684,61 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// </summary>
         private class AsyncTestRequestMessage : HttpClientRequestMessage
         {
-            private readonly string _response;
+            private readonly byte[] _response;
+            private readonly int _statusCode;
+            private readonly string _contentType;
 
             public AsyncTestRequestMessage(DataServiceClientRequestMessageArgs args, string response)
+                : this(args, Encoding.UTF8.GetBytes(response), 200, "application/json;charset=utf-8")
+            {
+            }
+
+            public AsyncTestRequestMessage(DataServiceClientRequestMessageArgs args, string response, int statusCode, string contentType = "application/json;charset=utf-8")
+                : this(args, Encoding.UTF8.GetBytes(response), statusCode, contentType)
+            {
+            }
+
+            public AsyncTestRequestMessage(DataServiceClientRequestMessageArgs args, byte[] response, int statusCode, string contentType)
                 : base(args)
             {
                 _response = response;
+                _statusCode = statusCode;
+                _contentType = contentType;
             }
 
             public override IODataResponseMessage GetResponse()
             {
-                return CreateMockResponse();
+                throw new NotSupportedException("Synchronous response APIs are unavailable on WebAssembly.");
             }
 
             public override Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                return Task.FromResult(GetResponse());
+                return Task.FromResult(CreateMockResponse());
             }
 
             public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
             {
-                var tcs = new TaskCompletionSource<bool>(state);
-                tcs.TrySetResult(true);
-                callback(tcs.Task);
-                return tcs.Task;
+                throw new NotSupportedException("APM response APIs are unavailable on WebAssembly.");
             }
 
             public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
             {
-                return GetResponse();
+                throw new NotSupportedException("APM response APIs are unavailable on WebAssembly.");
             }
 
             private IODataResponseMessage CreateMockResponse()
             {
+                var headers = new Dictionary<string, string>();
+                if (_contentType != null)
+                {
+                    headers.Add("Content-Type", _contentType);
+                }
+
                 return new HttpWebResponseMessage(
-                    new Dictionary<string, string> { { "Content-Type", "application/json;charset=utf-8" } },
-                    200,
-                    () => new MemoryStream(Encoding.UTF8.GetBytes(_response)),
+                    headers,
+                    _statusCode,
+                    () => new MemoryStream(_response),
                     null);
             }
         }
