@@ -323,13 +323,11 @@ namespace Microsoft.OData.Client
                 // Get the server type name using the type resolver or from the entity descriptor
                 string serverTypeName = this.requestInfo.GetServerTypeName(entityDescriptor);
 
-                // We don't need to set the TypeAnnotation if the instance type we're writing corresponds to the entity set's type
+                // We don't need to set the TypeAnnotation if the instance type we're writing corresponds to the entity's type
                 bool setTypeAnnotation = true;
-                IEdmEntitySet entitySet;
-                if (!string.IsNullOrEmpty(entityDescriptor.EntitySetName)
-                    && (entitySet = this.requestInfo.Format.ServiceModel.FindDeclaredEntitySet(entityDescriptor.EntitySetName)) != null)
+                if (!string.IsNullOrEmpty(entityType.ElementTypeName))
                 {
-                    setTypeAnnotation = entitySet.EntityType.FullTypeName() != serverTypeName;
+                    setTypeAnnotation = entityType.ElementTypeName != serverTypeName;
                 }
 
                 var entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format, setTypeAnnotation);
